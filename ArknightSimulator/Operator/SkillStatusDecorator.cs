@@ -4,7 +4,11 @@ using System.Text;
 
 namespace ArknightSimulator.Operator
 {
-    class SkillStatusDecorator: StatusDecorator
+    public class SkillStatusDecorator : StatusDecorator
     {
+        public SkillStatusDecorator(IStatus status) : base(status)
+        {
+
+        }
     }
 }

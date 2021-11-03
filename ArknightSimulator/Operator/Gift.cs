@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArknightSimulator.Operator
 {
-    class Gift
+    public class Gift
     {
     }
 }

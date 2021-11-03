@@ -4,19 +4,19 @@ using System.Text;
 
 namespace ArknightSimulator.Operator
 {
-    class Skill
+    public class Skill
     {
-        int Initial { get; set; }
-        int Cost { get; set; }
-        int Time { get; set; }
-        int Level { get; set; }
+        public int Initial { get; set; }
+        public int Cost { get; set; }
+        public int Time { get; set; }
+        public int Level { get; set; }
 
-        Status Start(Status status)
+        public IStatus Start(IStatus status)
         {
             return default;
         }
 
-        Status End(Status status)
+        public IStatus End(IStatus status)
         {
             return default;
         }

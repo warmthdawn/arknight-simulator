@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ArknightSimulator.Models
+namespace ArknightSimulator.Enemy
 {
     class EnemySkill
     {

@@ -7,17 +7,41 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Image\continue.png" />
     <None Remove="Image\operationSettingTitle.png" />
+    <None Remove="Image\operationSettingTitleSelected.png" />
     <None Remove="Image\operatorSettingTitle.png" />
+    <None Remove="Image\operatorSettingTitleSelected.png" />
+    <None Remove="Image\pause.png" />
+    <None Remove="Image\quit.png" />
+    <None Remove="Image\reChooseOperator.png" />
     <None Remove="Image\simulatorTitle.png" />
+    <None Remove="Image\speed1.png" />
+    <None Remove="Image\speed2.png" />
     <None Remove="Image\title.png" />
+    <None Remove="Pages\pause.png" />
+    <None Remove="Pages\quit.png" />
+    <None Remove="Pages\reChooseOperator.png" />
+    <None Remove="Pages\speed1.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Image\continue.png" />
     <Resource Include="Image\operationSettingTitle.png" />
+    <Resource Include="Image\operationSettingTitleSelected.png" />
     <Resource Include="Image\operatorSettingTitle.png" />
+    <Resource Include="Image\operatorSettingTitleSelected.png" />
+    <Resource Include="Image\pause.png" />
+    <Resource Include="Image\quit.png" />
+    <Resource Include="Image\reChooseOperator.png" />
     <Resource Include="Image\simulatorTitle.png" />
+    <Resource Include="Image\speed1.png" />
+    <Resource Include="Image\speed2.png" />
     <Resource Include="Image\title.png" />
+    <Resource Include="Pages\pause.png" />
+    <Resource Include="Pages\quit.png" />
+    <Resource Include="Pages\reChooseOperator.png" />
+    <Resource Include="Pages\speed1.png" />
   </ItemGroup>
 
   <ItemGroup>

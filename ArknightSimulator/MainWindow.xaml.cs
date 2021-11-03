@@ -23,9 +23,11 @@ namespace ArknightSimulator
     {
         private Page homePage;
         private Page editPage;
+        private Page operationPage;
 
         public EventHandler OnChangeToHomePage;
         public EventHandler OnChangeToEditPage;
+        public EventHandler OnChangeToOperationPage;
         public MainWindow()
         {
             InitializeComponent();
@@ -44,6 +46,7 @@ namespace ArknightSimulator
 
             OnChangeToHomePage += ChangeToHomePage;
             OnChangeToEditPage += ChangeToEditPage;
+            OnChangeToOperationPage += ChangeToOperationPage;
         }
 
         private void ChangeToHomePage(object sender, EventArgs e)
@@ -64,6 +67,16 @@ namespace ArknightSimulator
             }
 
             contentControl.Content = new Frame() { Content = editPage };
+        }
+
+        private void ChangeToOperationPage(object sender, EventArgs e)
+        {
+            if (operationPage == null)
+            {
+                operationPage = new OperationPage(this);
+            }
+
+            contentControl.Content = new Frame() { Content = operationPage };
         }
     }
 }

@@ -121,13 +121,37 @@
   <data name="operationSettingTitle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Image\operationSettingTitle.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="operationSettingTitleSelected" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Image\operationSettingTitleSelected.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="operatorSettingTitle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Image\operatorSettingTitle.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="operatorSettingTitleSelected" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Image\operatorSettingTitleSelected.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Image\pause.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="quit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Image\quit.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="reChooseOperator" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Image\reChooseOperator.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="simulatorTitle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Image\simulatorTitle.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="speed1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Image\speed1.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="speed2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Image\speed2.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="title" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Image\title.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="_continue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Image\continue.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

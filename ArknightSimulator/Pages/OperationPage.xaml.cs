@@ -14,35 +14,15 @@ using System.Windows.Shapes;
 namespace ArknightSimulator.Pages
 {
     /// <summary>
-    /// EditPage.xaml 的交互逻辑
+    /// OperationPage.xaml 的交互逻辑
     /// </summary>
-    public partial class EditPage : Page
+    public partial class OperationPage : Page
     {
         private MainWindow mainWindow;
-        public EditPage(MainWindow mainWindow)
+        public OperationPage(MainWindow mainWindow)
         {
             InitializeComponent();
             this.mainWindow = mainWindow;
-        }
-
-        private void btnOperationSelected_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void btnImportTimeAction_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void btnImportMapBlock_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void btnStartOperation_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

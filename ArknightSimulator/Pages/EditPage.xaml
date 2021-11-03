@@ -8,30 +8,59 @@
       d:DesignHeight="900" d:DesignWidth="1600"
       Title="EditPage">
 
-    <Grid Background="White">
+    <Grid Background="Black">
         <TabControl TabStripPlacement="Left">
-            <TabItem  Height="400">
-                <Grid Background="#FFE5E5E5"/>
+            <TabItem Height="450">
+                <Grid Background="LightGray">
+                    <Label Content="关卡" FontSize="30" HorizontalAlignment="Left" Margin="95,72,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="txtOperation" FontSize="30" VerticalContentAlignment="Center" HorizontalAlignment="Left"  Margin="217,72,0,0" VerticalAlignment="Top" Width="165" Height="50"/>
+                    <Button x:Name="btnOperationSelected" Content="确认" FontSize="30" HorizontalAlignment="Left" Margin="482,78,0,0" VerticalAlignment="Top" Click="btnOperationSelected_Click"/>
+                    <Label Content="时间轴" FontSize="30" HorizontalAlignment="Left" Margin="95,205,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="btnImportTimeAction" Content="导入" FontSize="30" HorizontalAlignment="Left" Margin="284,208,0,0" VerticalAlignment="Top" Click="btnImportTimeAction_Click"/>
+                    <Label Content="障碍物" FontSize="30" HorizontalAlignment="Left" Margin="95,311,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="btnImportMapBlock" Content="导入" FontSize="30" HorizontalAlignment="Left" Margin="284,314,0,0" VerticalAlignment="Top" Click="btnImportMapBlock_Click"/>
+                    <Image HorizontalAlignment="Left" Height="257" Margin="894,151,0,0" VerticalAlignment="Top" Width="419"/>
+                    <Button x:Name="btnStartOperation" Content="开始作战" FontSize="50" HorizontalAlignment="Left" Margin="632,731,0,0" VerticalAlignment="Top" Click="btnStartOperation_Click"/>
+
+                </Grid>
                 <TabItem.Style>
                     <Style TargetType="{x:Type TabItem}">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type TabItem}">
-                                    <Image Source="../Image/operationSettingTitle.png" Height="350"/>
+                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                        <Image x:Name="imgOperationSettingTitle" Source="../Image/operationSettingTitle.png" Width="75"/>
+                                        <TextBlock x:Name="txtOperationSettingTitle" Text="关卡设置" Width="75" FontSize="35" Foreground="White" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="imgOperationSettingTitle" Property="Source" Value="../Image/operationSettingTitleSelected.png" />
+                                            <Setter TargetName="txtOperationSettingTitle" Property="Foreground" Value="skyblue" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
                     </Style>
                 </TabItem.Style>
             </TabItem>
-            <TabItem Height="400">
-                <Grid Background="#FFE5E5E5"/>
+            <TabItem Height="450">
+                <Grid Background="LightGray"/>
                 <TabItem.Style>
                     <Style TargetType="{x:Type TabItem}">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type TabItem}">
-                                    <Image Source="../Image/operatorSettingTitle.png" Height="350"/>
+                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                        <Image x:Name="imgOperatorSettingTitle" Source="../Image/operatorSettingTitle.png" Width="75"/>
+                                        <TextBlock x:Name="txtOperatorSettingTitle" Text="干员设置" Width="75" FontSize="35" Foreground="White" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="imgOperatorSettingTitle" Property="Source" Value="../Image/operatorSettingTitleSelected.png" />
+                                            <Setter TargetName="txtOperatorSettingTitle" Property="Foreground" Value="skyblue" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>

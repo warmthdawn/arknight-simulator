@@ -63,9 +63,29 @@ namespace ArknightSimulator {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
+        internal static byte[] _continue {
+            get {
+                object obj = ResourceManager.GetObject("_continue", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
         internal static byte[] operationSettingTitle {
             get {
                 object obj = ResourceManager.GetObject("operationSettingTitle", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] operationSettingTitleSelected {
+            get {
+                object obj = ResourceManager.GetObject("operationSettingTitleSelected", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -83,9 +103,69 @@ namespace ArknightSimulator {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
+        internal static byte[] operatorSettingTitleSelected {
+            get {
+                object obj = ResourceManager.GetObject("operatorSettingTitleSelected", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] pause {
+            get {
+                object obj = ResourceManager.GetObject("pause", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] quit {
+            get {
+                object obj = ResourceManager.GetObject("quit", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] reChooseOperator {
+            get {
+                object obj = ResourceManager.GetObject("reChooseOperator", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
         internal static byte[] simulatorTitle {
             get {
                 object obj = ResourceManager.GetObject("simulatorTitle", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] speed1 {
+            get {
+                object obj = ResourceManager.GetObject("speed1", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] speed2 {
+            get {
+                object obj = ResourceManager.GetObject("speed2", resourceCulture);
                 return ((byte[])(obj));
             }
         }

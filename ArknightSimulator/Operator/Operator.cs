@@ -4,14 +4,13 @@ using System.Text;
 
 namespace ArknightSimulator.Operator
 {
-    class Operator // 已部署干员
+    public class Operator // 已部署干员
     {
-        OperatorTemplate Template { get; set; } // 模板
-        IStatus Status { get; set; } // 属性状态
-
-        void Attack() { }
-        void Hurt() { }
-        void SkillOn() { }
+        public OperatorTemplate Template { get; set; } // 模板
+        public IStatus Status { get; set; } // 属性状态
+        public void Attack() { }
+        public void Hurt() { }
+        public void SkillOn() { }
         
     }
 }

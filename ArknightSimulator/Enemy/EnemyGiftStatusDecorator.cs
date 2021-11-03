@@ -4,7 +4,11 @@ using System.Text;
 
 namespace ArknightSimulator.Enemy
 {
-    class EnemyGiftStatusDecorator: EnemyStatusDecorator
+    public class EnemyGiftStatusDecorator: EnemyStatusDecorator
     {
+        public EnemyGiftStatusDecorator(IEnemyStatus status) : base(status)
+        {
+
+        }
     }
 }

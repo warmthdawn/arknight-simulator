@@ -4,14 +4,14 @@ using System.Text;
 
 namespace ArknightSimulator.Enemy
 {
-    class EnemyTemplate
+    public class EnemyTemplate
     {
-        string Name { get; set; } // 名称
-        string Picture { get; set; } // 图片
-        int Level { get; set; } // 等级
-        EnemyStatus Status { get; set; } // 属性状态
-        EnemyGift Gift { get; set; }
-        EnemySkill Skill { get; set; }
+        public string Name { get; set; } // 名称
+        public string Picture { get; set; } // 图片
+        public int Level { get; set; } // 等级
+        public IEnemyStatus Status { get; set; } // 属性状态
+        public EnemyGift Gift { get; set; }
+        public EnemySkill Skill { get; set; }
         
     }
 }

@@ -4,14 +4,13 @@ using System.Text;
 
 namespace ArknightSimulator.Enemy
 {
-    class Enemy
+    public class Enemy
     {
-        EnemyTemplate Template { get; set; } // 模板
-        EnemyStatus Status { get; set; } // 属性状态
-
-        void Attack() { }
-        void Hurt() { }
-        void SkillOn() { }
+        public EnemyTemplate Template { get; set; } // 模板
+        public EnemyStatus Status { get; set; } // 属性状态
+        public void Attack() { }
+        public void Hurt() { }
+        public void SkillOn() { }
 
     }
 }

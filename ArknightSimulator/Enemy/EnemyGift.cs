@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArknightSimulator.Enemy
 {
-    class EnemyGift
+    public class EnemyGift
     {
     }
 }

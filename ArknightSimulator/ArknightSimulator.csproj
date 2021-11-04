@@ -4,14 +4,18 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Image\continue.png" />
     <None Remove="Image\operationSettingTitle.png" />
     <None Remove="Image\operationSettingTitleSelected.png" />
+    <None Remove="Image\operator.png" />
     <None Remove="Image\operatorSettingTitle.png" />
     <None Remove="Image\operatorSettingTitleSelected.png" />
+    <None Remove="Image\opMask.png" />
     <None Remove="Image\pause.png" />
     <None Remove="Image\quit.png" />
     <None Remove="Image\reChooseOperator.png" />
@@ -29,8 +33,10 @@
     <Resource Include="Image\continue.png" />
     <Resource Include="Image\operationSettingTitle.png" />
     <Resource Include="Image\operationSettingTitleSelected.png" />
+    <Resource Include="Image\operator.png" />
     <Resource Include="Image\operatorSettingTitle.png" />
     <Resource Include="Image\operatorSettingTitleSelected.png" />
+    <Resource Include="Image\opMask.png" />
     <Resource Include="Image\pause.png" />
     <Resource Include="Image\quit.png" />
     <Resource Include="Image\reChooseOperator.png" />
@@ -38,10 +44,6 @@
     <Resource Include="Image\speed1.png" />
     <Resource Include="Image\speed2.png" />
     <Resource Include="Image\title.png" />
-    <Resource Include="Pages\pause.png" />
-    <Resource Include="Pages\quit.png" />
-    <Resource Include="Pages\reChooseOperator.png" />
-    <Resource Include="Pages\speed1.png" />
   </ItemGroup>
 
   <ItemGroup>

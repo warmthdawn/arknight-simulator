@@ -3,11 +3,43 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ArknightSimulator.Pages"
+      xmlns:uc="clr-namespace:ArknightSimulator.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="900" d:DesignWidth="1600"
       Title="EditPage">
 
+    <Page.Resources>
+        <!--Animation for detial board-->
+        <!--show detial board-->
+        <Storyboard x:Key="ShowSide">
+            <DoubleAnimation Duration="00:00:0.5" From="0" To="300" 
+                             Storyboard.TargetName="detialBoard" Storyboard.TargetProperty="Width">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <!--hide detial board-->
+        <Storyboard x:Key="OffSide">
+            <DoubleAnimation Duration="00:00:0.5" From="300" To="0" 
+                             Storyboard.TargetName="detialBoard" Storyboard.TargetProperty="Width">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <!--Animation for selection mask-->
+        <Storyboard x:Key="MoveMask">
+            <DoubleAnimation Duration="00:00:0.5" From="300" To="0" 
+                             Storyboard.TargetName="detialBoard" Storyboard.TargetProperty="Width">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+
+    </Page.Resources>
     <Grid Background="Black">
         <TabControl TabStripPlacement="Left">
             <TabItem Height="450">
@@ -44,8 +76,8 @@
                     </Style>
                 </TabItem.Style>
             </TabItem>
-            <TabItem Height="450">
-                <Grid Background="LightGray"/>
+            <TabItem Height="450" x:Name="operatorSettingTab">
+
                 <TabItem.Style>
                     <Style TargetType="{x:Type TabItem}">
                         <Setter Property="Template">
@@ -66,6 +98,165 @@
                         </Setter>
                     </Style>
                 </TabItem.Style>
+                <Grid Background="LightGray">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3.5*"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1.7*"></RowDefinition>
+                        <RowDefinition Height="3*"></RowDefinition>
+                        <RowDefinition Height="3*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <!--Selected-->
+                    <Grid  Grid.Row="0" Grid.ColumnSpan="2"  >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Background="Black" Foreground="White" Text="已选干员" HorizontalAlignment="Stretch" FontSize="38" TextWrapping="WrapWithOverflow" Margin="5,0,0,0"></TextBlock>
+                        <ItemsControl  x:Name="selectedItems" ItemsSource="{Binding}" BorderThickness="5" BorderBrush="Black" Grid.Column="2" Background="Wheat">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    </WrapPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="3">
+                                        <WrapPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition></ColumnDefinition>
+                                                    <ColumnDefinition Width="20"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition></RowDefinition>
+                                                    <RowDefinition Height="20"></RowDefinition>
+                                                </Grid.RowDefinitions>
+                                                <Image Source="{Binding Picture}" Grid.ColumnSpan="2" Grid.RowSpan="2"></Image>
+                                                <Button Background="Red" Grid.Column="1" Grid.Row="1" Foreground="White" DataContext="{Binding}" Click="RemoveBtn_Click">X</Button>
+                                            </Grid>
+                                        </WrapPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+
+
+                    <!--Operator panel 1-->
+                    <ItemsControl  x:Name="operatorItems"  Background="#B28BB2F1" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" Margin="0,0,0,10"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="3">
+                                    <WrapPanel>
+                                        <Grid>
+                                            <uc:OpSettingItem  Width="200" OpName="{Binding Name}" Img="{Binding Picture}" MouseLeftButtonDown="OpSettingItem_MouseLeftButtonDown" MouseRightButtonDown="OpSettingItem_MouseRigthButtonDown"/>
+
+                                        </Grid>
+                                    </WrapPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <!--Operator panel 2-->
+                    <ItemsControl  x:Name="operatorItems2"  Background="#B28BB2F1" Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" Margin="0,0,0,10"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="3">
+                                    <WrapPanel>
+                                        <uc:OpSettingItem  Width="200"  OpName="{Binding Name}" Img="{Binding Picture}" MouseLeftButtonDown="OpSettingItem_MouseLeftButtonDown" MouseRightButtonDown="OpSettingItem_MouseRigthButtonDown"/>
+                                    </WrapPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!--for test-->
+                    <WrapPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Visibility="Hidden">
+                        <Grid>
+                            <uc:OpSettingItem Width="200" OpName="operator2" Img="../Image/operator.png" DataContext="{Binding}"/>
+                            <Canvas Margin="10,10,10,10" >
+                                <Canvas.Background>
+                                    <SolidColorBrush Opacity="0.3" Color="Blue"></SolidColorBrush>
+                                </Canvas.Background>
+                            </Canvas>
+                        </Grid>
+
+                        <uc:OpSettingItem Width="200" OpName="operator2" Img="../Image/operator.png"/>
+
+                    </WrapPanel>
+
+                    <Canvas x:Name="globalCanvas" Grid.ColumnSpan="2" Grid.RowSpan="3">
+                        <!--selection mask-->
+                        <Canvas x:Name="selectionMask" Margin="10,10,10,10" Canvas.Left="0" Canvas.Top="0" IsHitTestVisible="False">
+                            <Canvas.Background>
+                                <SolidColorBrush Opacity="0.2" Color="Blue"></SolidColorBrush>
+                            </Canvas.Background>
+                        </Canvas>
+                    </Canvas>
+
+
+                    <!--Detial board-->
+                    <Canvas x:Name="detialBoard" Grid.Column="1" Grid.RowSpan="3" Margin="10,10,10,10" Width="300" ClipToBounds="True" HorizontalAlignment="Right">
+                        <Canvas.Background>
+                            <SolidColorBrush Opacity="0.3" Color="Orange"></SolidColorBrush>
+                        </Canvas.Background>
+                        <Canvas.Effect>
+                            <DropShadowEffect Direction="45" Opacity="0.5"/>
+                        </Canvas.Effect>
+                        <Grid Width="{Binding Width, ElementName=detialBoard}" Height="{Binding Height, ElementName=detialBoard}"  >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Button FontSize="30" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" Content=">>" Background="Black" Foreground="White" Click="HideButton_Click"></Button>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" Content="代号" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="2" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Name}" ></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="3" HorizontalContentAlignment="Center" Content="精英化等级"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="4" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding EliteLevel}"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="5" HorizontalContentAlignment="Center" Content="等级"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="6" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Level}"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="7" HorizontalContentAlignment="Center" Content="信赖"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="8" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Belief}"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="9" HorizontalContentAlignment="Center" Content="潜能"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="10" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Potential}"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="11" HorizontalContentAlignment="Center" Content="天赋"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="12" HorizontalContentAlignment="Center" Foreground="White" Content="Gifts"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="13" HorizontalContentAlignment="Center" Content="技能" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.Row="14" HorizontalContentAlignment="Center" Foreground="White" Content="Skills"></Label>
+                        </Grid>
+
+                    </Canvas>
+                </Grid>
             </TabItem>
         </TabControl>
 

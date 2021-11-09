@@ -6,6 +6,7 @@ namespace ArknightSimulator.Operator
 {
     public class OperatorTemplate
     {
+        public string Id { get; set; }  // 编号
         public string Name { get; set; } = "临光"; // 代号
         public string Picture { get; set; } = "../Image/operator.png"; // 图片
         public int EliteLevel { get; set; } = 1;// 精英化等级

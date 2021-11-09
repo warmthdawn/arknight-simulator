@@ -14,6 +14,6 @@ namespace ArknightSimulator.Operation
         public int InitialCost { get; set; }
         public int HomeLife { get; set; }
         public int EnemyCount { get; set; }
-        public List<Enemy.Enemy> Enemies { get; set; }
+        public List<EnemyMovement> TimeLine { get; set; }
     }
 }

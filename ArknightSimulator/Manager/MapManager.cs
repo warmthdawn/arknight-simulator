@@ -11,9 +11,10 @@ namespace ArknightSimulator.Manager
         public MapManager()
         {
 
+
         }
 
-        //public 
+        //public void 
 
 
     }

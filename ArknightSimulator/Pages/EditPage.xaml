@@ -47,7 +47,7 @@
                     <Label Content="关卡" FontSize="30" HorizontalAlignment="Left" Margin="95,72,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="txtOperation" FontSize="30" VerticalContentAlignment="Center" HorizontalAlignment="Left"  Margin="217,72,0,0" VerticalAlignment="Top" Width="165" Height="50"/>
                     <Button x:Name="btnOperationSelected" Content="确认" FontSize="30" HorizontalAlignment="Left" Margin="482,78,0,0" VerticalAlignment="Top" Click="btnOperationSelected_Click"/>
-                    <Image HorizontalAlignment="Left" Height="257" Margin="894,151,0,0" VerticalAlignment="Top" Width="419"/>
+                    <Image x:Name="imgOperation" HorizontalAlignment="Left" Height="257" Margin="894,151,0,0" VerticalAlignment="Top" Width="419"/>
                     <Button x:Name="btnStartOperation" Content="开始作战" FontSize="50" HorizontalAlignment="Left" Margin="632,731,0,0" VerticalAlignment="Top" Click="btnStartOperation_Click"/>
 
                 </Grid>

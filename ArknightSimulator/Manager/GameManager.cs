@@ -10,6 +10,8 @@ namespace ArknightSimulator.Manager
         private DispatcherTimer timer;
         private int speed;
 
+        public MapManager MapManager { get; private set; } = new MapManager();
+
         public GameManager(DispatcherTimer timer)
         {
             this.timer = timer;

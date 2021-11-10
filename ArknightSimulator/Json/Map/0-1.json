@@ -1,7 +1,7 @@
 {
     "Id":"0-1",
     "Name":"坍塌",
-    "Picture":"../Image/Map/0-1.png",
+    "Picture":"./Image/Map/0-1.png",
     "MapWidth":9,
     "MapHeight":5,
     "Map":[[0,2,2,2,2,2,2,2,0],

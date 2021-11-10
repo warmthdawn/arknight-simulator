@@ -62,22 +62,13 @@ namespace ArknightSimulator.Pages
 
         private void btnOperationSelected_Click(object sender, RoutedEventArgs e)
         {
-
+            // 读取地图json文件
         }
 
-        private void btnImportTimeAction_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void btnImportMapBlock_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void btnStartOperation_Click(object sender, RoutedEventArgs e)
         {
-
+            // 创建
         }
 
         private void OpSettingItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

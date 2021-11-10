@@ -21,11 +21,11 @@ namespace ArknightSimulator.Enemy
 
         public int CurrentLife => Inner.CurrentLife;
 
-        public int Defense => Inner.Defense;
+        public int Defence => Inner.Defence;
 
-        public bool DizzyDefense => Inner.DizzyDefense;
+        public bool DizzyDefence => Inner.DizzyDefence;
 
-        public int MagicDefense => Inner.MagicDefense;
+        public int MagicDefence => Inner.MagicDefence;
 
         public int MaxLife => Inner.MaxLife;
 

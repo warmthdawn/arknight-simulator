@@ -10,7 +10,7 @@ namespace ArknightSimulator.Operator
         public int CurrentLife { get; set; } // 当前生命
         public int SkillPoint { get; set; } // 技力
         public int Attack { get; set; } // 攻击力
-        public int Defence { get; set; } // 防御
+        public int Defence { get; set; } // 防御 defence
         public int MagicDefence { get; set; } // 法术抗性
         public int Time { get; set; } // 再部署时间
         public int Cost { get; set; } // 部署费用

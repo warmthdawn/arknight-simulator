@@ -10,22 +10,22 @@
 
     <Grid Background="White">
         <Image HorizontalAlignment="Left" Height="900" VerticalAlignment="Top" Width="1600" Margin="0,0,0,0"/>
-        <Button x:Name="btnPauseOrContinue" Content="Button" HorizontalAlignment="Left" Margin="1490,10,0,0" VerticalAlignment="Top" Height="100" Width="100">
+        <Button x:Name="btnPauseOrContinue" HorizontalAlignment="Left" Margin="1490,10,0,0" VerticalAlignment="Top" Height="100" Width="100">
             <Button.Background>
                 <ImageBrush ImageSource="../Image/pause.png"/>
             </Button.Background>
         </Button>
-        <Button x:Name="btnSpeed" Content="Button" HorizontalAlignment="Left" Margin="1385,10,0,0" VerticalAlignment="Top" Height="100" Width="100">
+        <Button x:Name="btnSpeed" HorizontalAlignment="Left" Margin="1385,10,0,0" VerticalAlignment="Top" Height="100" Width="100">
             <Button.Background>
                 <ImageBrush ImageSource="../Image/speed1.png"/>
             </Button.Background>
         </Button>
-        <Button x:Name="btnQuit" Content="Button" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="100" Width="100">
+        <Button x:Name="btnQuit" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="100" Width="100">
             <Button.Background>
                 <ImageBrush ImageSource="../Image/quit.png"/>
             </Button.Background>
         </Button>
-        <Button x:Name="btnReChoose" Content="Button" HorizontalAlignment="Left" Margin="10,790,0,0" VerticalAlignment="Top" Height="100" Width="100">
+        <Button x:Name="btnReChoose" HorizontalAlignment="Left" Margin="10,790,0,0" VerticalAlignment="Top" Height="100" Width="100">
             <Button.Background>
                 <ImageBrush ImageSource="../Image/reChooseOperator.png"/>
             </Button.Background>

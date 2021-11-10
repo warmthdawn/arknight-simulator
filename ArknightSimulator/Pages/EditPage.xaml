@@ -210,7 +210,7 @@
 
 
                     <!--Detial board-->
-                    <Canvas x:Name="detialBoard" Grid.Column="1" Grid.RowSpan="3" Margin="10,10,10,10" Width="300" ClipToBounds="True" HorizontalAlignment="Right">
+                    <Canvas x:Name="detialBoard" Grid.Column="1" Grid.RowSpan="3" Margin="10,10,10,10" Width="0" ClipToBounds="True" HorizontalAlignment="Right">
                         <Canvas.Background>
                             <SolidColorBrush Opacity="0.3" Color="Orange"></SolidColorBrush>
                         </Canvas.Background>

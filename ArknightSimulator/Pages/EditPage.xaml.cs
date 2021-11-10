@@ -31,6 +31,7 @@ namespace ArknightSimulator.Pages
         {
             InitializeComponent();
             this.mainWindow = mainWindow;
+            OperatorManager operatorManager = new OperatorManager();
             // mook
             ObservableCollection<OperatorTemplate> operators = new ObservableCollection<OperatorTemplate>()
             {

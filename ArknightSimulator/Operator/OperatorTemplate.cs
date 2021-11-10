@@ -15,7 +15,7 @@ namespace ArknightSimulator.Operator
         public int Level { get; set; } = 1;// 等级
         public int Belief { get; set; } = 1;// 信赖
         public int Potential { get; set; } = 1; // 潜能
-        public Status[] Status { get; set; } // 属性状态
+        public Status Status { get; set; } // 属性状态
         public Gift[] Gift { get; set; } // 天赋
         public Skill[] Skill { get; set; } // 技能
 

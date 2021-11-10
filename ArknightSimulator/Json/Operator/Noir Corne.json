@@ -19,15 +19,15 @@
         "Cost": 14,
         "Block": 3,
         "AttackTime": 1.2,
-        "Range": [ 0 ]
+        "Range": [ [0] ]
     },
     "Gift": null,
     "Skill": null,
-    "LevelUpLife": [ "1219", "1670", "", "" ],
-    "LevelUpAttack": [ "180", "240", "", "" ],
-    "LevelUpDefense": [ "220", "315", "", "" ],
-    "LevelUpMagicDefence": [ "0", "0", "", "" ],
-    "BeliefUpStatus": [ "0", "0", "40", "" ],
+    "LevelUpLife": [ "1219", "1670", "0", "0" ],
+    "LevelUpAttack": [ "180", "240", "0", "0" ],
+    "LevelUpDefense": [ "220", "315", "0", "0" ],
+    "LevelUpMagicDefence": [ "0", "0", "0", "0" ],
+    "BeliefUpStatus": [ "0", "0", "40", "0" ],
     "PotentialValues": [
         {
             "Type": "Cost",

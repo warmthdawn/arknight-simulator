@@ -11,16 +11,16 @@ namespace ArknightSimulator.Operator
             this.Inner = status;
         }
         public IStatus Inner { get; private set; }
-        public int MaxLife => Inner.MaxLife;
-        public int CurrentLife => Inner.CurrentLife;
-        public int SkillPoint => Inner.SkillPoint;
-        public int Attack => Inner.Attack;
-        public int Defence => Inner.Defence;
-        public int MagicDefence => Inner.MagicDefence;
-        public int Time => Inner.Time;
-        public int Cost => Inner.Cost;
-        public int Block => Inner.Block;
-        public float AttackTime => Inner.AttackTime;
-        public int[][] Range => Inner.Range;
+        public virtual int MaxLife => Inner.MaxLife;
+        public virtual int CurrentLife => Inner.CurrentLife;
+        public virtual int SkillPoint => Inner.SkillPoint;
+        public virtual int Attack => Inner.Attack;
+        public virtual int Defence => Inner.Defence;
+        public virtual int MagicDefence => Inner.MagicDefence;
+        public virtual int Time => Inner.Time;
+        public virtual int Cost => Inner.Cost;
+        public virtual int Block => Inner.Block;
+        public virtual float AttackTime => Inner.AttackTime;
+        public virtual int[][] Range => Inner.Range;
     }
 }

@@ -4,12 +4,12 @@ using System.Text;
 using System.Windows;
 using ArknightSimulator.Enemy;
 
-namespace ArknightSimulator.Operation
+namespace ArknightSimulator.Operations
 {
     public class EnemyMovement
     {
         public EnemyTemplate Enemy { get; set; }
-        public int EntryTime { get; set; }
+        public float EntryTime { get; set; }
         public List<Point> MovingPoints { get; set; }
 
 

@@ -5,17 +5,17 @@
         int Attack { get; }
         int AttackSpeed { get; }
         float AttackTime { get; }
-        int Count { get; }
-        int CurrentLife { get; }
-        int Defence { get; }
-        bool DizzyDefence { get; }
-        int MagicDefense { get; }
-        int MaxLife { get; }
-        float MoveSpeed { get; }
         float Range { get; }
+        int Count { get; }
+        int Defense { get; }
+        int MaxLife { get; }
+        int CurrentLife { get; }
+        int MagicDefense { get; }
         int RecoverSpeed { get; }
-        bool SilenceDefence { get; }
-        bool SleepDefence { get; }
         int Weight { get; }
+        bool SilenceDefence { get; }
+        bool DizzyDefense { get; }
+        bool SleepDefence { get; }
+        float MoveSpeed { get; }
     }
 }

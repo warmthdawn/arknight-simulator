@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows;
 using ArknightSimulator.Enemy;
 
-namespace ArknightSimulator.Operation
+namespace ArknightSimulator.Operations
 {
     public class EnemyMovement
     {

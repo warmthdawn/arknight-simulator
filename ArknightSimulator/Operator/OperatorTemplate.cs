@@ -17,5 +17,6 @@ namespace ArknightSimulator.Operator
         public Status Status { get; set; } // 属性状态
         public Gift[] Gift { get; set; } // 天赋
         public Skill[] Skill { get; set; } // 技能
+
     }
 }

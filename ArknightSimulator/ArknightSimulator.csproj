@@ -30,6 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Image\continue.png" />
     <Resource Include="Image\operationSettingTitle.png" />
     <Resource Include="Image\operationSettingTitleSelected.png" />

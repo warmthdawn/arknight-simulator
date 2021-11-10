@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ArknightSimulator.Enemy;
 
-namespace ArknightSimulator.Operation
+namespace ArknightSimulator.Operations
 {
     public class Operation
     {
@@ -19,5 +19,7 @@ namespace ArknightSimulator.Operation
         public int HomeLife { get; set; }
         public int EnemyCount { get; set; }
         public List<EnemyMovement> TimeLine { get; set; }
+
+        public List<EnemyTemplate> AvailableEnemies { get; set; }
     }
 }

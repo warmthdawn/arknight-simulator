@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ArknightSimulator.Operation
+namespace ArknightSimulator.Operations
 {
     public enum PointType: int
     {

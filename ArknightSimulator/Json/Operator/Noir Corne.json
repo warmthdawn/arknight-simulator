@@ -1,0 +1,52 @@
+{
+    "Id": "Noir Corne",
+    "Name": "ºÚ½Ç",
+    "Picture": "../Image/Operator/Noir Corne.png",
+    "ModelPicture": "",
+    "EliteLevel": 0,
+    "Level": 1,
+    "Belief": 0,
+    "Potential": 1,
+    "Status": {
+        "MaxLife": 1219,
+        "CurrentLife": 1219,
+        "SkillPoint": 0,
+        "Attack": 180,
+        "Defence": 220,
+        "MagicDefence": 0,
+        "Time": 70,
+        "Cost": 14,
+        "Block": 3,
+        "AttackTime": 1.2,
+        "Range": [ 0 ]
+    },
+    "Gift": null,
+    "Skill": null,
+    "LevelUpLife": [ "1219", "1670", "", "" ],
+    "LevelUpAttack": [ "180", "240", "", "" ],
+    "LevelUpDefense": [ "220", "315", "", "" ],
+    "LevelUpMagicDefence": [ "0", "0", "", "" ],
+    "BeliefUpStatus": [ "0", "0", "40", "" ],
+    "PotentialValues": [
+        {
+            "Type": "Cost",
+            "UpValue": -1
+        },
+        {
+            "Type": "MaxLife",
+            "UpValue": 45
+        },
+        {
+            "Type": "Time",
+            "UpValue": -5
+        },
+        {
+            "Type": "MaxLife",
+            "UpValue": 45
+        },
+        {
+            "Type": "Cost",
+            "UpValue": -1
+        }
+    ]
+}

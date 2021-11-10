@@ -65,4 +65,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Json\Operator\" />
+  </ItemGroup>
+
 </Project>

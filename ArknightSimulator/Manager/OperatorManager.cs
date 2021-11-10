@@ -11,5 +11,6 @@ namespace ArknightSimulator.Manager
         public List<OperatorTemplate> AvailableOperators { get; private set; }
 
 
+
     }
 }

@@ -14,6 +14,7 @@ using ArknightSimulator.UserControls;
 using ArknightSimulator.Operator;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
+using ArknightSimulator.Manager;
 
 namespace ArknightSimulator.Pages
 {
@@ -62,7 +63,25 @@ namespace ArknightSimulator.Pages
 
         private void btnOperationSelected_Click(object sender, RoutedEventArgs e)
         {
-            // 读取地图json文件
+            var mapManager = mainWindow.GameManager.MapManager;
+            bool success = mapManager.LoadOperation(this.txtOperation.Text.Trim());
+            if(success)
+            {
+                try
+                {
+                    var path = System.IO.Path.GetFullPath(mapManager.CurrentOperation.Picture);
+                    var bmp = new BitmapImage(new Uri(path));
+                    imgOperation.Source = bmp;
+                    
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("无法获取地图图片" + ex.ToString());
+                }
+            }
+
+
         }
 
 
@@ -74,7 +93,7 @@ namespace ArknightSimulator.Pages
         private void OpSettingItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // 转换为自定义类型
-            OpSettingItem item = ((OpSettingItem)sender);
+            OpSettingItem item = (OpSettingItem)sender;
             detialBoard.DataContext = item.DataContext;
             
             selectionMask.Width = item.ActualWidth + 10;

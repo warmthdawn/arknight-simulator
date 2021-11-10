@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using ArknightSimulator.Manager;
 using ArknightSimulator.Pages;
 
 namespace ArknightSimulator
@@ -24,10 +26,12 @@ namespace ArknightSimulator
         private Page homePage;
         private Page editPage;
         private Page operationPage;
+        private DispatcherTimer timer;
 
         public EventHandler OnChangeToHomePage;
         public EventHandler OnChangeToEditPage;
         public EventHandler OnChangeToOperationPage;
+        public GameManager GameManager { get; private set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -39,6 +43,9 @@ namespace ArknightSimulator
 
         public void Init()
         {
+            this.timer = new DispatcherTimer(DispatcherPriority.Normal, this.Dispatcher);
+            GameManager = new GameManager(this.timer);
+
             MaxHeight = rootGrid.Height + 56;
             MaxWidth = rootGrid.Width + 22;
             MinHeight = rootGrid.Height + 56;
@@ -47,6 +54,8 @@ namespace ArknightSimulator
             OnChangeToHomePage += ChangeToHomePage;
             OnChangeToEditPage += ChangeToEditPage;
             OnChangeToOperationPage += ChangeToOperationPage;
+
+           
         }
 
         private void ChangeToHomePage(object sender, EventArgs e)

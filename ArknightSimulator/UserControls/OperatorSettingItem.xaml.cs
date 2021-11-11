@@ -56,6 +56,18 @@ namespace ArknightSimulator.UserControls
             }
         }
 
+        public int OpLevel
+        {
+            get
+            {
+                return (int)GetValue(OpLevelProperty);
+            }
+            set
+            {
+                SetValue(OpLevelProperty, value);
+            }
+        }
+
         public static readonly DependencyProperty OpNameProperty =
         DependencyProperty.Register(
        "OpName",
@@ -70,6 +82,13 @@ namespace ArknightSimulator.UserControls
         typeof(OpSettingItem),
         new PropertyMetadata(default(string), OnImgPropertyChanged));
 
+        public static readonly DependencyProperty OpLevelProperty =
+        DependencyProperty.Register(
+        "OpLevel",
+        typeof(int),
+        typeof(OpSettingItem),
+        new PropertyMetadata(default(int), OnLevelPropertyChanged));
+
         private static void OnItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             //AutocompleteTextBox source = d as AutocompleteTextBox;
@@ -78,6 +97,14 @@ namespace ArknightSimulator.UserControls
         }
 
         private static void OnImgPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            //AutocompleteTextBox source = d as AutocompleteTextBox;
+            //Do something...
+            //MessageBox.Show((string)e.NewValue);
+
+        }
+
+        private static void OnLevelPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             //AutocompleteTextBox source = d as AutocompleteTextBox;
             //Do something...

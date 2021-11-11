@@ -31,14 +31,19 @@ namespace ArknightSimulator.Pages
         {
             InitializeComponent();
             this.mainWindow = mainWindow;
+            //this.mainWindow.GameManager.OperatorManager.AvailableOperators
 
             // mook
             ObservableCollection<OperatorTemplate> operators = new ObservableCollection<OperatorTemplate>()
             {
-                new OperatorTemplate() {Name="op1", Picture="../Image/operator.png"},
+                new OperatorTemplate() {Name="耀骑士临光", Picture="../Image/operator.png",Level=90},
                 new OperatorTemplate() {Name="op2", Picture="../Image/operator.png"},
                 new OperatorTemplate() {Name="op3", Picture="../Image/operator.png"},
-                new OperatorTemplate() {Name="op4", Picture="../Image/operator.png"}
+                new OperatorTemplate() {Name="op4", Picture="../Image/operator.png"},
+                new OperatorTemplate() {Name="op5", Picture="../Image/operator.png"},
+                new OperatorTemplate() {Name="op6", Picture="../Image/operator.png"},
+                new OperatorTemplate() {Name="op7", Picture="../Image/operator.png"},
+                new OperatorTemplate() {Name="op8", Picture="../Image/operator.png"}
             };
             ObservableCollection<OperatorTemplate> operators2 = new ObservableCollection<OperatorTemplate>()
             {
@@ -50,7 +55,7 @@ namespace ArknightSimulator.Pages
             Operators = operators;
             Operators2 = operators2;
             operatorItems.DataContext = Operators;
-            operatorItems2.DataContext = Operators2;
+            //operatorItems2.DataContext = Operators2;
             selectedItems.DataContext = selected;
             //RefreshOperatorSettingTab(operators);
         }
@@ -129,7 +134,7 @@ namespace ArknightSimulator.Pages
 
         private void OpSettingItem_MouseRigthButtonDown(object sender, MouseButtonEventArgs e)
         {
-            OpSettingItem item = ((OpSettingItem)sender);
+            OpSettingItem item = (OpSettingItem)sender;
             OperatorTemplate opt = (OperatorTemplate)item.DataContext;
             selected.Add(opt);
         }
@@ -139,9 +144,9 @@ namespace ArknightSimulator.Pages
             BeginStoryboard((Storyboard)Resources["OffSide"]);
         }
 
-        private void RemoveBtn_Click(object sender, RoutedEventArgs e)
+        private void OnRemoveOperator(object sender, RoutedEventArgs e)
         {
-            OperatorTemplate op = (OperatorTemplate)(((Button)sender).DataContext);
+            OperatorTemplate op = (OperatorTemplate)((Image)sender).DataContext;
             selected.Remove(op);
         }
     }

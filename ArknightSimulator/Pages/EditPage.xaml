@@ -37,12 +37,14 @@
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
-    </Page.Resources>
-    
-    <Grid Background="Black">
-        <TabControl TabStripPlacement="Left">
-            <TabItem Height="450" x:Name="operatorSettingTab">
 
+        <SolidColorBrush x:Key="OpacityBrush" Color="White" Opacity="0.3"/>
+
+    </Page.Resources>
+
+    <Grid Background="Black">
+        <TabControl TabStripPlacement="Left" Padding="0,0,0,0">
+            <TabItem Height="450" x:Name="operatorSettingTab">
                 <TabItem.Style>
                     <Style TargetType="{x:Type TabItem}">
                         <Setter Property="Template">
@@ -63,45 +65,47 @@
                         </Setter>
                     </Style>
                 </TabItem.Style>
-                <Grid Background="LightGray">
+                <Grid>
+                    <Grid.Background>
+                        <ImageBrush ImageSource="/Image/editbackground.png"/>
+                    </Grid.Background>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3.5*"></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1.7*"></RowDefinition>
-                        <RowDefinition Height="3*"></RowDefinition>
-                        <RowDefinition Height="3*"></RowDefinition>
+                        <RowDefinition Height="205"></RowDefinition>
+                        <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
                     <!--Selected-->
                     <Grid  Grid.Row="0" Grid.ColumnSpan="2"  >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50"></ColumnDefinition>
+                            <ColumnDefinition Width="66"></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Background="Black" Foreground="White" Text="已选干员" HorizontalAlignment="Stretch" FontSize="38" TextWrapping="WrapWithOverflow" Margin="5,0,0,0"></TextBlock>
-                        <ItemsControl  x:Name="selectedItems" ItemsSource="{Binding}" BorderThickness="5" BorderBrush="Black" Grid.Column="2" Background="Wheat">
+                        <TextBlock Background="Black" Foreground="White" Text="已选干员" TextAlignment="Center" FontSize="38" TextWrapping="WrapWithOverflow" Margin="5,5,-5,0"/>
+                        <ItemsControl  x:Name="selectedItems" ItemsSource="{Binding}" BorderThickness="5" BorderBrush="Black" Grid.Column="2" Background="{StaticResource OpacityBrush}" Margin="0,5,5,0">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <WrapPanel Orientation="Horizontal" Margin="5,5,5,5">
                                     </WrapPanel>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Padding="3">
+                                    <Border Margin="5" BorderThickness="5" BorderBrush="Black" Background="White">
                                         <WrapPanel>
                                             <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition></ColumnDefinition>
-                                                    <ColumnDefinition Width="20"></ColumnDefinition>
+                                                <!--<Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="40"></ColumnDefinition>
+                                                    <ColumnDefinition Width="50"></ColumnDefinition>
                                                 </Grid.ColumnDefinitions>
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition></RowDefinition>
-                                                    <RowDefinition Height="20"></RowDefinition>
-                                                </Grid.RowDefinitions>
-                                                <Image Source="{Binding Picture}" Grid.ColumnSpan="2" Grid.RowSpan="2"></Image>
-                                                <Button Background="Red" Grid.Column="1" Grid.Row="1" Foreground="White" DataContext="{Binding}" Click="RemoveBtn_Click">X</Button>
+                                                    <RowDefinition Height="90"></RowDefinition>
+                                                    <RowDefinition Height="70"></RowDefinition>
+                                                </Grid.RowDefinitions>-->
+                                                <Image Source="{Binding Picture}" DataContext="{Binding}" Grid.ColumnSpan="2" Grid.Row="0" Width="90" Stretch="UniformToFill" MouseDown="OnRemoveOperator"></Image>
+                                                <!--<Button Background="Red" Grid.Column="1" Grid.Row="1" Foreground="White" DataContext="{Binding}" >X</Button>-->
                                             </Grid>
                                         </WrapPanel>
                                     </Border>
@@ -110,28 +114,28 @@
                         </ItemsControl>
                     </Grid>
 
-
-                    <!--Operator panel 1-->
-                    <ItemsControl  x:Name="operatorItems"  Background="#B28BB2F1" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal" Margin="0,0,0,10"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Padding="3">
-                                    <WrapPanel>
-                                        <Grid>
-                                            <uc:OpSettingItem  Width="200" OpName="{Binding Name}" Img="{Binding Picture}" MouseLeftButtonDown="OpSettingItem_MouseLeftButtonDown" MouseRightButtonDown="OpSettingItem_MouseRigthButtonDown"/>
-
-                                        </Grid>
-                                    </WrapPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <!--Operator panel 2-->
+                    <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                        <!--Operator panel 1-->
+                        <ItemsControl  x:Name="operatorItems" ItemsSource="{Binding}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical" Margin="15,15,15,15" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="0">
+                                        <WrapPanel>
+                                            <Grid>
+                                                <uc:OpSettingItem  Height="300" Width="143.75" OpName="{Binding Name}" Img="{Binding Picture}" OpLevel="{Binding Level}" MouseLeftButtonDown="OpSettingItem_MouseLeftButtonDown" MouseRightButtonDown="OpSettingItem_MouseRigthButtonDown"/>
+                                            </Grid>
+                                        </WrapPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                    <!--Operator panel 2
                     <ItemsControl  x:Name="operatorItems2"  Background="#B28BB2F1" Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -148,7 +152,7 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-
+                    -->
                     <!--for test-->
                     <WrapPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Visibility="Hidden">
                         <Grid>
@@ -224,13 +228,19 @@
                 </Grid>
             </TabItem>
             <TabItem Height="450">
-                <Grid Background="LightGray">
+                <Grid>
+                    <Grid.Background>
+                        <ImageBrush ImageSource="/Image/editbackground.png"/>
+                    </Grid.Background>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="140*"/>
+                        <RowDefinition Height="309*"/>
+                    </Grid.RowDefinitions>
                     <Label Content="关卡" FontSize="30" HorizontalAlignment="Left" Margin="95,72,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="txtOperation" FontSize="30" VerticalContentAlignment="Center" HorizontalAlignment="Left"  Margin="217,72,0,0" VerticalAlignment="Top" Width="165" Height="50"/>
                     <Button x:Name="btnOperationSelected" Content="确认" FontSize="30" HorizontalAlignment="Left" Margin="482,78,0,0" VerticalAlignment="Top" Click="btnOperationSelected_Click"/>
-                    <Image x:Name="imgOperation" HorizontalAlignment="Left" Height="257" Margin="894,151,0,0" VerticalAlignment="Top" Width="419"/>
-                    <Button x:Name="btnStartOperation" Content="开始作战" FontSize="50" HorizontalAlignment="Left" Margin="632,731,0,0" VerticalAlignment="Top" Click="btnStartOperation_Click"/>
-
+                    <Image x:Name="imgOperation" HorizontalAlignment="Left" Height="257" Margin="894,151,0,0" VerticalAlignment="Top" Width="419" Grid.RowSpan="2"/>
+                    <Button x:Name="btnStartOperation" Content="开始作战" FontSize="50" HorizontalAlignment="Left" Margin="632,451,0,0" VerticalAlignment="Top" Click="btnStartOperation_Click" Grid.Row="1"/>
                 </Grid>
                 <TabItem.Style>
                     <Style TargetType="{x:Type TabItem}">

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <None Remove="Image\continue.png" />
+    <None Remove="Image\editbackground.png" />
     <None Remove="Image\operationSettingTitle.png" />
     <None Remove="Image\operationSettingTitleSelected.png" />
     <None Remove="Image\operator.png" />
@@ -37,6 +38,7 @@
 
   <ItemGroup>
     <Resource Include="Image\continue.png" />
+    <Resource Include="Image\editbackground.png" />
     <Resource Include="Image\operationSettingTitle.png" />
     <Resource Include="Image\operationSettingTitleSelected.png" />
     <Resource Include="Image\operator.png" />

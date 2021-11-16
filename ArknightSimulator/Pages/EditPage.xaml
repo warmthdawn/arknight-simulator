@@ -216,14 +216,46 @@
                         <ImageBrush ImageSource="/Image/editbackground.png"/>
                     </Grid.Background>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="140*"/>
-                        <RowDefinition Height="309*"/>
+                        <RowDefinition Height="205"></RowDefinition>
+                        <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Label Content="关卡" FontSize="30" HorizontalAlignment="Left" Margin="95,72,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txtOperation" FontSize="30" VerticalContentAlignment="Center" HorizontalAlignment="Left"  Margin="217,72,0,0" VerticalAlignment="Top" Width="165" Height="50"/>
-                    <Button x:Name="btnOperationSelected" Content="确认" FontSize="30" HorizontalAlignment="Left" Margin="482,78,0,0" VerticalAlignment="Top" Click="btnOperationSelected_Click"/>
-                    <Image x:Name="imgOperation" HorizontalAlignment="Left" Height="257" Margin="894,151,0,0" VerticalAlignment="Top" Width="419" Grid.RowSpan="2"/>
-                    <Button x:Name="btnStartOperation" Content="开始作战" FontSize="50" HorizontalAlignment="Left" Margin="632,451,0,0" VerticalAlignment="Top" Click="btnStartOperation_Click" Grid.Row="1"/>
+                    <!--Selected-->
+                    <Grid  Grid.Row="0" Grid.ColumnSpan="2"  >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="66"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Background="Black" Foreground="White" Text="已选干员" TextAlignment="Center" FontSize="38" TextWrapping="WrapWithOverflow" Margin="5,5,-5,0"/>
+                        <ItemsControl x:Name="selectedItems2" ItemsSource="{Binding}" BorderThickness="5" BorderBrush="Black" Grid.Column="2" Margin="0,5,5,0">
+                            <ItemsControl.Background>
+                                <SolidColorBrush Color="White" Opacity="0.3"/>
+                            </ItemsControl.Background>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" Margin="5,5,5,5">
+                                    </WrapPanel>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="5" BorderThickness="5" BorderBrush="Black" Background="White">
+                                        <WrapPanel>
+                                            <Grid>
+                                                <Image DataContext="{Binding}" Grid.ColumnSpan="2" Grid.Row="0" Width="90" Stretch="UniformToFill" Initialized="OpSelectedItem_Initialized"/>
+                                            </Grid>
+                                        </WrapPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                    <Label Content="关卡" FontSize="50" HorizontalAlignment="Left" Margin="100,100,0,0" VerticalAlignment="Top" Grid.Row="1"/>
+                    <TextBox x:Name="txtOperation" FontSize="50" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center" HorizontalAlignment="Left"  Margin="245,100,0,0" VerticalAlignment="Top" Width="300" Height="80" Grid.Row="1"/>
+                    <Button x:Name="btnOperationSelected" Content="确认" FontSize="50" Foreground="White" Background="Black" Height="80" Width="120" HorizontalAlignment="Left" Margin="580,100,0,0" VerticalAlignment="Top" Click="btnOperationSelected_Click" Grid.Row="1"/>
+                    <Border BorderThickness="5" BorderBrush="Black" HorizontalAlignment="Left" Height="348" Width="610" Margin="100,250,0,0" VerticalAlignment="Top" Grid.Row="1">
+                        <Image x:Name="imgOperation"/>
+                    </Border>
+                    <Button x:Name="btnStartOperation" Content="开始作战" FontSize="50" Height="80" Width="240" Foreground="White" Background="#0074a5" HorizontalAlignment="Left" Margin="760,100,0,0" VerticalAlignment="Top" Click="btnStartOperation_Click" Grid.Row="1"/>
                 </Grid>
                 <TabItem.Style>
                     <Style TargetType="{x:Type TabItem}">

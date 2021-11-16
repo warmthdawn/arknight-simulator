@@ -21,22 +21,32 @@ namespace ArknightSimulator.Pages
     /// <summary>
     /// EditPage.xaml 的交互逻辑
     /// </summary>
-    public partial class EditPage : Page
+    public partial class EditPage : Page   // 干员和关卡编辑界面
     {
         private MainWindow mainWindow;
+        private GameManager gameManager;
+        private MapManager mapManager;
+        private OperatorManager operatorManager;
+
+
+        public EventHandler OnChangeToOperationPage;   //  跳转到作战界面事件
         public ObservableCollection<OperatorTemplate> Operators { get; set; }
         private ObservableCollection<OperatorTemplate> selected;
         public EditPage(MainWindow mainWindow)
         {
             InitializeComponent();
             this.mainWindow = mainWindow;
+            gameManager = mainWindow.GameManager;
+            mapManager = gameManager.MapManager;
+            operatorManager = gameManager.OperatorManager;
 
             // mook
-            ObservableCollection<OperatorTemplate> operators = new ObservableCollection<OperatorTemplate>(this.mainWindow.GameManager.OperatorManager.AvailableOperators);
+            ObservableCollection<OperatorTemplate> operators = new ObservableCollection<OperatorTemplate>(operatorManager.AvailableOperators);
             selected = new ObservableCollection<OperatorTemplate>();
             Operators = operators;
             operatorItems.DataContext = Operators;
             selectedItems.DataContext = selected;
+            selectedItems2.DataContext = selected;
             //RefreshOperatorSettingTab(operators);
 
 
@@ -49,9 +59,10 @@ namespace ArknightSimulator.Pages
             operatorItems.ItemsSource = this.Operators;
         }
 
+        // 选中关卡
         private void btnOperationSelected_Click(object sender, RoutedEventArgs e)
         {
-            var mapManager = mainWindow.GameManager.MapManager;
+            //var mapManager = mainWindow.GameManager.MapManager;
             bool success = mapManager.LoadOperation(this.txtOperation.Text.Trim());
             if(success)
             {
@@ -60,22 +71,25 @@ namespace ArknightSimulator.Pages
                     var path = System.IO.Path.GetFullPath(mapManager.CurrentOperation.Picture);
                     var bmp = new BitmapImage(new Uri(path));
                     imgOperation.Source = bmp;
-                    
-
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("无法获取地图图片" + ex.ToString());
                 }
             }
-
-
         }
 
 
+        // 开始作战
         private void btnStartOperation_Click(object sender, RoutedEventArgs e)
         {
-            // 创建
+            if (mapManager.CurrentOperation == null)
+                return;
+
+            // 创建作战
+            mapManager.Init();
+            operatorManager.Init(selected, mapManager.CurrentOperation.InitialCost, mapManager.CurrentOperation.DeploymentLimit);
+            OnChangeToOperationPage(this, null);
         }
 
         // 左键弹出干员信息

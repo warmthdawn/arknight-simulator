@@ -11,7 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Image\continue.png" />
     <None Remove="Image\editbackground.png" />
     <None Remove="Image\operationSettingTitle.png" />
     <None Remove="Image\operationSettingTitleSelected.png" />
@@ -19,12 +18,9 @@
     <None Remove="Image\operatorSettingTitle.png" />
     <None Remove="Image\operatorSettingTitleSelected.png" />
     <None Remove="Image\opMask.png" />
-    <None Remove="Image\pause.png" />
     <None Remove="Image\quit.png" />
     <None Remove="Image\reChooseOperator.png" />
     <None Remove="Image\simulatorTitle.png" />
-    <None Remove="Image\speed1.png" />
-    <None Remove="Image\speed2.png" />
     <None Remove="Image\title.png" />
     <None Remove="Pages\pause.png" />
     <None Remove="Pages\quit.png" />
@@ -37,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Image\continue.png" />
     <Resource Include="Image\editbackground.png" />
     <Resource Include="Image\operationSettingTitle.png" />
     <Resource Include="Image\operationSettingTitleSelected.png" />
@@ -45,12 +40,9 @@
     <Resource Include="Image\operatorSettingTitle.png" />
     <Resource Include="Image\operatorSettingTitleSelected.png" />
     <Resource Include="Image\opMask.png" />
-    <Resource Include="Image\pause.png" />
     <Resource Include="Image\quit.png" />
     <Resource Include="Image\reChooseOperator.png" />
     <Resource Include="Image\simulatorTitle.png" />
-    <Resource Include="Image\speed1.png" />
-    <Resource Include="Image\speed2.png" />
     <Resource Include="Image\title.png" />
   </ItemGroup>
 
@@ -79,6 +71,9 @@
     <None Update="Image\Caster.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Image\continue.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Image\Defender.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -94,10 +89,19 @@
     <None Update="Image\Operator\Noir Corne.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Image\pause.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Image\Sniper.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Image\Specialist.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image\speed1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image\speed2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Image\Supporter.png">

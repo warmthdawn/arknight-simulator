@@ -19,6 +19,7 @@ namespace ArknightSimulator.Pages
     public partial class HomePage : Page
     {
         private MainWindow mainWindow;
+        public EventHandler OnChangeToEditPage;   // 跳转到编辑页事件
         public HomePage(MainWindow mainWindow)
         {
             InitializeComponent();
@@ -27,7 +28,7 @@ namespace ArknightSimulator.Pages
         
         private void Grid_MouseDown(object sender, MouseEventArgs e)
         {
-            mainWindow.OnChangeToEditPage(mainWindow, null);
+            OnChangeToEditPage(this, null);
         }
     }
 }

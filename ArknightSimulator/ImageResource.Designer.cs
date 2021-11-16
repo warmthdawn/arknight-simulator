@@ -63,16 +63,6 @@ namespace ArknightSimulator {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
-        internal static byte[] _continue {
-            get {
-                object obj = ResourceManager.GetObject("_continue", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
         internal static byte[] _operator {
             get {
                 object obj = ResourceManager.GetObject("_operator", resourceCulture);
@@ -133,16 +123,6 @@ namespace ArknightSimulator {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
-        internal static byte[] pause {
-            get {
-                object obj = ResourceManager.GetObject("pause", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
         internal static byte[] quit {
             get {
                 object obj = ResourceManager.GetObject("quit", resourceCulture);
@@ -166,26 +146,6 @@ namespace ArknightSimulator {
         internal static byte[] simulatorTitle {
             get {
                 object obj = ResourceManager.GetObject("simulatorTitle", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] speed1 {
-            get {
-                object obj = ResourceManager.GetObject("speed1", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] speed2 {
-            get {
-                object obj = ResourceManager.GetObject("speed2", resourceCulture);
                 return ((byte[])(obj));
             }
         }

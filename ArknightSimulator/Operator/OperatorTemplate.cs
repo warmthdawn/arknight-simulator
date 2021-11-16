@@ -19,10 +19,10 @@ namespace ArknightSimulator.Operator
         public string Picture { get; set; }// 图片
         public string ModelPicture { get; set; }  // 模型
         public int Rare { get; set; } // 稀有度
-        public int EliteLevel { get { return eliteLevel; } set { eliteLevel = value; OnPropertyChanged(); } }  // 精英化等级
-        public int Level { get { return level; } set { level = value;OnPropertyChanged(); } }     // 等级
-        public int Belief { get { return belief; } set { belief = value; OnPropertyChanged(); } }   // 信赖
-        public int Potential { get { return potential; } set { potential = value; OnPropertyChanged(); } } // 潜能
+        public int EliteLevel { get => eliteLevel; set { eliteLevel = value; OnPropertyChanged(); } }  // 精英化等级
+        public int Level { get => level; set { level = value; OnPropertyChanged(); } }     // 等级
+        public int Belief { get => belief; set { belief = value; OnPropertyChanged(); } }   // 信赖
+        public int Potential { get => potential; set { potential = value; OnPropertyChanged(); } } // 潜能
         public Status InitStatus { get; set; } // 初始属性状态
         public Status Status { get; set; } // 属性状态
         public Gift[] Gift { get; set; } // 天赋

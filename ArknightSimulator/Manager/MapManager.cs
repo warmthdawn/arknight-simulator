@@ -45,7 +45,13 @@ namespace ArknightSimulator.Manager
             return true;
         }
 
-        //public void 
+        
+        
+        
+        public void Init()
+        {
+            //
+        }
 
 
     }

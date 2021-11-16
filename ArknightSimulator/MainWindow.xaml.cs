@@ -23,14 +23,12 @@ namespace ArknightSimulator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Page homePage;
-        private Page editPage;
-        private Page operationPage;
+        private HomePage homePage;
+        private EditPage editPage;
+        private OperationPage operationPage;
         private DispatcherTimer timer;
 
         public EventHandler OnChangeToHomePage;
-        public EventHandler OnChangeToEditPage;
-        public EventHandler OnChangeToOperationPage;
         public GameManager GameManager { get; private set; }
         public MainWindow()
         {
@@ -52,10 +50,6 @@ namespace ArknightSimulator
             MinWidth = rootGrid.Width + 22;
 
             OnChangeToHomePage += ChangeToHomePage;
-            OnChangeToEditPage += ChangeToEditPage;
-            OnChangeToOperationPage += ChangeToOperationPage;
-
-           
         }
 
         private void ChangeToHomePage(object sender, EventArgs e)
@@ -63,6 +57,7 @@ namespace ArknightSimulator
             if (homePage == null)
             {
                 homePage = new HomePage(this);
+                homePage.OnChangeToEditPage += ChangeToEditPage;
             }
 
             contentControl.Content = new Frame() { Content = homePage };
@@ -73,6 +68,7 @@ namespace ArknightSimulator
             if (editPage == null)
             {
                 editPage = new EditPage(this);
+                editPage.OnChangeToOperationPage += ChangeToOperationPage;
             }
 
             contentControl.Content = new Frame() { Content = editPage };
@@ -83,9 +79,16 @@ namespace ArknightSimulator
             if (operationPage == null)
             {
                 operationPage = new OperationPage(this);
+                operationPage.OnDeleteOperationPage += DeleteOperationPage;
+                operationPage.OnChangeToEditPage += ChangeToEditPage;
             }
 
             contentControl.Content = new Frame() { Content = operationPage };
+        }
+
+        private void DeleteOperationPage(object sender, EventArgs e)
+        {
+            operationPage = null;
         }
     }
 }

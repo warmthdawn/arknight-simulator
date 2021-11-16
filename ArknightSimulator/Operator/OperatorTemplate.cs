@@ -1,20 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace ArknightSimulator.Operator
 {
-    public class OperatorTemplate
+    public class OperatorTemplate: INotifyPropertyChanged
     {
+        private int eliteLevel;
+        private int level;
+        private int belief;
+        private int potential;
+
         public string Id { get; set; }  // 编号
-        public string Name { get; set; } = "临光"; // 代号
-        public string Picture { get; set; } = "../Image/operator.png"; // 图片
+        public string Name { get; set; } // 代号
+        public PositionType Position { get; set; } // 职业
+        public string Picture { get; set; }// 图片
         public string ModelPicture { get; set; }  // 模型
         public int Rare { get; set; } // 稀有度
-        public int EliteLevel { get; set; } = 1;// 精英化等级
-        public int Level { get; set; } = 1;// 等级
-        public int Belief { get; set; } = 1;// 信赖
-        public int Potential { get; set; } = 1; // 潜能
+        public int EliteLevel { get { return eliteLevel; } set { eliteLevel = value; OnPropertyChanged(); } }  // 精英化等级
+        public int Level { get { return level; } set { level = value;OnPropertyChanged(); } }     // 等级
+        public int Belief { get { return belief; } set { belief = value; OnPropertyChanged(); } }   // 信赖
+        public int Potential { get { return potential; } set { potential = value; OnPropertyChanged(); } } // 潜能
         public Status InitStatus { get; set; } // 初始属性状态
         public Status Status { get; set; } // 属性状态
         public Gift[] Gift { get; set; } // 天赋
@@ -32,6 +40,8 @@ namespace ArknightSimulator.Operator
             public int UpValue { get; set; }
         }
 
+
+
         public static int[][] LevelLimit = new int[][] // 等级限制，第一维是稀有度减一
         {
             new int[1]{30} ,
@@ -43,6 +53,13 @@ namespace ArknightSimulator.Operator
         };
 
 
+        // 数据更新
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
         // 重新设置属性（属性设置界面）
         public void ResetStatus()
         {
@@ -53,9 +70,19 @@ namespace ArknightSimulator.Operator
             status.MagicDefence = StatusCalculator(LevelUpMagicDefence) + (int)Math.Round(BeliefUpStatus[3] / 2 * Belief * 1.0 / 50, MidpointRounding.AwayFromZero);
             status.SkillPoint = InitStatus.SkillPoint;
             status.Time = InitStatus.Time;
-            status.Cost = InitStatus.Cost;
+            status.Cost = new int[InitStatus.Cost.Length];
+            InitStatus.Cost.CopyTo(status.Cost, 0);
             status.Block = InitStatus.Block;
             status.AttackTime = InitStatus.AttackTime;
+            status.Range = new int[InitStatus.Range.Length][][];
+            for(int i=0;i< InitStatus.Range.Length;i++)
+            {
+                status.Range[i] = new int[InitStatus.Range[i].Length][];
+                for(int j = 0;j< InitStatus.Range[i].Length;j++)
+                {
+                    status.Range[i][j] = new int[InitStatus.Range[i][j].Length];
+                }
+            }
             InitStatus.Range.CopyTo(status.Range, 0);
 
 
@@ -68,7 +95,12 @@ namespace ArknightSimulator.Operator
                     case "Defence": status.Defence += PotentialValues[i].UpValue; break;
                     case "MagicDefence": status.MagicDefence += PotentialValues[i].UpValue; break;
                     case "Time": status.Time += PotentialValues[i].UpValue; break;
-                    case "Cost": status.Cost += PotentialValues[i].UpValue; break;
+                    case "Cost":
+                        for(int j = 0;j < status.Cost.Length;j++)
+                        {
+                            status.Cost[j] += PotentialValues[i].UpValue;
+                        }
+                        break;
                     case "AttackSpeed":
                         float speed = (InitStatus.AttackTime / status.AttackTime * 100) + PotentialValues[i].UpValue;
                         status.AttackTime = InitStatus.AttackTime * 100 / speed;

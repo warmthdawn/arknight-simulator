@@ -18,9 +18,9 @@ namespace ArknightSimulator.Operator
         public virtual int Defence => Inner.Defence;
         public virtual int MagicDefence => Inner.MagicDefence;
         public virtual int Time => Inner.Time;
-        public virtual int Cost => Inner.Cost;
+        public virtual int[] Cost => Inner.Cost;
         public virtual int Block => Inner.Block;
         public virtual float AttackTime => Inner.AttackTime;
-        public virtual int[][] Range => Inner.Range;
+        public virtual int[][][] Range => Inner.Range;
     }
 }

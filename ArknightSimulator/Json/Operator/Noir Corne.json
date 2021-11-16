@@ -1,9 +1,10 @@
 {
     "Id": "Noir Corne",
-    "Name": "ºÚ½Ç",
+    "Name": "é»‘è§’",
+    "Position": 3,
     "Picture": "./Image/Operator/Noir Corne.png",
     "ModelPicture": "",
-    "Rare":2,
+    "Rare": 2,
     "EliteLevel": 0,
     "Level": 1,
     "Belief": 0,
@@ -16,10 +17,10 @@
         "Defence": 220,
         "MagicDefence": 0,
         "Time": 70,
-        "Cost": 14,
+        "Cost": [ 14 ],
         "Block": 3,
         "AttackTime": 1.2,
-        "Range": [ [0] ]
+        "Range": [ [ [ 0 ] ] ]
     },
     "Gift": null,
     "Skill": null,

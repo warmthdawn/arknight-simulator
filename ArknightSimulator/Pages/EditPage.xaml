@@ -9,20 +9,20 @@
       Title="EditPage">
 
     <Page.Resources>
-        <!--Animation for detial board-->
-        <!--show detial board-->
+        <!--Animation for detail board-->
+        <!--show detail board-->
         <Storyboard x:Key="ShowSide">
             <DoubleAnimation Duration="00:00:0.5" From="0" To="300" 
-                             Storyboard.TargetName="detialBoard" Storyboard.TargetProperty="Width">
+                             Storyboard.TargetName="detailBoard" Storyboard.TargetProperty="Width">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseOut"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
-        <!--hide detial board-->
+        <!--hide detail board-->
         <Storyboard x:Key="OffSide">
             <DoubleAnimation Duration="00:00:0.5" From="300" To="0" 
-                             Storyboard.TargetName="detialBoard" Storyboard.TargetProperty="Width">
+                             Storyboard.TargetName="detailBoard" Storyboard.TargetProperty="Width">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseOut"/>
                 </DoubleAnimation.EasingFunction>
@@ -31,15 +31,12 @@
         <!--Animation for selection mask-->
         <Storyboard x:Key="MoveMask">
             <DoubleAnimation Duration="00:00:0.5" From="300" To="0" 
-                             Storyboard.TargetName="detialBoard" Storyboard.TargetProperty="Width">
+                             Storyboard.TargetName="detailBoard" Storyboard.TargetProperty="Width">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseOut"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
         </Storyboard>
-
-        <SolidColorBrush x:Key="OpacityBrush" Color="White" Opacity="0.3"/>
-
     </Page.Resources>
 
     <Grid Background="Black">
@@ -84,7 +81,10 @@
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Background="Black" Foreground="White" Text="已选干员" TextAlignment="Center" FontSize="38" TextWrapping="WrapWithOverflow" Margin="5,5,-5,0"/>
-                        <ItemsControl  x:Name="selectedItems" ItemsSource="{Binding}" BorderThickness="5" BorderBrush="Black" Grid.Column="2" Background="{StaticResource OpacityBrush}" Margin="0,5,5,0">
+                        <ItemsControl  x:Name="selectedItems" ItemsSource="{Binding}" BorderThickness="5" BorderBrush="Black" Grid.Column="2" Margin="0,5,5,0">
+                            <ItemsControl.Background>
+                                <SolidColorBrush Color="White" Opacity="0.3"/>
+                            </ItemsControl.Background>
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel Orientation="Horizontal" Margin="5,5,5,5">
@@ -96,16 +96,7 @@
                                     <Border Margin="5" BorderThickness="5" BorderBrush="Black" Background="White">
                                         <WrapPanel>
                                             <Grid>
-                                                <!--<Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="40"></ColumnDefinition>
-                                                    <ColumnDefinition Width="50"></ColumnDefinition>
-                                                </Grid.ColumnDefinitions>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="90"></RowDefinition>
-                                                    <RowDefinition Height="70"></RowDefinition>
-                                                </Grid.RowDefinitions>-->
-                                                <Image Source="{Binding Picture}" DataContext="{Binding}" Grid.ColumnSpan="2" Grid.Row="0" Width="90" Stretch="UniformToFill" MouseDown="OnRemoveOperator"></Image>
-                                                <!--<Button Background="Red" Grid.Column="1" Grid.Row="1" Foreground="White" DataContext="{Binding}" >X</Button>-->
+                                                <Image DataContext="{Binding}" Grid.ColumnSpan="2" Grid.Row="0" Width="90" Stretch="UniformToFill" Initialized="OpSelectedItem_Initialized" MouseLeftButtonDown="OpSelectedItem_MouseLeftButtonDown" MouseRightButtonDown="OpSelectedItem_MouseRightButtonDown"/>
                                             </Grid>
                                         </WrapPanel>
                                     </Border>
@@ -127,7 +118,7 @@
                                     <Border Padding="0">
                                         <WrapPanel>
                                             <Grid>
-                                                <uc:OpSettingItem  Height="300" Width="143.75" OpName="{Binding Name}" Img="{Binding Picture}" OpLevel="{Binding Level}" MouseLeftButtonDown="OpSettingItem_MouseLeftButtonDown" MouseRightButtonDown="OpSettingItem_MouseRigthButtonDown"/>
+                                                <uc:OpSettingItem  Height="300" Width="150" OpName="{Binding Name}" Img="{Binding Picture}" OpLevel="{Binding Level}" MouseLeftButtonDown="OpSettingItem_MouseLeftButtonDown" MouseRightButtonDown="OpSettingItem_MouseRigthButtonDown"/>
                                             </Grid>
                                         </WrapPanel>
                                     </Border>
@@ -135,26 +126,8 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </Grid>
-                    <!--Operator panel 2
-                    <ItemsControl  x:Name="operatorItems2"  Background="#B28BB2F1" Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal" Margin="0,0,0,10"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Padding="3">
-                                    <WrapPanel>
-                                        <uc:OpSettingItem  Width="200"  OpName="{Binding Name}" Img="{Binding Picture}" MouseLeftButtonDown="OpSettingItem_MouseLeftButtonDown" MouseRightButtonDown="OpSettingItem_MouseRigthButtonDown"/>
-                                    </WrapPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    -->
                     <!--for test-->
-                    <WrapPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Visibility="Hidden">
+                    <!--<WrapPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Visibility="Hidden">
                         <Grid>
                             <uc:OpSettingItem Width="200" OpName="operator2" Img="../Image/operator.png" DataContext="{Binding}"/>
                             <Canvas Margin="10,10,10,10" >
@@ -166,7 +139,7 @@
 
                         <uc:OpSettingItem Width="200" OpName="operator2" Img="../Image/operator.png"/>
 
-                    </WrapPanel>
+                    </WrapPanel>-->
 
                     <Canvas x:Name="globalCanvas" Grid.ColumnSpan="2" Grid.RowSpan="3">
                         <!--selection mask-->
@@ -178,16 +151,18 @@
                     </Canvas>
 
 
-                    <!--Detial board-->
-                    <Canvas x:Name="detialBoard" Grid.Column="1" Grid.RowSpan="3" Margin="10,10,10,10" Width="0" ClipToBounds="True" HorizontalAlignment="Right">
+                    <!--Detail board-->
+                    <Canvas x:Name="detailBoard" Grid.Column="1" Grid.RowSpan="3" Margin="10,10,10,10" Width="0" ClipToBounds="True" HorizontalAlignment="Right">
                         <Canvas.Background>
                             <SolidColorBrush Opacity="0.3" Color="Orange"></SolidColorBrush>
                         </Canvas.Background>
                         <Canvas.Effect>
                             <DropShadowEffect Direction="45" Opacity="0.5"/>
                         </Canvas.Effect>
-                        <Grid Width="{Binding Width, ElementName=detialBoard}" Height="{Binding Height, ElementName=detialBoard}"  >
+                        <Grid Width="{Binding Width, ElementName=detailBoard}" Height="{Binding Height, ElementName=detailBoard}"  >
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
                                 <ColumnDefinition></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -207,21 +182,29 @@
                                 <RowDefinition></RowDefinition>
                                 <RowDefinition></RowDefinition>
                             </Grid.RowDefinitions>
-                            <Button FontSize="30" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" Content=">>" Background="Black" Foreground="White" Click="HideButton_Click"></Button>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" Content="代号" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="2" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Name}" ></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="3" HorizontalContentAlignment="Center" Content="精英化等级"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="4" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding EliteLevel}"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="5" HorizontalContentAlignment="Center" Content="等级"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="6" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Level}"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="7" HorizontalContentAlignment="Center" Content="信赖"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="8" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Belief}"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="9" HorizontalContentAlignment="Center" Content="潜能"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="10" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Potential}"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="11" HorizontalContentAlignment="Center" Content="天赋"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="12" HorizontalContentAlignment="Center" Foreground="White" Content="Gifts"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="13" HorizontalContentAlignment="Center" Content="技能" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.Row="14" HorizontalContentAlignment="Center" Foreground="White" Content="Skills"></Label>
+                            <Button FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" HorizontalContentAlignment="Center" Content=">>" Background="Black" Foreground="White" Click="HideButton_Click"></Button>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" HorizontalContentAlignment="Center" Content="代号" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Name}" ></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" HorizontalContentAlignment="Center" Content="精英化等级"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="1" Grid.Row="4" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding EliteLevel}"></Label>
+                            <Button FontSize="30" Grid.Column="0" Grid.Row="4" Content="&lt;" Background="Black" Foreground="White" Click="BtnEliteLevelDown_Click"></Button>
+                            <Button FontSize="30" Grid.Column="2" Grid.Row="4" Content=">" Background="Black" Foreground="White" Click="BtnEliteLevelUp_Click"></Button>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5" HorizontalContentAlignment="Center" Content="等级"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="1" Grid.Row="6" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Level}"></Label>
+                            <Button FontSize="30" Grid.Column="0" Grid.Row="6" Content="&lt;" Background="Black" Foreground="White" Click="BtnLevelDown_Click"></Button>
+                            <Button FontSize="30" Grid.Column="2" Grid.Row="6" Content=">" Background="Black" Foreground="White" Click="BtnLevelUp_Click"></Button>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="7" HorizontalContentAlignment="Center" Content="信赖"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="1" Grid.Row="8" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Belief}"></Label>
+                            <Button FontSize="30" Grid.Column="0" Grid.Row="8" Content="&lt;" Background="Black" Foreground="White" Click="BtnBeliefDown_Click"></Button>
+                            <Button FontSize="30" Grid.Column="2" Grid.Row="8" Content=">" Background="Black" Foreground="White" Click="BtnBeliefUp_Click"></Button>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="9" HorizontalContentAlignment="Center" Content="潜能"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="1" Grid.Row="10" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Potential}"></Label>
+                            <Button FontSize="30" Grid.Column="0" Grid.Row="10" Content="&lt;" Background="Black" Foreground="White" Click="BtnPotentialDown_Click"></Button>
+                            <Button FontSize="30" Grid.Column="2" Grid.Row="10" Content=">" Background="Black" Foreground="White" Click="BtnPotentialUp_Click"></Button>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="11" HorizontalContentAlignment="Center" Content="天赋"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="1" Grid.Row="12" HorizontalContentAlignment="Center" Foreground="White" Content="Gifts"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="13" HorizontalContentAlignment="Center" Content="技能" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="1" Grid.Row="14" HorizontalContentAlignment="Center" Foreground="White" Content="Skills"></Label>
                         </Grid>
 
                     </Canvas>

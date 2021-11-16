@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Text;
 using System.Windows;
@@ -23,49 +24,25 @@ namespace ArknightSimulator.UserControls
         public OpSettingItem()
         {
             InitializeComponent();
-            //DataContext = this;
-            //DataContext = new OperatorTemplate();
-            //BitmapImage bmp = new BitmapImage(new Uri(Img));
-            //OpName = "op";
-            //opImg.Source = bmp;
-            //opImg.DataContext = this;
         }
 
         public string Img
         {
-            get
-            {
-                return (string)GetValue(ImgProperty);
-            }
-            set
-            {
-                SetValue(ImgProperty, value);
-            }
+            get => (string)GetValue(ImgProperty);
+            set => SetValue(ImgProperty, value);
         }
-
-
+        public BitmapImage BitmapImg { get; set; }
+        public BitmapImage PositionImg { get; set; }
         public string OpName
         {
-            get
-            {
-                return (string)GetValue(OpNameProperty);
-            }
-            set
-            {
-                SetValue(OpNameProperty, value);
-            }
+            get => (string)GetValue(OpNameProperty);
+            set => SetValue(OpNameProperty, value);
         }
 
         public int OpLevel
         {
-            get
-            {
-                return (int)GetValue(OpLevelProperty);
-            }
-            set
-            {
-                SetValue(OpLevelProperty, value);
-            }
+            get => (int)GetValue(OpLevelProperty);
+            set => SetValue(OpLevelProperty, value);
         }
 
         public static readonly DependencyProperty OpNameProperty =
@@ -73,7 +50,7 @@ namespace ArknightSimulator.UserControls
        "OpName",
         typeof(string),
         typeof(OpSettingItem),
-        new PropertyMetadata(default(string), OnItemsPropertyChanged));
+        new PropertyMetadata(default(string), OnNamePropertyChanged));
 
         public static readonly DependencyProperty ImgProperty =
         DependencyProperty.Register(
@@ -89,28 +66,39 @@ namespace ArknightSimulator.UserControls
         typeof(OpSettingItem),
         new PropertyMetadata(default(int), OnLevelPropertyChanged));
 
-        private static void OnItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnNamePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            //AutocompleteTextBox source = d as AutocompleteTextBox;
-            //Do something...
-            //MessageBox.Show((string)e.NewValue);
+            OpSettingItem item = d as OpSettingItem;
+            // 职位
+            switch (((OperatorTemplate)item.DataContext).Position)
+            {
+                case PositionType.Vanguard: item.PositionImg = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Image/Vanguard.png"))); break;
+                case PositionType.Guard: item.PositionImg = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Image/Guard.png"))); break;
+                case PositionType.Sniper: item.PositionImg = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Image/Sniper.png"))); break;
+                case PositionType.Defender: item.PositionImg = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Image/Defender.png"))); break;
+                case PositionType.Medic: item.PositionImg = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Image/Medic.png"))); break;
+                case PositionType.Supporter: item.PositionImg = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Image/Supporter.png"))); break;
+                case PositionType.Caster: item.PositionImg = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Image/Caster.png"))); break;
+                case PositionType.Specialist: item.PositionImg = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Image/Specialist.png"))); break;
+                default: break;
+            }
         }
 
         private static void OnImgPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            //AutocompleteTextBox source = d as AutocompleteTextBox;
-            //Do something...
-            //MessageBox.Show((string)e.NewValue);
+            OpSettingItem item = d as OpSettingItem;
+            item.BitmapImg = new BitmapImage(new Uri(System.IO.Path.GetFullPath(item.Img)));
+            //item.opImg.Source = null;
+            //item.opImg.Source = item.BitmapImg;
 
         }
 
         private static void OnLevelPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            //AutocompleteTextBox source = d as AutocompleteTextBox;
-            //Do something...
-            //MessageBox.Show((string)e.NewValue);
 
         }
+
+
 
     }
 }

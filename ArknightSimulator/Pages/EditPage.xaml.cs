@@ -25,39 +25,21 @@ namespace ArknightSimulator.Pages
     {
         private MainWindow mainWindow;
         public ObservableCollection<OperatorTemplate> Operators { get; set; }
-        public ObservableCollection<OperatorTemplate> Operators2 { get; set; }
         private ObservableCollection<OperatorTemplate> selected;
         public EditPage(MainWindow mainWindow)
         {
             InitializeComponent();
             this.mainWindow = mainWindow;
-            //this.mainWindow.GameManager.OperatorManager.AvailableOperators
 
             // mook
-            ObservableCollection<OperatorTemplate> operators = new ObservableCollection<OperatorTemplate>()
-            {
-                new OperatorTemplate() {Name="耀骑士临光", Picture="../Image/operator.png",Level=90},
-                new OperatorTemplate() {Name="op2", Picture="../Image/operator.png"},
-                new OperatorTemplate() {Name="op3", Picture="../Image/operator.png"},
-                new OperatorTemplate() {Name="op4", Picture="../Image/operator.png"},
-                new OperatorTemplate() {Name="op5", Picture="../Image/operator.png"},
-                new OperatorTemplate() {Name="op6", Picture="../Image/operator.png"},
-                new OperatorTemplate() {Name="op7", Picture="../Image/operator.png"},
-                new OperatorTemplate() {Name="op8", Picture="../Image/operator.png"}
-            };
-            ObservableCollection<OperatorTemplate> operators2 = new ObservableCollection<OperatorTemplate>()
-            {
-                new OperatorTemplate() {Name="op1", Picture="../Image/operator.png"},
-                new OperatorTemplate() {Name="op2", Picture="../Image/operator.png"},
-                new OperatorTemplate() {Name="op3", Picture="../Image/operator.png"}
-            };
+            ObservableCollection<OperatorTemplate> operators = new ObservableCollection<OperatorTemplate>(this.mainWindow.GameManager.OperatorManager.AvailableOperators);
             selected = new ObservableCollection<OperatorTemplate>();
             Operators = operators;
-            Operators2 = operators2;
             operatorItems.DataContext = Operators;
-            //operatorItems2.DataContext = Operators2;
             selectedItems.DataContext = selected;
             //RefreshOperatorSettingTab(operators);
+
+
         }
 
         private void RefreshOperatorSettingTab(ObservableCollection<OperatorTemplate> operators = null)
@@ -96,11 +78,12 @@ namespace ArknightSimulator.Pages
             // 创建
         }
 
+        // 左键弹出干员信息
         private void OpSettingItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // 转换为自定义类型
             OpSettingItem item = (OpSettingItem)sender;
-            detialBoard.DataContext = item.DataContext;
+            detailBoard.DataContext = item.DataContext;
             
             selectionMask.Width = item.ActualWidth + 10;
             selectionMask.Height = item.ActualHeight + 10;
@@ -110,7 +93,7 @@ namespace ArknightSimulator.Pages
                 Canvas.SetLeft(selectionMask, 0); // 重置
                 Canvas.SetTop(selectionMask, 0); // 重置
                 selectionMask.Visibility = Visibility.Hidden;
-                if (detialBoard.ActualWidth > 0)
+                if (detailBoard.ActualWidth > 0)
                     BeginStoryboard((Storyboard)Resources["OffSide"]);
                 return;
             }
@@ -132,22 +115,160 @@ namespace ArknightSimulator.Pages
 
         }
 
+        // 右键入队
         private void OpSettingItem_MouseRigthButtonDown(object sender, MouseButtonEventArgs e)
         {
             OpSettingItem item = (OpSettingItem)sender;
             OperatorTemplate opt = (OperatorTemplate)item.DataContext;
-            selected.Add(opt);
+            if (!selected.Contains(opt))
+                selected.Add(opt);
         }
 
+        // 隐藏属性板
         private void HideButton_Click(object sender, RoutedEventArgs e)
         {
             BeginStoryboard((Storyboard)Resources["OffSide"]);
         }
 
-        private void OnRemoveOperator(object sender, RoutedEventArgs e)
+        // 已入队干员初始化后加载图片
+        private void OpSelectedItem_Initialized(object sender, EventArgs e)
         {
-            OperatorTemplate op = (OperatorTemplate)((Image)sender).DataContext;
-            selected.Remove(op);
+            Image img = (Image)sender;
+            img.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(((OperatorTemplate)img.DataContext).Picture)));
         }
+
+        // 左键弹出已入队干员信息
+        private void OpSelectedItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // 转换为自定义类型
+            Image item = (Image)sender;
+            detailBoard.DataContext = item.DataContext;
+
+            selectionMask.Width = 100;
+            selectionMask.Height = 170;
+            Point point = item.TranslatePoint(new Point(), globalCanvas); // 计算相对位置
+            if (Canvas.GetLeft(selectionMask) == point.X - 10 - 5 && selectionMask.Visibility == Visibility.Visible) // 同一位置再次触发，取消选中
+            {
+                Canvas.SetLeft(selectionMask, 0); // 重置
+                Canvas.SetTop(selectionMask, 0); // 重置
+                selectionMask.Visibility = Visibility.Hidden;
+                if (detailBoard.ActualWidth > 0)
+                    BeginStoryboard((Storyboard)Resources["OffSide"]);
+                return;
+            }
+            selectionMask.Visibility = Visibility.Visible;
+            BeginStoryboard((Storyboard)Resources["ShowSide"]);
+            if (Canvas.GetLeft(selectionMask) == 0) // 首次触发，不激活动画
+            {
+                Canvas.SetLeft(selectionMask, point.X - 10 - 5); // X - Margin - additional width
+                Canvas.SetTop(selectionMask, point.Y - 10 - 5);
+
+                BeginStoryboard((Storyboard)Resources["ShowSide"]);
+                return;
+            }
+            DoubleAnimation maskMoveX = new DoubleAnimation(Canvas.GetLeft(selectionMask), point.X - 10 - 5, new Duration(TimeSpan.FromSeconds(0.1)));
+            DoubleAnimation maskMoveY = new DoubleAnimation(Canvas.GetTop(selectionMask), point.Y - 10 - 5, new Duration(TimeSpan.FromSeconds(0.1)));
+            selectionMask.BeginAnimation(Canvas.LeftProperty, maskMoveX);
+            selectionMask.BeginAnimation(Canvas.TopProperty, maskMoveY);
+            //Storyboard Mave
+        }
+
+        // 右键取消编队
+        private void OpSelectedItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)((Image)sender).DataContext;
+            selected.Remove(opt);
+        }
+
+
+        // 精英等级减小
+        private void BtnEliteLevelDown_Click(object sender, RoutedEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
+            if (opt.EliteLevel - 1 >= 0)
+            {
+                opt.EliteLevel--;
+                opt.ResetStatus();
+            }
+        }
+
+        // 精英等级增大
+        private void BtnEliteLevelUp_Click(object sender, RoutedEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
+            if (opt.EliteLevel + 1 <= OperatorTemplate.LevelLimit[opt.Rare-1].Length-1)
+            {
+                opt.EliteLevel++;
+                opt.ResetStatus();
+            }
+        }
+
+        // 等级减小
+        private void BtnLevelDown_Click(object sender, RoutedEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
+            if (opt.Level - 1 >= 1)
+            {
+                opt.Level--;
+                opt.ResetStatus();
+            }
+        }
+
+        // 等级增大
+        private void BtnLevelUp_Click(object sender, RoutedEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
+            if (opt.Level + 1 <= OperatorTemplate.LevelLimit[opt.Rare - 1][opt.EliteLevel])
+            {
+                opt.Level++;
+                opt.ResetStatus();
+            }
+        }
+
+        // 信赖减小
+        private void BtnBeliefDown_Click(object sender, RoutedEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
+            if (opt.Belief - 1 >= 0)
+            {
+                opt.Belief--;
+                opt.ResetStatus();
+            }
+        }
+
+        // 信赖增大
+        private void BtnBeliefUp_Click(object sender, RoutedEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
+            if (opt.Belief + 1 <= 200)
+            {
+                opt.Belief++;
+                opt.ResetStatus();
+            }
+        }
+
+        // 潜能减小
+        private void BtnPotentialDown_Click(object sender, RoutedEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
+            if (opt.Potential - 1 >= 1)
+            {
+                opt.Potential--;
+                opt.ResetStatus();
+            }
+        }
+
+        // 潜能增大
+        private void BtnPotentialUp_Click(object sender, RoutedEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
+            if (opt.Potential + 1 <= 6)
+            {
+                opt.Potential++;
+                opt.ResetStatus();
+            }
+        }
+
+
     }
 }

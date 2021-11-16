@@ -6,29 +6,31 @@
              xmlns:local="clr-namespace:ArknightSimulator.UserControls"
              xmlns:op="clr-namespace:ArknightSimulator.Operator"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="200"
+             d:DesignHeight="300" d:DesignWidth="150"
              MinWidth="100"
              Margin="15,15,15,15"
              Background="White"
              >
+    <!--原d:DesignHeight="450" d:DesignWidth="200"-->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="103*"></RowDefinition>
-            <RowDefinition Height="15*"/>
-            <RowDefinition Height="15*"/>
-            <RowDefinition Height="17*" />
+            <RowDefinition Height="207*"></RowDefinition>
+            <RowDefinition Height="29*"/>
+            <RowDefinition Height="29*"/>
+            <RowDefinition Height="35" />
         </Grid.RowDefinitions>
-        <Image x:Name="opImg" HorizontalAlignment="Center" Height="auto" VerticalAlignment="Top" Width="auto" Grid.RowSpan="3" Stretch="UniformToFill" Source="{Binding Img, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OpSettingItem}}}"/>
+        <Image x:Name="opImg" HorizontalAlignment="Center" Grid.RowSpan="4" Stretch="UniformToFill" Source="{Binding BitmapImg, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OpSettingItem}}}"/>
+
 
         <Grid Grid.Row="3" Background="#CA000000"/>
         <!-- <Label x:Name="opName1" Content="{Binding Path=Name}" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="White" FontSize="20"></Label> -->
         <Image Grid.RowSpan="4" Grid.Column="0" Source="../Image/opMask.png"  Stretch="Fill" Margin="-5,-5,-5,-5"></Image>
-        <Label Content="LV" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontSize="15"></Label>
-        <Label x:Name="opLevel" Content="{Binding OpLevel, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OpSettingItem}}}" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White" FontSize="50"></Label>
-        <Label x:Name="opName" Content="{Binding OpName, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OpSettingItem}}}" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="White" FontSize="25" Margin="0,0,-5,-5"></Label>
-
+        <Label Content="LV" Grid.Row="1" HorizontalAlignment="Left" Foreground="Gray" FontSize="15" Margin="-5,0,0,0"/>
+        <Image x:Name="positionImg" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" Source="{Binding PositionImg, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OpSettingItem}}}" Stretch="Uniform" Width="50" Margin="0,0,-5,0"></Image>
+        <Label x:Name="opLevel" Content="{Binding OpLevel, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OpSettingItem}}}" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left" Foreground="White" FontSize="50" Margin="0,5,0,-15"/>
+        <Label x:Name="opName" Content="{Binding OpName, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OpSettingItem}}}" Grid.Row="3" HorizontalAlignment="Right" Foreground="White" FontSize="25" Margin="0,0,-5,-5"/>
     </Grid>
 </UserControl>

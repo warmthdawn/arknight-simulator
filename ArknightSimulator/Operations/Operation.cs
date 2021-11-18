@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ArknightSimulator.Enemy;
+using ArknightSimulator.Enemies;
 
 namespace ArknightSimulator.Operations
 {

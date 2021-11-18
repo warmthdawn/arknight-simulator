@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ArknightSimulator.Enemy
+namespace ArknightSimulator.Enemies
 {
-    public class EnemySkill
+    public class EnemyGift
     {
     }
 }

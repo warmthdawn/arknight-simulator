@@ -3,7 +3,7 @@
     "Name": "黑角",
     "Position": 3,
     "Picture": "./Image/Operator/Noir Corne.png",
-    "ModelPicture": "",
+    "ModelPicture": "./Image/Operator/model-Noir Corne.png",
     "Rare": 2,
     "EliteLevel": 0,
     "Level": 1,

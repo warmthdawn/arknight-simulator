@@ -14,6 +14,7 @@ namespace ArknightSimulator.Manager
         private bool timerTicking;  // 计时器事件进行中
         private int costRefresh;    // 每秒费用刷新次数
         private int interval = 50;  // 刷新间隔
+        private float totalTime;      // 总时间
 
         public int Speed => this.speed;
         public bool IsGoingOn => this.isGoingOn;
@@ -26,8 +27,7 @@ namespace ArknightSimulator.Manager
         public OperatorManager OperatorManager { get; private set; } = new OperatorManager();
 
 
-        public EventHandler OnCostIncrease;
-        //public EventHandler OnDeploymentDecrease;
+
 
         public GameManager(DispatcherTimer timer)
         {
@@ -35,6 +35,11 @@ namespace ArknightSimulator.Manager
             this.timer.Interval = TimeSpan.FromMilliseconds(interval);
             costRefresh = 1000 / interval;
             this.timer.Tick += Timer_Tick;
+
+        }
+
+        public void Init()
+        {
             speed = 1;
             isGoingOn = false;
         }
@@ -51,21 +56,21 @@ namespace ArknightSimulator.Manager
             timerTicking = true;
 
 
-            // 处理
-            int nextCostUnit = (OperatorManager.CostUnit + 1 * speed) % costRefresh;
-            if (nextCostUnit < OperatorManager.CostUnit)
-                OperatorManager.CurrentCost++;
-            OperatorManager.CostUnit = nextCostUnit;
-            for(int i=0;i<speed;i++)
+            for (int i = 0; i < speed; i++)
             {
-                OnCostIncrease(this, null);
+                Update();
             }
 
 
 
-
-
             timerTicking = false;
+        }
+
+        public void Update()
+        {
+            totalTime += interval * 1.0f / 1000;
+            OperatorManager.Update(totalTime, costRefresh);
+            MapManager.Update(totalTime);
         }
 
         public void StartGame()
@@ -107,6 +112,8 @@ namespace ArknightSimulator.Manager
         {
             timer.Stop();
             isGoingOn = false;
+            OperatorManager.GameOver();
+            MapManager.GameOver();
         }
 
 

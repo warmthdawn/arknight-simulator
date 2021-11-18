@@ -1,4 +1,4 @@
-﻿namespace ArknightSimulator.Enemy
+﻿namespace ArknightSimulator.Enemies
 {
     public interface IEnemyStatus
     {

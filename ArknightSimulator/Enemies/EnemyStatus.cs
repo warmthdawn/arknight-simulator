@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ArknightSimulator.Enemy
+namespace ArknightSimulator.Enemies
 {
     public class EnemyStatus : IEnemyStatus
     {
@@ -21,5 +21,25 @@ namespace ArknightSimulator.Enemy
         public bool DizzyDefence { get; set; } // 眩晕抗性
         public bool SleepDefence { get; set; } // 沉睡抗性
         public float MoveSpeed { get; set; } // 移动速度
+
+        public EnemyStatus() { } // Json反序列化所需的无参构造器
+        public EnemyStatus(IEnemyStatus enemyStatus)  // 深拷贝所需的构造器
+        {
+            Attack = enemyStatus.Attack;
+            AttackSpeed = enemyStatus.AttackSpeed;
+            AttackTime = enemyStatus.AttackTime;
+            Range = enemyStatus.Range;
+            Count = enemyStatus.Count;
+            Defence = enemyStatus.Defence;
+            MaxLife = enemyStatus.MaxLife;
+            CurrentLife = enemyStatus.CurrentLife;
+            MagicDefence = enemyStatus.MagicDefence;
+            RecoverSpeed = enemyStatus.RecoverSpeed;
+            Weight = enemyStatus.Weight;
+            SilenceDefence = enemyStatus.SilenceDefence;
+            DizzyDefence = enemyStatus.DizzyDefence;
+            SleepDefence = enemyStatus.SleepDefence;
+            MoveSpeed = enemyStatus.MoveSpeed;
+        }
     }
 }

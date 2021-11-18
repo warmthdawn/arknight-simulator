@@ -8,7 +8,7 @@
       d:DesignHeight="900" d:DesignWidth="1600"
       Title="OperationPage">
 
-    <Grid Background="White">
+    <Grid x:Name="grid" Background="White" MouseMove="OpSelectedItem_MouseMove" MouseUp="OpSelectedItem_MouseUp">
         <Image x:Name="imgMap" HorizontalAlignment="Left" Height="900" VerticalAlignment="Top" Width="1600" Margin="0,0,0,0"/>
         <Label x:Name="lblPause" Background="#7F000000" Content="PAUSE" Foreground="White" FontSize="100" Height="900" Width="1600" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 
@@ -24,23 +24,20 @@
                 <ImageBrush ImageSource="../Image/reChooseOperator.png"/>
             </Button.Background>
         </Button>
-        
-        <ItemsControl x:Name="selectedItems" ItemsSource="{Binding}" Height="200" BorderThickness="5" BorderBrush="Black" Grid.Column="2" Margin="120,690,10,10">
-            <ItemsControl.Background>
-                <SolidColorBrush Color="White" Opacity="0.3"/>
-            </ItemsControl.Background>
+
+        <ItemsControl x:Name="selectedItems" ItemsSource="{Binding}" Height="150" Grid.Column="2" Margin="120,740,10,10">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" Margin="5,5,5,5">
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     </WrapPanel>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border Margin="5" BorderThickness="5" BorderBrush="Black" Background="White">
+                    <Border BorderBrush="#7cffffff" BorderThickness="1" Background="#0fffffff">
                         <WrapPanel>
                             <Grid>
-                                <Image DataContext="{Binding}" Grid.ColumnSpan="2" Grid.Row="0" Width="90" Stretch="UniformToFill" Initialized="OpSelectedItem_Initialized"/>
+                                <Image DataContext="{Binding}" Width="100" Stretch="UniformToFill" VerticalAlignment="Top" Initialized="OpSelectedItem_Initialized" MouseDown="OpSelectedItem_MouseDown"/>
                             </Grid>
                         </WrapPanel>
                     </Border>
@@ -49,10 +46,10 @@
         </ItemsControl>
 
         <Button x:Name="btnStart" HorizontalAlignment="Left" Margin="1000,400,0,0" VerticalAlignment="Top" Height="100" Width="100" Click="BtnStart_Click"/>
-        <Label Content="Cost" FontSize="30" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Margin="1370,540,10,270" Background="#B2000000" Foreground="White" />
-        <Label x:Name="lblCost" Content="{Binding OperatorManager.CurrentCost,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OperationPage}}}" FontSize="80" HorizontalContentAlignment="Center" Margin="1440,530,10,270" Foreground="White" />
-        <Label Content="剩余可放置角色：" FontSize="30" Margin="1310,630,10,220" Background="#B2000000" Foreground="White" />
-        <Label x:Name="lblDeployment" Content="{Binding OperatorManager.RestDeploymentCount,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OperationPage}}}" FontSize="30"  Margin="1540,630,10,220" Foreground="White"/>
-        <ProgressBar x:Name="pgbCost" Background="#00000000" Foreground="White" BorderThickness="0" Height="5" Width="210" Margin="1375,625,15,270"/>
+        <Label Content="Cost" FontSize="30" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Margin="1370,590,10,220" Background="#B2000000" Foreground="White" />
+        <Label x:Name="lblCost" Content="{Binding OperatorManager.CurrentCost,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OperationPage}}}" FontSize="80" HorizontalContentAlignment="Center" Margin="1440,580,10,220" Foreground="White" />
+        <Label Content="剩余可放置角色：" FontSize="30" Margin="1310,680,10,170" Background="#B2000000" Foreground="White" />
+        <Label x:Name="lblDeployment" Content="{Binding OperatorManager.RestDeploymentCount,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OperationPage}}}" FontSize="30"  Margin="1540,680,10,170" Foreground="White"/>
+        <ProgressBar x:Name="pgbCost" Background="#00000000" Foreground="White" BorderThickness="0" Height="5" Width="210" Margin="1375,675,15,220"/>
     </Grid>
 </Page>

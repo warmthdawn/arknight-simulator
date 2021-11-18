@@ -10,6 +10,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ArknightSimulator.Enemies;
+using ArknightSimulator.EventHandlers;
 using ArknightSimulator.Manager;
 using ArknightSimulator.Operator;
 
@@ -24,7 +26,8 @@ namespace ArknightSimulator.Pages
         private GameManager gameManager;
         private MapManager mapManager;
         private OperatorManager operatorManager;
-
+        private OperatorTemplate currentDragOperator;
+        private Image currentDragOperatorImg;
 
         public GameManager GameManager => gameManager;
         public MapManager MapManager => mapManager;
@@ -58,7 +61,8 @@ namespace ArknightSimulator.Pages
             btnSpeed.Visibility = Visibility.Hidden;
 
 
-            gameManager.OnCostIncrease += CostIncrease;
+            operatorManager.OnCostIncrease += CostIncrease;
+            mapManager.OnEnemyAppearing += EnemyAppearing;
         }
 
 
@@ -66,13 +70,24 @@ namespace ArknightSimulator.Pages
         {
             pgbCost.Value = operatorManager.CostUnit * 100.0 / gameManager.CostRefresh;
         }
-
+        private void EnemyAppearing(object sender, EnemyEventArgs e)
+        {
+            Image enemyImg = new Image();
+            EnemyTemplate et = mapManager.CurrentOperation.AvailableEnemies.Find(en => en.Id == e.enemy.Enemy.TemplateId);
+            enemyImg.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(et.Picture)));
+            enemyImg.Width = 200;
+            enemyImg.Height = 200;
+            enemyImg.Margin = new Thickness(700,350,700,350);
+            grid.Children.Add(enemyImg);
+        }
 
         // 已入队干员初始化后加载图片
         private void OpSelectedItem_Initialized(object sender, EventArgs e)
         {
             Image img = (Image)sender;
             img.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(((OperatorTemplate)img.DataContext).Picture)));
+            double width = selectedItems.Width / operatorManager.SelectedOperators.Count;
+            img.Width = (width < selectedItems.Height) ? width : selectedItems.Height;
         }
 
 
@@ -152,6 +167,47 @@ namespace ArknightSimulator.Pages
         private void BtnReChoose_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void OpSelectedItem_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (currentDragOperator == null && e.LeftButton == MouseButtonState.Pressed)
+            {
+                currentDragOperator = (OperatorTemplate)((Image)sender).DataContext;
+                currentDragOperatorImg = new Image();
+                currentDragOperatorImg.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(currentDragOperator.ModelPicture)));
+                currentDragOperatorImg.Width = 200;
+                currentDragOperatorImg.Height = 200;
+                currentDragOperatorImg.Margin = new Thickness(
+                    e.GetPosition(grid).X - 0.5 * currentDragOperatorImg.Width,
+                    e.GetPosition(grid).Y - currentDragOperatorImg.Width,
+                    grid.ActualWidth - e.GetPosition(grid).X - 0.5 * currentDragOperatorImg.Width,
+                    grid.ActualHeight - e.GetPosition(grid).Y);
+                grid.Children.Add(currentDragOperatorImg);
+            }
+        }
+
+        private void OpSelectedItem_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (currentDragOperator != null && e.LeftButton == MouseButtonState.Pressed)
+            {
+                currentDragOperatorImg.Margin = new Thickness(
+                    e.GetPosition(grid).X - 0.5 * currentDragOperatorImg.Width,
+                    e.GetPosition(grid).Y - currentDragOperatorImg.Width,
+                    grid.ActualWidth - e.GetPosition(grid).X - 0.5 * currentDragOperatorImg.Width,
+                    grid.ActualHeight - e.GetPosition(grid).Y);
+            }
+        }
+
+        private void OpSelectedItem_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (currentDragOperator != null && e.LeftButton != MouseButtonState.Pressed)
+            {
+                // 操作
+
+                currentDragOperator = null;
+                currentDragOperatorImg = null;
+            }
         }
     }
 }

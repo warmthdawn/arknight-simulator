@@ -77,6 +77,12 @@
     <None Update="Image\Defender.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Image\Enemy\01.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image\Enemy\B1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Image\Guard.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -84,6 +90,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Image\Medic.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image\Operator\model-Noir Corne.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Image\Operator\Noir Corne.png">

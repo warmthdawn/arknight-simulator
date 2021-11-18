@@ -15,6 +15,7 @@ using ArknightSimulator.Operator;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
 using ArknightSimulator.Manager;
+using ArknightSimulator.Enemies;
 
 namespace ArknightSimulator.Pages
 {
@@ -71,6 +72,8 @@ namespace ArknightSimulator.Pages
                     var path = System.IO.Path.GetFullPath(mapManager.CurrentOperation.Picture);
                     var bmp = new BitmapImage(new Uri(path));
                     imgOperation.Source = bmp;
+
+                    enemyItems.DataContext = mapManager.CurrentOperation.AvailableEnemies;
                 }
                 catch (Exception ex)
                 {
@@ -87,8 +90,9 @@ namespace ArknightSimulator.Pages
                 return;
 
             // 创建作战
+            gameManager.Init();
             mapManager.Init();
-            operatorManager.Init(selected, mapManager.CurrentOperation.InitialCost, mapManager.CurrentOperation.DeploymentLimit);
+            operatorManager.Init(selected, mapManager.CurrentOperation.InitialCost, mapManager.CurrentOperation.MaxCost, mapManager.CurrentOperation.DeploymentLimit);
             OnChangeToOperationPage(this, null);
         }
 
@@ -149,6 +153,13 @@ namespace ArknightSimulator.Pages
         {
             Image img = (Image)sender;
             img.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(((OperatorTemplate)img.DataContext).Picture)));
+        }
+        
+        // 地图确定后敌人加载图片
+        private void EnemyItems_Initialized(object sender, EventArgs e)
+        {
+            Image img = (Image)sender;
+            img.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(((EnemyTemplate)img.DataContext).Picture)));
         }
 
         // 左键弹出已入队干员信息

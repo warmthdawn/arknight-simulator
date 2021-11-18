@@ -1,46 +1,26 @@
 {
-    "Id":"0-1",
-    "Name":"坍塌",
-    "Picture":"./Image/Map/0-1.png",
-    "MapWidth":9,
-    "MapHeight":5,
-    "Map":[[0,2,2,2,2,2,2,2,0],
-    [4,1,2,1,1,1,1,1,0],
-    [0,1,1,1,2,1,1,1,5],
-    [0,2,2,2,2,2,2,2,0],
-    [0,0,0,0,0,0,0,0,0]],
-    "DeploymentLimit":8,
-    "InitialCost":10,
-    "MaxCost":99,
-    "HomeLife":20,
-    "EnemyCount":11,
-    "TimeLine":[
+    "Id": "0-1",
+    "Name": "坍塌",
+    "Picture": "./Image/Map/0-1.png",
+    "MapWidth": 9,
+    "MapHeight": 5,
+    "Map": [
+        [ 0, 2, 2, 2, 2, 2, 2, 2, 0 ],
+        [ 4, 1, 2, 1, 1, 1, 1, 1, 0 ],
+        [ 0, 1, 1, 1, 2, 1, 1, 1, 5 ],
+        [ 0, 2, 2, 2, 2, 2, 2, 2, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+    ],
+    "DeploymentLimit": 8,
+    "InitialCost": 10,
+    "MaxCost": 99,
+    "HomeLife": 20,
+    "EnemyCount": 11,
+    "TimeLine": [
         {
             "Enemy": {
-                "Id": "B1",
-                "Name": "源石虫",
-                "Picture": "",
-                "Level": 0,
-                "Type": 0,
-                "Status": {
-                    "Attack": 130,
-                    "AttackSpeed": 100,
-                    "AttackTime": 1.7,
-                    "Range": -1,
-                    "Count": 1,
-                    "Defence": 0,
-                    "MaxLife": 550,
-                    "CurrentLife": 550,
-                    "MagicDefence": 0,
-                    "RecoverSpeed": 0,
-                    "Weight": 0,
-                    "SilenceDefence": false,
-                    "DizzyDefence": false,
-                    "SleepDefence": false,
-                    "MoveSpeed": 1.0
-                },
-                "Gift": null,
-                "Skill": null
+                "InstanceId": 0,
+                "TemplateId": "B1"
             },
             "EntryTime": 5.2,
             "MovingPoints": [
@@ -76,30 +56,8 @@
         },
         {
             "Enemy": {
-                "Id": "B1",
-                "Name": "源石虫",
-                "Picture": "",
-                "Level": 0,
-                "Type": 0,
-                "Status": {
-                    "Attack": 130,
-                    "AttackSpeed": 100,
-                    "AttackTime": 1.7,
-                    "Range": -1,
-                    "Count": 1,
-                    "Defence": 0,
-                    "MaxLife": 550,
-                    "CurrentLife": 550,
-                    "MagicDefence": 0,
-                    "RecoverSpeed": 0,
-                    "Weight": 0,
-                    "SilenceDefence": false,
-                    "DizzyDefence": false,
-                    "SleepDefence": false,
-                    "MoveSpeed": 1.0
-                },
-                "Gift": null,
-                "Skill": null
+                "InstanceId": 1,
+                "TemplateId": "B1"
             },
             "EntryTime": 16.35,
             "MovingPoints": [
@@ -135,30 +93,8 @@
         },
         {
             "Enemy": {
-                "Id": "B1",
-                "Name": "源石虫",
-                "Picture": "",
-                "Level": 0,
-                "Type": 0,
-                "Status": {
-                    "Attack": 130,
-                    "AttackSpeed": 100,
-                    "AttackTime": 1.7,
-                    "Range": -1,
-                    "Count": 1,
-                    "Defence": 0,
-                    "MaxLife": 550,
-                    "CurrentLife": 550,
-                    "MagicDefence": 0,
-                    "RecoverSpeed": 0,
-                    "Weight": 0,
-                    "SilenceDefence": false,
-                    "DizzyDefence": false,
-                    "SleepDefence": false,
-                    "MoveSpeed": 1.0
-                },
-                "Gift": null,
-                "Skill": null
+                "InstanceId": 2,
+                "TemplateId": "B1"
             },
             "EntryTime": 18.35,
             "MovingPoints": [
@@ -194,30 +130,8 @@
         },
         {
             "Enemy": {
-                "Id": "B1",
-                "Name": "源石虫",
-                "Picture": "",
-                "Level": 0,
-                "Type": 0,
-                "Status": {
-                    "Attack": 130,
-                    "AttackSpeed": 100,
-                    "AttackTime": 1.7,
-                    "Range": -1,
-                    "Count": 1,
-                    "Defence": 0,
-                    "MaxLife": 550,
-                    "CurrentLife": 550,
-                    "MagicDefence": 0,
-                    "RecoverSpeed": 0,
-                    "Weight": 0,
-                    "SilenceDefence": false,
-                    "DizzyDefence": false,
-                    "SleepDefence": false,
-                    "MoveSpeed": 1.0
-                },
-                "Gift": null,
-                "Skill": null
+                "InstanceId": 3,
+                "TemplateId": "B1"
             },
             "EntryTime": 29.5,
             "MovingPoints": [
@@ -253,30 +167,8 @@
         },
         {
             "Enemy": {
-                "Id": "B1",
-                "Name": "源石虫",
-                "Picture": "",
-                "Level": 0,
-                "Type": 0,
-                "Status": {
-                    "Attack": 130,
-                    "AttackSpeed": 100,
-                    "AttackTime": 1.7,
-                    "Range": -1,
-                    "Count": 1,
-                    "Defence": 0,
-                    "MaxLife": 550,
-                    "CurrentLife": 550,
-                    "MagicDefence": 0,
-                    "RecoverSpeed": 0,
-                    "Weight": 0,
-                    "SilenceDefence": false,
-                    "DizzyDefence": false,
-                    "SleepDefence": false,
-                    "MoveSpeed": 1.0
-                },
-                "Gift": null,
-                "Skill": null
+                "InstanceId": 4,
+                "TemplateId": "B1"
             },
             "EntryTime": 30.25,
             "MovingPoints": [
@@ -312,30 +204,8 @@
         },
         {
             "Enemy": {
-                "Id": "B1",
-                "Name": "源石虫",
-                "Picture": "",
-                "Level": 0,
-                "Type": 0,
-                "Status": {
-                    "Attack": 130,
-                    "AttackSpeed": 100,
-                    "AttackTime": 1.7,
-                    "Range": -1,
-                    "Count": 1,
-                    "Defence": 0,
-                    "MaxLife": 550,
-                    "CurrentLife": 550,
-                    "MagicDefence": 0,
-                    "RecoverSpeed": 0,
-                    "Weight": 0,
-                    "SilenceDefence": false,
-                    "DizzyDefence": false,
-                    "SleepDefence": false,
-                    "MoveSpeed": 1.0
-                },
-                "Gift": null,
-                "Skill": null
+                "InstanceId": 5,
+                "TemplateId": "B1"
             },
             "EntryTime": 34.65,
             "MovingPoints": [
@@ -371,30 +241,8 @@
         },
         {
             "Enemy": {
-                "Id": "B1",
-                "Name": "源石虫",
-                "Picture": "",
-                "Level": 0,
-                "Type": 0,
-                "Status": {
-                    "Attack": 130,
-                    "AttackSpeed": 100,
-                    "AttackTime": 1.7,
-                    "Range": -1,
-                    "Count": 1,
-                    "Defence": 0,
-                    "MaxLife": 550,
-                    "CurrentLife": 550,
-                    "MagicDefence": 0,
-                    "RecoverSpeed": 0,
-                    "Weight": 0,
-                    "SilenceDefence": false,
-                    "DizzyDefence": false,
-                    "SleepDefence": false,
-                    "MoveSpeed": 1.0
-                },
-                "Gift": null,
-                "Skill": null
+                "InstanceId": 6,
+                "TemplateId": "B1"
             },
             "EntryTime": 45.75,
             "MovingPoints": [
@@ -430,30 +278,8 @@
         },
         {
             "Enemy": {
-                "Id": "B1",
-                "Name": "源石虫",
-                "Picture": "",
-                "Level": 0,
-                "Type": 0,
-                "Status": {
-                    "Attack": 130,
-                    "AttackSpeed": 100,
-                    "AttackTime": 1.7,
-                    "Range": -1,
-                    "Count": 1,
-                    "Defence": 0,
-                    "MaxLife": 550,
-                    "CurrentLife": 550,
-                    "MagicDefence": 0,
-                    "RecoverSpeed": 0,
-                    "Weight": 0,
-                    "SilenceDefence": false,
-                    "DizzyDefence": false,
-                    "SleepDefence": false,
-                    "MoveSpeed": 1.0
-                },
-                "Gift": null,
-                "Skill": null
+                "InstanceId": 7,
+                "TemplateId": "B1"
             },
             "EntryTime": 46.45,
             "MovingPoints": [
@@ -489,30 +315,8 @@
         },
         {
             "Enemy": {
-                "Id": "B1",
-                "Name": "源石虫",
-                "Picture": "",
-                "Level": 0,
-                "Type": 0,
-                "Status": {
-                    "Attack": 130,
-                    "AttackSpeed": 100,
-                    "AttackTime": 1.7,
-                    "Range": -1,
-                    "Count": 1,
-                    "Defence": 0,
-                    "MaxLife": 550,
-                    "CurrentLife": 550,
-                    "MagicDefence": 0,
-                    "RecoverSpeed": 0,
-                    "Weight": 0,
-                    "SilenceDefence": false,
-                    "DizzyDefence": false,
-                    "SleepDefence": false,
-                    "MoveSpeed": 1.0
-                },
-                "Gift": null,
-                "Skill": null
+                "InstanceId": 8,
+                "TemplateId": "B1"
             },
             "EntryTime": 52.8,
             "MovingPoints": [
@@ -548,30 +352,8 @@
         },
         {
             "Enemy": {
-                "Id": "B1",
-                "Name": "源石虫",
-                "Picture": "",
-                "Level": 0,
-                "Type": 0,
-                "Status": {
-                    "Attack": 130,
-                    "AttackSpeed": 100,
-                    "AttackTime": 1.7,
-                    "Range": -1,
-                    "Count": 1,
-                    "Defence": 0,
-                    "MaxLife": 550,
-                    "CurrentLife": 550,
-                    "MagicDefence": 0,
-                    "RecoverSpeed": 0,
-                    "Weight": 0,
-                    "SilenceDefence": false,
-                    "DizzyDefence": false,
-                    "SleepDefence": false,
-                    "MoveSpeed": 1.0
-                },
-                "Gift": null,
-                "Skill": null
+                "InstanceId": 9,
+                "TemplateId": "B1"
             },
             "EntryTime": 53.5,
             "MovingPoints": [
@@ -607,35 +389,29 @@
         },
         {
             "Enemy": {
-                "Id": "01",
-                "Name": "士兵",
-                "Picture": "",
-                "Level": 0,
-                "Type": 0,
-                "Status": {
-                    "Attack": 200,
-                    "AttackSpeed": 100,
-                    "AttackTime": 2.0,
-                    "Range": -1,
-                    "Count": 1,
-                    "Defence": 30,
-                    "MaxLife": 1650,
-                    "CurrentLife": 1650,
-                    "MagicDefence": 0,
-                    "RecoverSpeed": 0,
-                    "Weight": 1,
-                    "SilenceDefence": false,
-                    "DizzyDefence": false,
-                    "SleepDefence": false,
-                    "MoveSpeed": 1.1
-                },
-                "Gift": null,
-                "Skill": null
+                "InstanceId": 10,
+                "TemplateId": "01"
             },
             "EntryTime": 64.75,
             "MovingPoints": [
                 {
                     "X": 8.5,
+                    "Y": 2.5
+                },
+                {
+                    "X": 7.5,
+                    "Y": 2.5
+                },
+                {
+                    "X": 7.5,
+                    "Y": 2.5
+                },
+                {
+                    "X": 7.5,
+                    "Y": 2.5
+                },
+                {
+                    "X": 7.5,
                     "Y": 2.5
                 },
                 {
@@ -664,5 +440,60 @@
                 }
             ]
         }
-        ]
+    ],
+    "AvailableEnemies": [
+        {
+            "Id": "B1",
+            "Name": "源石虫",
+            "Picture": "./Image/Enemy/B1.png",
+            "Level": 0,
+            "Type": 0,
+            "Status": {
+                "Attack": 130,
+                "AttackSpeed": 100,
+                "AttackTime": 1.7,
+                "Range": -1,
+                "Count": 1,
+                "Defence": 0,
+                "MaxLife": 550,
+                "CurrentLife": 550,
+                "MagicDefence": 0,
+                "RecoverSpeed": 0,
+                "Weight": 0,
+                "SilenceDefence": false,
+                "DizzyDefence": false,
+                "SleepDefence": false,
+                "MoveSpeed": 1.0
+            },
+            "Gift": null,
+            "Skill": null
+        },
+        {
+            "Id": "01",
+            "Name": "士兵",
+            "Picture": "./Image/Enemy/01.png",
+            "Level": 0,
+            "Type": 0,
+            "Status": {
+                "Attack": 200,
+                "AttackSpeed": 100,
+                "AttackTime": 2.0,
+                "Range": -1,
+                "Count": 1,
+                "Defence": 30,
+                "MaxLife": 1650,
+                "CurrentLife": 1650,
+                "MagicDefence": 0,
+                "RecoverSpeed": 0,
+                "Weight": 1,
+                "SilenceDefence": false,
+                "DizzyDefence": false,
+                "SleepDefence": false,
+                "MoveSpeed": 1.1
+            },
+            "Gift": null,
+            "Skill": null
+        }
+
+    ]
 }

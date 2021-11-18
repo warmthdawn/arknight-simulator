@@ -256,6 +256,25 @@
                         <Image x:Name="imgOperation"/>
                     </Border>
                     <Button x:Name="btnStartOperation" Content="开始作战" FontSize="50" Height="80" Width="240" Foreground="White" Background="#0074a5" HorizontalAlignment="Left" Margin="760,100,0,0" VerticalAlignment="Top" Click="btnStartOperation_Click" Grid.Row="1"/>
+                    <ItemsControl x:Name="enemyItems" ItemsSource="{Binding}" BorderThickness="5" BorderBrush="Black" Grid.Row="1" Margin="751,250,120,100">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal">
+                                </WrapPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border>
+                                    <WrapPanel>
+                                        <Grid>
+                                            <Image DataContext="{Binding}" Width="160" Height="160" Stretch="UniformToFill" Initialized="EnemyItems_Initialized"/>
+                                        </Grid>
+                                    </WrapPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Grid>
                 <TabItem.Style>
                     <Style TargetType="{x:Type TabItem}">

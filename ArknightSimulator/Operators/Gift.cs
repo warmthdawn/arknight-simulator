@@ -2,12 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ArknightSimulator.Operator
+namespace ArknightSimulator.Operators
 {
     public class Gift
     {
         public int EliteLevel { get; set; }
         public int Level { get; set; }
+
+        public Gift() { }
+        public Gift(Gift gift)
+        {
+
+        }
+
 
         public IStatus Start(IStatus status)
         {

@@ -10,10 +10,10 @@ namespace ArknightSimulator.EventHandlers
     // 敌人事件参数类
     public class EnemyEventArgs : EventArgs
     {
-        public EnemyMovement enemy;
+        public EnemyMovement EnemyMovement { get; set; }
         public EnemyEventArgs(EnemyMovement enemy)
         {
-            this.enemy = enemy;
+            EnemyMovement = enemy;
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ArknightSimulator.Operator
+namespace ArknightSimulator.Operators
 {
     public class Skill
     {
@@ -10,6 +10,13 @@ namespace ArknightSimulator.Operator
         public int Cost { get; set; }
         public int Time { get; set; }
         public int Level { get; set; }
+
+
+        public Skill() { }
+        public Skill(Skill skill)
+        {
+
+        }
 
         public IStatus Start(IStatus status)
         {

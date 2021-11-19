@@ -25,6 +25,8 @@ namespace ArknightSimulator.Enemies
         public EnemyStatus() { } // Json反序列化所需的无参构造器
         public EnemyStatus(IEnemyStatus enemyStatus)  // 深拷贝所需的构造器
         {
+            if (enemyStatus == null)
+                return;
             Attack = enemyStatus.Attack;
             AttackSpeed = enemyStatus.AttackSpeed;
             AttackTime = enemyStatus.AttackTime;

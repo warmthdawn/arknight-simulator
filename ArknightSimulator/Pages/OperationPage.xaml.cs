@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,7 +14,7 @@ using System.Windows.Shapes;
 using ArknightSimulator.Enemies;
 using ArknightSimulator.EventHandlers;
 using ArknightSimulator.Manager;
-using ArknightSimulator.Operator;
+using ArknightSimulator.Operators;
 
 namespace ArknightSimulator.Pages
 {
@@ -28,10 +29,16 @@ namespace ArknightSimulator.Pages
         private OperatorManager operatorManager;
         private OperatorTemplate currentDragOperator;
         private Image currentDragOperatorImg;
+        private int currentMapX;
+        private int currentMapY;
+
+
 
         public GameManager GameManager => gameManager;
         public MapManager MapManager => mapManager;
         public OperatorManager OperatorManager => operatorManager;
+
+
 
         public EventHandler OnDeleteOperationPage;  // 结束作战删除本页事件
         public EventHandler OnChangeToEditPage;   // 跳转到编辑页事件
@@ -39,17 +46,23 @@ namespace ArknightSimulator.Pages
         public OperationPage(MainWindow mainWindow)
         {
             InitializeComponent();
+
+            // 属性初始值
             this.mainWindow = mainWindow;
             gameManager = mainWindow.GameManager;
             mapManager = gameManager.MapManager;
             operatorManager = gameManager.OperatorManager;
 
+            
+
+
             // 初始化控件
-            selectedItems.DataContext = operatorManager.SelectedOperators;
+            selectedItems.DataContext = operatorManager.NotOnMapOperators;
             imgMap.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(mapManager.CurrentOperation.Picture)));
 
             lblCost.DataContext = operatorManager.CurrentCost;
             lblDeployment.DataContext = operatorManager.RestDeploymentCount;
+            pgbCost.DataContext = operatorManager.CostUnit;
 
             ImageBrush brush2 = new ImageBrush();
             brush2.ImageSource = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Image/continue.png")));
@@ -60,24 +73,33 @@ namespace ArknightSimulator.Pages
             btnPauseOrContinue.Visibility = Visibility.Hidden;
             btnSpeed.Visibility = Visibility.Hidden;
 
-
-            operatorManager.OnCostIncrease += CostIncrease;
+            // 添加事件
             mapManager.OnEnemyAppearing += EnemyAppearing;
+
         }
 
+        
 
-        private void CostIncrease(object sender,EventArgs e)
-        {
-            pgbCost.Value = operatorManager.CostUnit * 100.0 / gameManager.CostRefresh;
-        }
+
+        // 敌人出现
         private void EnemyAppearing(object sender, EnemyEventArgs e)
         {
             Image enemyImg = new Image();
-            EnemyTemplate et = mapManager.CurrentOperation.AvailableEnemies.Find(en => en.Id == e.enemy.Enemy.TemplateId);
+            EnemyTemplate et = mapManager.CurrentOperation.AvailableEnemies.Find(en => en.Id == e.EnemyMovement.Enemy.TemplateId);
             enemyImg.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(et.Picture)));
             enemyImg.Width = 200;
             enemyImg.Height = 200;
-            enemyImg.Margin = new Thickness(700,350,700,350);
+            enemyImg.Margin = new Thickness(700,350,700,350);  // 暂定 ↓
+            /* 坐标转换  mapManager.CurrentOperation.XXXXXX
+             * e.EnemyMovement.Enemy.Position.X --> gridX
+             * e.EnemyMovement.Enemy.Position.Y --> gridY
+             * gridX - 0.5 * enemyImg.Width,
+                    gridY - enemyImg.Width,
+                    grid.ActualWidth - gridX - 0.5 * enemyImg.Width,
+                    grid.ActualHeight - gridY);
+             */
+            enemyImg.Name = "enemy" + e.EnemyMovement.Enemy.InstanceId.ToString();
+            
             grid.Children.Add(enemyImg);
         }
 
@@ -86,11 +108,11 @@ namespace ArknightSimulator.Pages
         {
             Image img = (Image)sender;
             img.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(((OperatorTemplate)img.DataContext).Picture)));
-            double width = selectedItems.Width / operatorManager.SelectedOperators.Count;
+            double width = selectedItems.Width / operatorManager.NotOnMapOperators.Count;
             img.Width = (width < selectedItems.Height) ? width : selectedItems.Height;
         }
 
-
+        // 游戏开始
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             lblPause.Visibility = Visibility.Hidden;
@@ -109,6 +131,7 @@ namespace ArknightSimulator.Pages
             btnSpeed.Visibility = Visibility.Visible;
         }
 
+        // 暂停
         private void BtnPauseOrContinue_Click(object sender, RoutedEventArgs e)
         {
             if (gameManager.IsGoingOn)
@@ -133,6 +156,7 @@ namespace ArknightSimulator.Pages
             }
         }
 
+        // 调整游戏速度
         private void BtnSpeed_Click(object sender, RoutedEventArgs e)
         {
             if (gameManager.Speed == 1)
@@ -153,27 +177,40 @@ namespace ArknightSimulator.Pages
             }
         }
 
+        // 退出
         private void BtnQuit_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("确定要退出作战吗？", "退出作战", MessageBoxButton.YesNo);
             if(result == MessageBoxResult.Yes)
             {
-                gameManager.Quit();
+                gameManager.GameOver();
                 OnChangeToEditPage(this, null);
                 OnDeleteOperationPage(this, null);
             }
         }
 
+        // 重选干员
         private void BtnReChoose_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
+        // 选中干员准备拖动
         private void OpSelectedItem_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (currentDragOperator == null && e.LeftButton == MouseButtonState.Pressed)
+            if (currentDragOperatorImg == null && currentDragOperator == null && e.LeftButton == MouseButtonState.Pressed)
             {
                 currentDragOperator = (OperatorTemplate)((Image)sender).DataContext;
+
+                if (gameManager.IsGoingOn == false || currentDragOperator.Status.Cost[currentDragOperator.EliteLevel] > operatorManager.CurrentCost)
+                {
+                    currentDragOperator = null;
+                    return;
+                }
+
+                btnPauseOrContinue.IsEnabled = false;
+                gameManager.Pause();   // 部署时先暂停
+
                 currentDragOperatorImg = new Image();
                 currentDragOperatorImg.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(currentDragOperator.ModelPicture)));
                 currentDragOperatorImg.Width = 200;
@@ -187,9 +224,10 @@ namespace ArknightSimulator.Pages
             }
         }
 
+        // 拖动干员
         private void OpSelectedItem_MouseMove(object sender, MouseEventArgs e)
         {
-            if (currentDragOperator != null && e.LeftButton == MouseButtonState.Pressed)
+            if (currentDragOperatorImg != null && e.LeftButton == MouseButtonState.Pressed)
             {
                 currentDragOperatorImg.Margin = new Thickness(
                     e.GetPosition(grid).X - 0.5 * currentDragOperatorImg.Width,
@@ -199,15 +237,99 @@ namespace ArknightSimulator.Pages
             }
         }
 
+        // 放下干员
         private void OpSelectedItem_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (currentDragOperator != null && e.LeftButton != MouseButtonState.Pressed)
+            if (currentDragOperatorImg != null && e.LeftButton != MouseButtonState.Pressed)
             {
-                // 操作
+                // 坐标转换，将鼠标位置转换为地图格子坐标
+                // mapManager.CurrentOperation.XXXXXXXX   // 坐标转换
+                // currentMapX = ...     // 地图格子坐标
+                // currentMapY = ...
+                // currentGridX = ...;  // 实际窗口中的坐标
+                // currentGridY = ...;
 
-                currentDragOperator = null;
+
+                int currentGridX = 800; // 暂定 ↑
+                int currentGridY = 500; // 暂定
+
+
+
+                currentDragOperatorImg.Margin = new Thickness(
+                    currentGridX - 0.5 * currentDragOperatorImg.Width,
+                    currentGridY - currentDragOperatorImg.Width,
+                    grid.ActualWidth - currentGridX - 0.5 * currentDragOperatorImg.Width,
+                    grid.ActualHeight - currentGridY);
+
+                canvasDirection.Margin = new Thickness(
+                    currentDragOperatorImg.Margin.Left - 100,
+                    currentDragOperatorImg.Margin.Top - 100,
+                    currentDragOperatorImg.Margin.Right - 100,
+                    currentDragOperatorImg.Margin.Bottom - 100);
+                canvasDirection.Visibility = Visibility.Visible;
+
+                currentDragOperatorImg.Name = currentDragOperator.Id.Replace(" ", "_");
+
                 currentDragOperatorImg = null;
             }
+        }
+
+        // 调整方向
+        private void BtnTurnUp_Click(object sender, RoutedEventArgs e)
+        {
+            operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY);
+
+            currentDragOperator = null;
+            canvasDirection.Visibility = Visibility.Hidden;
+            gameManager.Continue();   // 部署后继续游戏
+            btnPauseOrContinue.IsEnabled = true;
+        }
+        private void BtnTurnDown_Click(object sender, RoutedEventArgs e)
+        {
+            operatorManager.Deploying(currentDragOperator, Directions.Down, currentMapX, currentMapY);
+
+            currentDragOperator = null;
+            canvasDirection.Visibility = Visibility.Hidden;
+            gameManager.Continue();
+            btnPauseOrContinue.IsEnabled = true;
+        }
+        private void BtnTurnLeft_Click(object sender, RoutedEventArgs e)
+        {
+            foreach(var i in grid.Children)
+            {
+                if(((FrameworkElement)i).Name == currentDragOperator.Id.Replace(" ", "_"))
+                {
+                    // 干员模型图片转向左边（原来默认的模型转向为右边）
+                    ScaleTransform scaleTransform = new ScaleTransform();
+                    scaleTransform.ScaleX = -1;
+                    scaleTransform.CenterX = 0.5* ((Image)i).Width;
+                    ((Image)i).RenderTransform = scaleTransform;
+                    break;
+                }
+            }
+
+            operatorManager.Deploying(currentDragOperator, Directions.Left, currentMapX, currentMapY);
+
+            currentDragOperator = null;
+            canvasDirection.Visibility = Visibility.Hidden;
+            gameManager.Continue();
+            btnPauseOrContinue.IsEnabled = true;
+        }
+        private void BtnTurnRight_Click(object sender, RoutedEventArgs e)
+        {
+            operatorManager.Deploying(currentDragOperator, Directions.Right, currentMapX, currentMapY);
+
+            currentDragOperator = null;
+            canvasDirection.Visibility = Visibility.Hidden;
+            gameManager.Continue();
+            btnPauseOrContinue.IsEnabled = true;
+        }
+        private void BtnTurnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            currentDragOperator = null;
+            canvasDirection.Visibility = Visibility.Hidden;
+            gameManager.Continue();
+            btnPauseOrContinue.IsEnabled = true;
         }
     }
 }

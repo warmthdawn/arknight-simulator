@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Image\cancel.png" />
     <None Remove="Image\editbackground.png" />
     <None Remove="Image\operationSettingTitle.png" />
     <None Remove="Image\operationSettingTitleSelected.png" />
@@ -22,10 +23,20 @@
     <None Remove="Image\reChooseOperator.png" />
     <None Remove="Image\simulatorTitle.png" />
     <None Remove="Image\title.png" />
+    <None Remove="Image\turnDown.png" />
+    <None Remove="Image\turnLeft.png" />
+    <None Remove="Image\turnRight.png" />
+    <None Remove="Image\turnUp.png" />
     <None Remove="Pages\pause.png" />
     <None Remove="Pages\quit.png" />
     <None Remove="Pages\reChooseOperator.png" />
     <None Remove="Pages\speed1.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Image\cancel.png" />
+    <Resource Include="Image\turnRight.png" />
+    <Resource Include="Image\turnUp.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +55,8 @@
     <Resource Include="Image\reChooseOperator.png" />
     <Resource Include="Image\simulatorTitle.png" />
     <Resource Include="Image\title.png" />
+    <Resource Include="Image\turnDown.png" />
+    <Resource Include="Image\turnLeft.png" />
   </ItemGroup>
 
   <ItemGroup>

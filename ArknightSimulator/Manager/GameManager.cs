@@ -108,7 +108,7 @@ namespace ArknightSimulator.Manager
             }
 
         }
-        public void Quit()
+        public void GameOver()
         {
             timer.Stop();
             isGoingOn = false;

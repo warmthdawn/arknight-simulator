@@ -21,5 +21,7 @@ namespace ArknightSimulator.Operations
         public List<EnemyMovement> TimeLine { get; set; }
 
         public List<EnemyTemplate> AvailableEnemies { get; set; }
+
+        // 坐标转换
     }
 }

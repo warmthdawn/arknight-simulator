@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ArknightSimulator.Operator
+namespace ArknightSimulator.Operators
 {
     public class GiftStatusDecorator: StatusDecorator
     {

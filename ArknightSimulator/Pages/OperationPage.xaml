@@ -50,6 +50,35 @@
         <Label x:Name="lblCost" Content="{Binding OperatorManager.CurrentCost,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OperationPage}}}" FontSize="80" HorizontalContentAlignment="Center" Margin="1440,580,10,220" Foreground="White" />
         <Label Content="剩余可放置角色：" FontSize="30" Margin="1310,680,10,170" Background="#B2000000" Foreground="White" />
         <Label x:Name="lblDeployment" Content="{Binding OperatorManager.RestDeploymentCount,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OperationPage}}}" FontSize="30"  Margin="1540,680,10,170" Foreground="White"/>
-        <ProgressBar x:Name="pgbCost" Background="#00000000" Foreground="White" BorderThickness="0" Height="5" Width="210" Margin="1375,675,15,220"/>
+        <ProgressBar x:Name="pgbCost" Value="{Binding OperatorManager.CostUnit,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OperationPage}}}" Background="#00000000" Foreground="White" BorderThickness="0" Height="5" Width="210" Margin="1375,675,15,220"/>
+
+        <Canvas x:Name="canvasDirection" Visibility="Hidden">
+            <Button x:Name="btnTurnUp" BorderThickness="0" Margin="100,0,100,300" Height="100" Width="200" Click="BtnTurnUp_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="../Image/turnUp.png"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="btnTurnLeft" BorderThickness="0" Margin="0,100,300,100" Height="200" Width="100" Click="BtnTurnLeft_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="../Image/turnLeft.png"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="btnTurnDown" BorderThickness="0" Margin="100,300,100,0" Height="100" Width="200" Click="BtnTurnDown_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="../Image/turnDown.png"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="btnTurnRight" BorderThickness="0" Margin="300,100,0,100" Height="200" Width="100" Click="BtnTurnRight_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="../Image/turnRight.png"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="btnTurnCancel" BorderThickness="0" Margin="0,0,300,300" Height="100" Width="100" Click="BtnTurnCancel_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="../Image/cancel.png"/>
+                </Button.Background>
+            </Button>
+        </Canvas>
+
     </Grid>
 </Page>

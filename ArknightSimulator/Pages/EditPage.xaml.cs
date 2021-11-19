@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ArknightSimulator.UserControls;
-using ArknightSimulator.Operator;
+using ArknightSimulator.Operators;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
 using ArknightSimulator.Manager;
@@ -29,10 +29,12 @@ namespace ArknightSimulator.Pages
         private MapManager mapManager;
         private OperatorManager operatorManager;
 
+        private ObservableCollection<OperatorTemplate> operators;
+        private ObservableCollection<OperatorTemplate> selected;
+
 
         public EventHandler OnChangeToOperationPage;   //  跳转到作战界面事件
-        public ObservableCollection<OperatorTemplate> Operators { get; set; }
-        private ObservableCollection<OperatorTemplate> selected;
+
         public EditPage(MainWindow mainWindow)
         {
             InitializeComponent();
@@ -44,8 +46,8 @@ namespace ArknightSimulator.Pages
             // mook
             ObservableCollection<OperatorTemplate> operators = new ObservableCollection<OperatorTemplate>(operatorManager.AvailableOperators);
             selected = new ObservableCollection<OperatorTemplate>();
-            Operators = operators;
-            operatorItems.DataContext = Operators;
+            this.operators = operators;
+            operatorItems.DataContext = this.operators;
             selectedItems.DataContext = selected;
             selectedItems2.DataContext = selected;
             //RefreshOperatorSettingTab(operators);
@@ -56,8 +58,8 @@ namespace ArknightSimulator.Pages
         private void RefreshOperatorSettingTab(ObservableCollection<OperatorTemplate> operators = null)
         {
             if (operators != null)
-                this.Operators = operators;
-            operatorItems.ItemsSource = this.Operators;
+                this.operators = operators;
+            operatorItems.ItemsSource = this.operators;
         }
 
         // 选中关卡
@@ -92,7 +94,7 @@ namespace ArknightSimulator.Pages
             // 创建作战
             gameManager.Init();
             mapManager.Init();
-            operatorManager.Init(selected, mapManager.CurrentOperation.InitialCost, mapManager.CurrentOperation.MaxCost, mapManager.CurrentOperation.DeploymentLimit);
+            operatorManager.Init(new List<OperatorTemplate>(selected), mapManager.CurrentOperation.InitialCost, mapManager.CurrentOperation.MaxCost, mapManager.CurrentOperation.DeploymentLimit);
             OnChangeToOperationPage(this, null);
         }
 

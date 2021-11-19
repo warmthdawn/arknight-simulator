@@ -1,4 +1,4 @@
-﻿namespace ArknightSimulator.Operator
+﻿namespace ArknightSimulator.Operators
 {
     public interface IStatus
     {

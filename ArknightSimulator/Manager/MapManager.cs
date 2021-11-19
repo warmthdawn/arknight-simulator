@@ -60,7 +60,11 @@ namespace ArknightSimulator.Manager
         
         public void Init()
         {
-            enemiesNotAppear = operation.TimeLine;
+            enemiesNotAppear = new List<EnemyMovement>();
+            foreach(EnemyMovement t in operation.TimeLine)
+            {
+                enemiesNotAppear.Add(new EnemyMovement(t));
+            }
             enemiesAppear = new List<EnemyMovement>();
             foreach (EnemyMovement enemy in enemiesNotAppear)
             {
@@ -89,7 +93,8 @@ namespace ArknightSimulator.Manager
                 {
                     EnemiesNotAppear.Remove(newEnemy);
                     EnemiesAppear.Add(newEnemy);
-                    newEnemy.Enemy.Position = new Point { X = newEnemy.MovingPoints[0].X, Y = newEnemy.MovingPoints[0].Y };
+                    newEnemy.Enemy.Position.X = newEnemy.MovingPoints[0].X;
+                    newEnemy.Enemy.Position.Y = newEnemy.MovingPoints[0].Y;
                     newEnemy.PassPointCount = 1;
 
 

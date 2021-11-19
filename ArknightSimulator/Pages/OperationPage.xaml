@@ -25,7 +25,7 @@
             </Button.Background>
         </Button>
 
-        <ItemsControl x:Name="selectedItems" ItemsSource="{Binding}" Height="150" Grid.Column="2" Margin="120,740,10,10">
+        <ItemsControl x:Name="notOnMapItems" ItemsSource="{Binding}" Height="150" Grid.Column="2" Margin="120,740,10,10">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right">

@@ -12,11 +12,12 @@ using Point = ArknightSimulator.Operations.Point;
 
 namespace ArknightSimulator.Manager
 {
-    public class MapManager
+    public class MapManager    // 管理地图和敌人
     {
         private Operation operation;
         private List<EnemyMovement> enemiesNotAppear;
         private List<EnemyMovement> enemiesAppear;
+        private Dictionary<string, float> markTime;
 
 
         public Operation CurrentOperation => operation;
@@ -24,7 +25,9 @@ namespace ArknightSimulator.Manager
         public List<EnemyMovement> EnemiesAppear => enemiesAppear;
 
 
-        public EnemyEventHandler OnEnemyAppearing;
+        public EnemyEventHandler OnEnemyAppearing;   // 敌人出现事件
+        public EnemyEventHandler OnEnemyMoving;   // 敌人出现事件
+
 
         public MapManager()
         {
@@ -61,7 +64,7 @@ namespace ArknightSimulator.Manager
         public void Init()
         {
             enemiesNotAppear = new List<EnemyMovement>();
-            foreach(EnemyMovement t in operation.TimeLine)
+            foreach (EnemyMovement t in operation.TimeLine)
             {
                 enemiesNotAppear.Add(new EnemyMovement(t));
             }
@@ -72,14 +75,17 @@ namespace ArknightSimulator.Manager
                 enemy.Enemy.Status = new EnemyStatus(et.Status);
                 enemy.PassPointCount = 0;
             }
+
+            markTime = new Dictionary<string, float>();
         }
 
-        public void Update(float totalTime)
+        public void Update(float totalTime, int costRefresh)
         {
             EnemyAppearing(totalTime);
 
-            EnemyMoving();
+            EnemyMoving(totalTime, costRefresh);
 
+            EnemyAttack();
         }
 
 
@@ -103,14 +109,65 @@ namespace ArknightSimulator.Manager
             }
         }
         // 敌人移动
-        private void EnemyMoving()
+        private void EnemyMoving(float totalTime, int costRefresh)
         {
             foreach(var enemy in EnemiesAppear)
             {
-                
+                // 判断是否滞留
+                if (Math.Abs(enemy.MovingPoints[enemy.PassPointCount].X
+                    - enemy.MovingPoints[enemy.PassPointCount - 1].X) < double.Epsilon
+                    && Math.Abs(enemy.MovingPoints[enemy.PassPointCount].Y
+                    - enemy.MovingPoints[enemy.PassPointCount - 1].Y) < double.Epsilon)
+                {
+                    if (markTime.ContainsKey("enemy" + enemy.Enemy.InstanceId + "Stay"))
+                    {
+                        if (totalTime - markTime["enemy" + enemy.Enemy.InstanceId + "Stay"] < 1)
+                            continue;
+                        else
+                            markTime.Remove("enemy" + enemy.Enemy.InstanceId + "Stay");
+                    }
+                    else
+                    {
+                        markTime.Add("enemy" + enemy.Enemy.InstanceId + "Stay", totalTime);
+                        continue;
+                    }
+                }
+
+
+                // ---------------------------------
+                // 还要判断是否被阻挡、进入我方据点
+                // ---------------------------------
+
+
+                double x = enemy.MovingPoints[enemy.PassPointCount].X - enemy.Enemy.Position.X;
+                double y = enemy.MovingPoints[enemy.PassPointCount].Y - enemy.Enemy.Position.Y;
+
+                if (Math.Abs(x) < 0.0176776695 && Math.Abs(y) < 0.0176776695)   // 抵达检查点
+                {
+                    enemy.PassPointCount++;
+                    x = enemy.MovingPoints[enemy.PassPointCount].X - enemy.Enemy.Position.X;
+                    y = enemy.MovingPoints[enemy.PassPointCount].Y - enemy.Enemy.Position.Y;
+                }
+
+                double distance = Math.Sqrt(x * x + y * y);
+                double moveX = enemy.Enemy.Status.MoveSpeed * 0.5 * x / distance / costRefresh;
+                double moveY = enemy.Enemy.Status.MoveSpeed * 0.5 * y / distance / costRefresh;
+
+                enemy.Enemy.Move(moveX, moveY);
+                OnEnemyMoving(this, new EnemyEventArgs(enemy));
+
             }
         }
 
+
+        // 敌人攻击
+        private void EnemyAttack()
+        {
+            foreach (var enemy in EnemiesAppear)
+            {
+
+            }
+        }
 
 
 

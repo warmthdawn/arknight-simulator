@@ -29,6 +29,7 @@ namespace ArknightSimulator.Pages
         private OperatorManager operatorManager;
         private OperatorTemplate currentDragOperator;
         private Image currentDragOperatorImg;
+        private List<Image> notOnMapImg;
         private int currentMapX;
         private int currentMapY;
 
@@ -52,14 +53,13 @@ namespace ArknightSimulator.Pages
             gameManager = mainWindow.GameManager;
             mapManager = gameManager.MapManager;
             operatorManager = gameManager.OperatorManager;
+            notOnMapImg = new List<Image>();
 
-            
 
 
             // 初始化控件
-            selectedItems.DataContext = operatorManager.NotOnMapOperators;
+            notOnMapItems.DataContext = operatorManager.NotOnMapOperators;
             imgMap.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(mapManager.CurrentOperation.Picture)));
-
             lblCost.DataContext = operatorManager.CurrentCost;
             lblDeployment.DataContext = operatorManager.RestDeploymentCount;
             pgbCost.DataContext = operatorManager.CostUnit;
@@ -74,11 +74,26 @@ namespace ArknightSimulator.Pages
             btnSpeed.Visibility = Visibility.Hidden;
 
             // 添加事件
+            operatorManager.OnOperatorEnable += OperatorEnable;
             mapManager.OnEnemyAppearing += EnemyAppearing;
-
+            mapManager.OnEnemyMoving += EnemyMoving;
         }
 
         
+
+        // 判断费用是否足够放置
+        private void OperatorEnable(object sender, OperatorEventArgs e)
+        {
+            Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == e.OperatorTemplate.Id);
+            if (e.CostEnough)
+            {
+                img.Opacity = 1;
+            }
+            else
+            {
+                img.Opacity = 0.3;
+            }
+        }
 
 
         // 敌人出现
@@ -89,27 +104,51 @@ namespace ArknightSimulator.Pages
             enemyImg.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(et.Picture)));
             enemyImg.Width = 200;
             enemyImg.Height = 200;
-            enemyImg.Margin = new Thickness(700,350,700,350);  // 暂定 ↓
+            enemyImg.Margin = new Thickness(700, 350, 700, 350);  // 暂定 ↓
             /* 坐标转换  mapManager.CurrentOperation.XXXXXX
              * e.EnemyMovement.Enemy.Position.X --> gridX
              * e.EnemyMovement.Enemy.Position.Y --> gridY
              * gridX - 0.5 * enemyImg.Width,
-                    gridY - enemyImg.Width,
+                    gridY - enemyImg.Height,
                     grid.ActualWidth - gridX - 0.5 * enemyImg.Width,
                     grid.ActualHeight - gridY);
              */
-            enemyImg.Name = "enemy" + e.EnemyMovement.Enemy.InstanceId.ToString();
-            
+
+            grid.RegisterName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString(), enemyImg);
             grid.Children.Add(enemyImg);
         }
+
+
+        // 敌人移动
+        private void EnemyMoving(object sender, EnemyEventArgs e)
+        {
+            Image enemyImg = (Image)grid.FindName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString());
+            enemyImg.Margin = new Thickness(
+                e.EnemyMovement.Enemy.Position.X * 100 - 0.5 * enemyImg.Width,
+                e.EnemyMovement.Enemy.Position.Y * 100 - enemyImg.Height,
+                grid.ActualWidth - e.EnemyMovement.Enemy.Position.X * 100 - 0.5 * enemyImg.Width,
+                grid.ActualHeight - e.EnemyMovement.Enemy.Position.Y*100
+                );     // 暂定  ↓
+            /* 坐标转换  mapManager.CurrentOperation.XXXXXX
+             * e.EnemyMovement.Enemy.Position.X --> gridX
+             * e.EnemyMovement.Enemy.Position.Y --> gridY
+             * gridX - 0.5 * enemyImg.Width,
+                    gridY - enemyImg.Height,
+                    grid.ActualWidth - gridX - 0.5 * enemyImg.Width,
+                    grid.ActualHeight - gridY);
+             */
+        }
+
 
         // 已入队干员初始化后加载图片
         private void OpSelectedItem_Initialized(object sender, EventArgs e)
         {
             Image img = (Image)sender;
             img.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(((OperatorTemplate)img.DataContext).Picture)));
-            double width = selectedItems.Width / operatorManager.NotOnMapOperators.Count;
-            img.Width = (width < selectedItems.Height) ? width : selectedItems.Height;
+            double width = notOnMapItems.Width / operatorManager.NotOnMapOperators.Count;
+            img.Width = (width < notOnMapItems.Height) ? width : notOnMapItems.Height;
+
+            notOnMapImg.Add(img);
         }
 
         // 游戏开始
@@ -220,6 +259,8 @@ namespace ArknightSimulator.Pages
                     e.GetPosition(grid).Y - currentDragOperatorImg.Width,
                     grid.ActualWidth - e.GetPosition(grid).X - 0.5 * currentDragOperatorImg.Width,
                     grid.ActualHeight - e.GetPosition(grid).Y);
+
+                grid.RegisterName(currentDragOperator.Id.Replace(" ", "_"), currentDragOperatorImg);
                 grid.Children.Add(currentDragOperatorImg);
             }
         }
@@ -268,8 +309,6 @@ namespace ArknightSimulator.Pages
                     currentDragOperatorImg.Margin.Bottom - 100);
                 canvasDirection.Visibility = Visibility.Visible;
 
-                currentDragOperatorImg.Name = currentDragOperator.Id.Replace(" ", "_");
-
                 currentDragOperatorImg = null;
             }
         }
@@ -279,6 +318,8 @@ namespace ArknightSimulator.Pages
         {
             operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY);
 
+            Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
+            notOnMapImg.Remove(img);
             currentDragOperator = null;
             canvasDirection.Visibility = Visibility.Hidden;
             gameManager.Continue();   // 部署后继续游戏
@@ -288,6 +329,8 @@ namespace ArknightSimulator.Pages
         {
             operatorManager.Deploying(currentDragOperator, Directions.Down, currentMapX, currentMapY);
 
+            Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
+            notOnMapImg.Remove(img);
             currentDragOperator = null;
             canvasDirection.Visibility = Visibility.Hidden;
             gameManager.Continue();
@@ -310,6 +353,8 @@ namespace ArknightSimulator.Pages
 
             operatorManager.Deploying(currentDragOperator, Directions.Left, currentMapX, currentMapY);
 
+            Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
+            notOnMapImg.Remove(img);
             currentDragOperator = null;
             canvasDirection.Visibility = Visibility.Hidden;
             gameManager.Continue();
@@ -319,6 +364,8 @@ namespace ArknightSimulator.Pages
         {
             operatorManager.Deploying(currentDragOperator, Directions.Right, currentMapX, currentMapY);
 
+            Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
+            notOnMapImg.Remove(img);
             currentDragOperator = null;
             canvasDirection.Visibility = Visibility.Hidden;
             gameManager.Continue();

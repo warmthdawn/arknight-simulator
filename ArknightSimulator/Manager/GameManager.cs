@@ -69,8 +69,8 @@ namespace ArknightSimulator.Manager
         public void Update()
         {
             totalTime += interval * 1.0f / 1000;
-            OperatorManager.Update(totalTime, costRefresh);
-            MapManager.Update(totalTime);
+            OperatorManager.Update(costRefresh);
+            MapManager.Update(totalTime, costRefresh);
         }
 
         public void StartGame()

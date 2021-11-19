@@ -1,4 +1,5 @@
 ﻿using ArknightSimulator.Enemies;
+using ArknightSimulator.EventHandlers;
 using ArknightSimulator.Operators;
 using Newtonsoft.Json;
 using System;
@@ -13,7 +14,7 @@ using Point = ArknightSimulator.Operations.Point;
 
 namespace ArknightSimulator.Manager
 {
-    public class OperatorManager : INotifyPropertyChanged
+    public class OperatorManager : INotifyPropertyChanged    // 管理干员、费用等
     {
         private int currentCost;          // 当前费用
         private int maxCost;              // 最大费用
@@ -37,7 +38,7 @@ namespace ArknightSimulator.Manager
 
 
 
-        //public EventHandler OnCostIncrease;
+        public OperatorEventHandler OnOperatorEnable;   // 费用足够后干员可用（或不足不可用）事件
 
 
         public OperatorManager()
@@ -77,6 +78,7 @@ namespace ArknightSimulator.Manager
 
         }
 
+
         public void Init(List<OperatorTemplate> selected, int initialCost, int maxCost, int deploymentLimit)
         {
             SelectedOperators = new List<OperatorTemplate>();
@@ -94,18 +96,49 @@ namespace ArknightSimulator.Manager
             RestDeploymentCount = (deploymentLimit >= 0) ? deploymentLimit : 0;
             CostUnit = 0;
             totalDeploymentCount = 0;
+
+
         }
-        public void Update(float totalTime, int costRefresh)
+
+        public void Update(int costRefresh)
+        {
+            CostIncreasing(costRefresh);
+
+            OperatorAttack();
+        }
+
+
+        // 费用随时间增加
+        public void CostIncreasing(int costRefresh)
         {
             if (CurrentCost < MaxCost)
             {
                 int nextCostUnit = (CostUnit + 100 / costRefresh) % 100;
                 if (nextCostUnit < CostUnit)
+                {
                     CurrentCost++;
+                }
                 CostUnit = nextCostUnit;
             }
 
+
+
+            foreach (var opt in NotOnMapOperators)   // 判断费用是否足够放置干员
+            {
+                if (CurrentCost >= opt.Status.Cost[opt.EliteLevel])
+                    OnOperatorEnable(this, new OperatorEventArgs(opt, true));
+                else
+                    OnOperatorEnable(this, new OperatorEventArgs(opt, false));
+            }
         }
+
+        // 干员攻击
+        public void OperatorAttack()
+        {
+
+        }
+
+
 
         // 部署干员
         public void Deploying(OperatorTemplate opt, Directions direction, int mapX, int mapY)

@@ -123,11 +123,12 @@ namespace ArknightSimulator.Pages
         private void EnemyMoving(object sender, EnemyEventArgs e)
         {
             Image enemyImg = (Image)grid.FindName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString());
+            var pos = mapManager.CurrentOperation.GetPosition(e.EnemyMovement.Enemy.Position);
             enemyImg.Margin = new Thickness(
-                e.EnemyMovement.Enemy.Position.X * 100 - 0.5 * enemyImg.Width,
-                e.EnemyMovement.Enemy.Position.Y * 100 - enemyImg.Height,
-                grid.ActualWidth - e.EnemyMovement.Enemy.Position.X * 100 - 0.5 * enemyImg.Width,
-                grid.ActualHeight - e.EnemyMovement.Enemy.Position.Y*100
+                pos.X - 0.5 * enemyImg.Width,
+                pos.Y - enemyImg.Height,
+                grid.ActualWidth - pos.X - 0.5 * enemyImg.Width,
+                grid.ActualHeight - pos.Y
                 );     // 暂定  ↓
             /* 坐标转换  mapManager.CurrentOperation.XXXXXX
              * e.EnemyMovement.Enemy.Position.X --> gridX

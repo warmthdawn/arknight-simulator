@@ -18,27 +18,30 @@ namespace ArknightSimulator.Operations
         public int MaxCost { get; set; }
         public int HomeLife { get; set; }
         public int EnemyCount { get; set; }
+
+        // 关卡转换数据(格子范围)
+        public Point TopLeft { get; set; }
+        public Point BottomLeft { get; set; }
+        public Point TopRight { get; set; }
+        public Point BottomRight { get; set; }
+
+        // y 轴分割比例，3D视角非线性，x 轴暂时视为均匀分布
+        int[] Factors { get; set; }
+
         public List<EnemyMovement> TimeLine { get; set; }
 
         public List<EnemyTemplate> AvailableEnemies { get; set; }
 
-        // 坐标转换
+
+
+        // 坐标转换（格子坐标到实际坐标）
         public Point GetPosition(Point point)
         {
-            // 关卡转换数据（可作为关卡属性），这里用关卡0-1
-            // 格子范围
-            Point topLeft = new Point(251, 188);
-            Point bottomLeft = new Point(55, 817);
-            Point topRight = new Point(1233, 188);
-            Point bottomRight = new Point(1549, 816);
-            // y 轴分割比例，3D视角非线性，x 轴暂时视为均匀分布
-            //int[] factors = { 98, 106, 128, 130, 161 };
-            int[] factors = { 101, 123, 120, 126, 159 };
             // 计算累加比例
             List<int> weights = new List<int>();
             weights.Add(0);
             int sum = 0;
-            foreach(int i in factors)
+            foreach(int i in Factors)
             {
                 sum += i;
                 weights.Add(sum);
@@ -58,11 +61,11 @@ namespace ArknightSimulator.Operations
 
             // 根据格子范围四点，插值计算水平线左右两点（若格子x轴一定水平，Y计算也可只计算一次）
             Point leftPoint = new Point();
-            leftPoint.X = topLeft.X * (1 - ratio) + bottomLeft.X * ratio;
-            leftPoint.Y = topLeft.Y * (1 - ratio) + bottomLeft.Y * ratio;
+            leftPoint.X = TopLeft.X * (1 - ratio) + BottomLeft.X * ratio;
+            leftPoint.Y = TopLeft.Y * (1 - ratio) + BottomLeft.Y * ratio;
             Point rightPoint = new Point();
-            rightPoint.X = topRight.X * (1 - ratio) + bottomRight.X * ratio;
-            rightPoint.Y = topRight.Y * (1 - ratio) + bottomRight.Y * ratio;
+            rightPoint.X = TopRight.X * (1 - ratio) + BottomRight.X * ratio;
+            rightPoint.Y = TopRight.Y * (1 - ratio) + BottomRight.Y * ratio;
 
             // 暂设x轴方向格子分布均匀，直接插值
             Point position = new Point();
@@ -72,5 +75,12 @@ namespace ArknightSimulator.Operations
 
             return position;
         }
+
+        // 坐标反转换（实际坐标到格子坐标）
+
+
+
+
+
     }
 }

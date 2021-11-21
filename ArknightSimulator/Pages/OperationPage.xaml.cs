@@ -15,6 +15,8 @@ using ArknightSimulator.Enemies;
 using ArknightSimulator.EventHandlers;
 using ArknightSimulator.Manager;
 using ArknightSimulator.Operators;
+using Point = ArknightSimulator.Operations.Point;
+
 
 namespace ArknightSimulator.Pages
 {
@@ -32,7 +34,6 @@ namespace ArknightSimulator.Pages
         private List<Image> notOnMapImg;
         private int currentMapX;
         private int currentMapY;
-
 
 
         public GameManager GameManager => gameManager;
@@ -77,6 +78,8 @@ namespace ArknightSimulator.Pages
             operatorManager.OnOperatorEnable += OperatorEnable;
             mapManager.OnEnemyAppearing += EnemyAppearing;
             mapManager.OnEnemyMoving += EnemyMoving;
+            mapManager.OnLose += Lose;
+            mapManager.OnEnemyRemove += EnemyRemove;
         }
 
         
@@ -104,15 +107,15 @@ namespace ArknightSimulator.Pages
             enemyImg.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(et.Picture)));
             enemyImg.Width = 200;
             enemyImg.Height = 200;
-            enemyImg.Margin = new Thickness(700, 350, 700, 350);  // 暂定 ↓
-            /* 坐标转换  mapManager.CurrentOperation.XXXXXX
-             * e.EnemyMovement.Enemy.Position.X --> gridX
-             * e.EnemyMovement.Enemy.Position.Y --> gridY
-             * gridX - 0.5 * enemyImg.Width,
-                    gridY - enemyImg.Height,
-                    grid.ActualWidth - gridX - 0.5 * enemyImg.Width,
-                    grid.ActualHeight - gridY);
-             */
+            var pos = mapManager.CurrentOperation.GetPosition(e.EnemyMovement.Enemy.Position);
+
+            enemyImg.Margin = new Thickness(
+                pos.X - 0.5 * enemyImg.Width,
+                pos.Y - enemyImg.Height,
+                grid.ActualWidth - pos.X - 0.5 * enemyImg.Width,
+                grid.ActualHeight - pos.Y
+                );
+
 
             grid.RegisterName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString(), enemyImg);
             grid.Children.Add(enemyImg);
@@ -124,22 +127,49 @@ namespace ArknightSimulator.Pages
         {
             Image enemyImg = (Image)grid.FindName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString());
             var pos = mapManager.CurrentOperation.GetPosition(e.EnemyMovement.Enemy.Position);
+            
+            // 转向
+            if (e.IsTurningDirection && e.Direction == Directions.Left)
+            {
+                ScaleTransform scaleTransform = new ScaleTransform();
+                scaleTransform.ScaleX = -1;
+                scaleTransform.CenterX = 0.5 * enemyImg.Width;
+                enemyImg.RenderTransform = scaleTransform;
+            }
+            else if(e.IsTurningDirection && e.Direction == Directions.Right)
+            {
+                ScaleTransform scaleTransform = new ScaleTransform();
+                scaleTransform.ScaleX = 1;
+                scaleTransform.CenterX = 0.5 * enemyImg.Width;
+                enemyImg.RenderTransform = scaleTransform;
+            }
+
+
             enemyImg.Margin = new Thickness(
                 pos.X - 0.5 * enemyImg.Width,
                 pos.Y - enemyImg.Height,
                 grid.ActualWidth - pos.X - 0.5 * enemyImg.Width,
                 grid.ActualHeight - pos.Y
-                );     // 暂定  ↓
-            /* 坐标转换  mapManager.CurrentOperation.XXXXXX
-             * e.EnemyMovement.Enemy.Position.X --> gridX
-             * e.EnemyMovement.Enemy.Position.Y --> gridY
-             * gridX - 0.5 * enemyImg.Width,
-                    gridY - enemyImg.Height,
-                    grid.ActualWidth - gridX - 0.5 * enemyImg.Width,
-                    grid.ActualHeight - gridY);
-             */
+                );
         }
 
+        private void Lose(object sender, EventArgs e)
+        {
+            gameManager.Pause();
+            MessageBoxResult result = MessageBox.Show("作战失败", "作战失败", MessageBoxButton.OK);
+            if (result == MessageBoxResult.OK)
+            {
+                gameManager.GameOver();
+                OnChangeToEditPage(this, null);
+                OnDeleteOperationPage(this, null);
+            }
+        }
+
+        private void EnemyRemove(object sender, EnemyEventArgs e)
+        {
+            Image enemyImg = (Image)grid.FindName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString());
+            grid.Children.Remove(enemyImg);
+        }
 
         // 已入队干员初始化后加载图片
         private void OpSelectedItem_Initialized(object sender, EventArgs e)
@@ -220,13 +250,16 @@ namespace ArknightSimulator.Pages
         // 退出
         private void BtnQuit_Click(object sender, RoutedEventArgs e)
         {
+            gameManager.Pause();
             MessageBoxResult result = MessageBox.Show("确定要退出作战吗？", "退出作战", MessageBoxButton.YesNo);
-            if(result == MessageBoxResult.Yes)
+            if (result == MessageBoxResult.Yes)
             {
                 gameManager.GameOver();
                 OnChangeToEditPage(this, null);
                 OnDeleteOperationPage(this, null);
             }
+            else
+                gameManager.Continue();
         }
 
         // 重选干员
@@ -291,17 +324,17 @@ namespace ArknightSimulator.Pages
                 // currentGridX = ...;  // 实际窗口中的坐标
                 // currentGridY = ...;
 
-
-                int currentGridX = 800; // 暂定 ↑
-                int currentGridY = 500; // 暂定
-
+                var mapPoint = mapManager.CurrentOperation.GetPosition(new Point(e.GetPosition(grid).X, e.GetPosition(grid).Y));
+                currentMapX = (int)mapPoint.X;
+                currentMapY = (int)mapPoint.Y;
+                var pos = mapManager.CurrentOperation.GetPosition(new Point(currentMapX + 0.5, currentMapY + 0.5));
 
 
                 currentDragOperatorImg.Margin = new Thickness(
-                    currentGridX - 0.5 * currentDragOperatorImg.Width,
-                    currentGridY - currentDragOperatorImg.Width,
-                    grid.ActualWidth - currentGridX - 0.5 * currentDragOperatorImg.Width,
-                    grid.ActualHeight - currentGridY);
+                    pos.X - 0.5 * currentDragOperatorImg.Width,
+                    pos.Y - currentDragOperatorImg.Width,
+                    grid.ActualWidth - pos.X - 0.5 * currentDragOperatorImg.Width,
+                    grid.ActualHeight - pos.Y);
 
                 canvasDirection.Margin = new Thickness(
                     currentDragOperatorImg.Margin.Left - 100,
@@ -339,18 +372,14 @@ namespace ArknightSimulator.Pages
         }
         private void BtnTurnLeft_Click(object sender, RoutedEventArgs e)
         {
-            foreach(var i in grid.Children)
-            {
-                if(((FrameworkElement)i).Name == currentDragOperator.Id.Replace(" ", "_"))
-                {
-                    // 干员模型图片转向左边（原来默认的模型转向为右边）
-                    ScaleTransform scaleTransform = new ScaleTransform();
-                    scaleTransform.ScaleX = -1;
-                    scaleTransform.CenterX = 0.5* ((Image)i).Width;
-                    ((Image)i).RenderTransform = scaleTransform;
-                    break;
-                }
-            }
+            Image currentImg = (Image)grid.FindName(currentDragOperator.Id.Replace(" ", "_"));
+
+            // 干员模型图片转向左边（原来默认的模型转向为右边）
+            ScaleTransform scaleTransform = new ScaleTransform();
+            scaleTransform.ScaleX = -1;
+            scaleTransform.CenterX = 0.5 * currentImg.Width;
+            currentImg.RenderTransform = scaleTransform;
+
 
             operatorManager.Deploying(currentDragOperator, Directions.Left, currentMapX, currentMapY);
 

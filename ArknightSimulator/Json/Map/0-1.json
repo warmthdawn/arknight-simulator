@@ -16,6 +16,23 @@
     "MaxCost": 99,
     "HomeLife": 20,
     "EnemyCount": 11,
+    "TopLeft": {
+        "X": 251,
+        "Y": 188
+    },
+    "BottomLeft": {
+        "X": 55,
+        "Y": 817
+    },
+    "TopRight": {
+        "X": 1233,
+        "Y": 188
+    },
+    "BottomRight": {
+        "X": 1549,
+        "Y": 817
+    },
+    "Factors": [ 101, 123, 120, 126, 159 ],
     "TimeLine": [
         {
             "Enemy": {

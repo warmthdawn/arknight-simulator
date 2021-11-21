@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ArknightSimulator.Operations;
+using ArknightSimulator.Operators;
 
 namespace ArknightSimulator.EventHandlers
 {
@@ -11,9 +12,17 @@ namespace ArknightSimulator.EventHandlers
     public class EnemyEventArgs : EventArgs
     {
         public EnemyMovement EnemyMovement { get; set; }
+        public Directions Direction { get; set; }
+        public bool IsTurningDirection { get; set; }
         public EnemyEventArgs(EnemyMovement enemy)
         {
             EnemyMovement = enemy;
+        }
+        public EnemyEventArgs(EnemyMovement enemy, Directions direction,bool isTurningDirection)
+        {
+            EnemyMovement = enemy;
+            Direction = direction;
+            IsTurningDirection = isTurningDirection;
         }
     }
 }

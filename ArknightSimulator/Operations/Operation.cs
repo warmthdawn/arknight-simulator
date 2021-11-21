@@ -26,7 +26,7 @@ namespace ArknightSimulator.Operations
         public Point BottomRight { get; set; }
 
         // y 轴分割比例，3D视角非线性，x 轴暂时视为均匀分布
-        int[] Factors { get; set; }
+        public int[] Factors { get; set; }
 
         public List<EnemyMovement> TimeLine { get; set; }
 
@@ -46,6 +46,7 @@ namespace ArknightSimulator.Operations
                 sum += i;
                 weights.Add(sum);
             }
+            weights.Add(0);
 
             //point = new Point(3,2);
 

@@ -8,7 +8,7 @@
       d:DesignHeight="900" d:DesignWidth="1600"
       Title="OperationPage">
 
-    <Grid x:Name="grid" Background="White" MouseMove="OpSelectedItem_MouseMove" MouseUp="OpSelectedItem_MouseUp">
+    <Grid x:Name="grid" Background="White" MouseMove="OpSelectedItem_MouseMove">
         <Image x:Name="imgMap" HorizontalAlignment="Left" Height="900" VerticalAlignment="Top" Width="1600" Margin="0,0,0,0"/>
         <Label x:Name="lblPause" Background="#7F000000" Content="PAUSE" Foreground="White" FontSize="100" Height="900" Width="1600" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 
@@ -79,6 +79,7 @@
                 </Button.Background>
             </Button>
         </Canvas>
-
+        <Canvas x:Name="gridCanvas" Visibility="Hidden"></Canvas>
+<!--         <Polygon Points="251,188 55,817 1549,816 1365,188 " StrokeThickness="5" Stroke="Red"></Polygon> -->
     </Grid>
 </Page>

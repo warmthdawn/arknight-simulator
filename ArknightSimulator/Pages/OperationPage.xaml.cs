@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using ArknightSimulator.Enemies;
 using ArknightSimulator.EventHandlers;
 using ArknightSimulator.Manager;
+using ArknightSimulator.Operations;
 using ArknightSimulator.Operators;
 using Point = ArknightSimulator.Operations.Point;
 
@@ -39,11 +40,13 @@ namespace ArknightSimulator.Pages
         public GameManager GameManager => gameManager;
         public MapManager MapManager => mapManager;
         public OperatorManager OperatorManager => operatorManager;
-
+        // Grid
+        private List<List<Polygon>> blocks;
 
 
         public EventHandler OnDeleteOperationPage;  // 结束作战删除本页事件
         public EventHandler OnChangeToEditPage;   // 跳转到编辑页事件
+        public Action<PositionType> OnPlaceOperator;   // 跳转到编辑页事件
 
         public OperationPage(MainWindow mainWindow)
         {
@@ -55,8 +58,7 @@ namespace ArknightSimulator.Pages
             mapManager = gameManager.MapManager;
             operatorManager = gameManager.OperatorManager;
             notOnMapImg = new List<Image>();
-
-
+            blocks = new List<List<Polygon>>();
 
             // 初始化控件
             notOnMapItems.DataContext = operatorManager.NotOnMapOperators;
@@ -64,6 +66,46 @@ namespace ArknightSimulator.Pages
             lblCost.DataContext = operatorManager.CurrentCost;
             lblDeployment.DataContext = operatorManager.RestDeploymentCount;
             pgbCost.DataContext = operatorManager.CostUnit;
+
+            gridCanvas.DataContext = this;
+            for (int x = 0; x < mapManager.CurrentOperation.MapWidth; x++)
+            {
+                List<Polygon> row = new List<Polygon>();
+                for (int y = 0; y < mapManager.CurrentOperation.MapHeight; y++)
+                {
+                    Polygon block = new Polygon();
+                    Point point = new Point();
+                    point = mapManager.CurrentOperation.GetPosition(new Point(x, y + 1)); // 左下角
+                    block.Points.Add(new System.Windows.Point(point.X, point.Y));
+                    point = mapManager.CurrentOperation.GetPosition(new Point(x, y)); // 左上角
+                    block.Points.Add(new System.Windows.Point(point.X, point.Y));
+                    point = mapManager.CurrentOperation.GetPosition(new Point(x + 1, y)); // 右上角
+                    block.Points.Add(new System.Windows.Point(point.X, point.Y));
+                    point = mapManager.CurrentOperation.GetPosition(new Point(x + 1, y + 1)); // 右下角
+                    block.Points.Add(new System.Windows.Point(point.X, point.Y));
+
+                    block.Stroke = Brushes.Black;
+                    
+                    block.Fill = new SolidColorBrush(Colors.Green);
+                    block.Opacity = 0.3;
+                    //                     Binding binding = new Binding("GridVisibility");
+                    //                     binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                    //                     binding.Mode = BindingMode.TwoWay;
+                    //                     binding.Source = this;
+                    //                     block.SetBinding(Polygon.VisibilityProperty, binding);
+                    //block.IsHitTestVisible = true;
+                    block.IsHitTestVisible = true;
+                    block.MouseUp += OpSelectedItem_MouseUp;
+                    block.MouseEnter += Block_MouseEnter;
+                    block.MouseLeave += Block_MouseLeave;
+                    block.Name = $"block{x}_{y}";
+                    //grid.RegisterName($"block{x}_{y}", block);
+                    gridCanvas.Children.Add(block);
+
+                    row.Add(block);
+                }
+                blocks.Add(row);
+            }
 
             ImageBrush brush2 = new ImageBrush();
             brush2.ImageSource = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Image/continue.png")));
@@ -80,9 +122,22 @@ namespace ArknightSimulator.Pages
             mapManager.OnEnemyMoving += EnemyMoving;
             mapManager.OnLose += Lose;
             mapManager.OnEnemyRemove += EnemyRemove;
+            OnPlaceOperator += PlaceOperator;
         }
 
-        
+        private void Block_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Polygon block = (Polygon)sender;
+            block.Opacity -= 0.2;
+        }
+
+        private void Block_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Polygon block = (Polygon)sender;
+            block.Opacity += 0.2;
+        }
+
+
 
         // 判断费用是否足够放置
         private void OperatorEnable(object sender, OperatorEventArgs e)
@@ -127,7 +182,7 @@ namespace ArknightSimulator.Pages
         {
             Image enemyImg = (Image)grid.FindName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString());
             var pos = mapManager.CurrentOperation.GetPosition(e.EnemyMovement.Enemy.Position);
-            
+
             // 转向
             if (e.IsTurningDirection && e.Direction == Directions.Left)
             {
@@ -136,7 +191,7 @@ namespace ArknightSimulator.Pages
                 scaleTransform.CenterX = 0.5 * enemyImg.Width;
                 enemyImg.RenderTransform = scaleTransform;
             }
-            else if(e.IsTurningDirection && e.Direction == Directions.Right)
+            else if (e.IsTurningDirection && e.Direction == Directions.Right)
             {
                 ScaleTransform scaleTransform = new ScaleTransform();
                 scaleTransform.ScaleX = 1;
@@ -169,6 +224,35 @@ namespace ArknightSimulator.Pages
         {
             Image enemyImg = (Image)grid.FindName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString());
             grid.Children.Remove(enemyImg);
+        }
+
+        // 根据干员类型更新可放置网格
+        private void PlaceOperator(PositionType type) // TODO: 待完善
+        {
+            PointType place; // 可放置网格类型
+            switch (type)
+            {
+                case PositionType.Guard:
+                case PositionType.Defender:
+                case PositionType.Vanguard:
+                    place = PointType.Land;
+                    break;
+                default:
+                    place = PointType.HighLand;
+                    break;
+            }
+
+            for (int x = 0; x < mapManager.CurrentOperation.MapWidth; x++)
+            {
+                for (int y = 0; y < mapManager.CurrentOperation.MapHeight; y++)
+                {
+                    if (mapManager.CurrentOperation.Map[y][x] == place)
+                        blocks[x][y].Visibility = Visibility.Visible;
+                    else
+                        blocks[x][y].Visibility = Visibility.Hidden;
+
+                }
+            }
         }
 
         // 已入队干员初始化后加载图片
@@ -297,6 +381,10 @@ namespace ArknightSimulator.Pages
                 grid.RegisterName(currentDragOperator.Id.Replace(" ", "_"), currentDragOperatorImg);
                 grid.Children.Add(currentDragOperatorImg);
             }
+            // 网格可视化
+            OnPlaceOperator(currentDragOperator.Position);
+            gridCanvas.Visibility = Visibility.Visible;
+            currentDragOperatorImg.IsHitTestVisible = false;
         }
 
         // 拖动干员
@@ -323,10 +411,13 @@ namespace ArknightSimulator.Pages
                 // currentMapY = ...
                 // currentGridX = ...;  // 实际窗口中的坐标
                 // currentGridY = ...;
+                Polygon block = (Polygon)sender;
+                string coordinate = block.Name.Substring(5);
+                currentDragOperatorImg.IsHitTestVisible = true;
 
-                var mapPoint = mapManager.CurrentOperation.GetPosition(new Point(e.GetPosition(grid).X, e.GetPosition(grid).Y));
-                currentMapX = (int)mapPoint.X;
-                currentMapY = (int)mapPoint.Y;
+                //var mapPoint = mapManager.CurrentOperation.GetPosition(new Point(e.GetPosition(grid).X, e.GetPosition(grid).Y));
+                currentMapX = int.Parse(coordinate.Split("_")[0]);
+                currentMapY = int.Parse(coordinate.Split("_")[1]);
                 var pos = mapManager.CurrentOperation.GetPosition(new Point(currentMapX + 0.5, currentMapY + 0.5));
 
 
@@ -344,6 +435,7 @@ namespace ArknightSimulator.Pages
                 canvasDirection.Visibility = Visibility.Visible;
 
                 currentDragOperatorImg = null;
+                gridCanvas.Visibility = Visibility.Hidden;
             }
         }
 
@@ -408,5 +500,6 @@ namespace ArknightSimulator.Pages
             gameManager.Continue();
             btnPauseOrContinue.IsEnabled = true;
         }
+
     }
 }

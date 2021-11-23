@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ArknightSimulator.Enemies;
 using ArknightSimulator.Operations;
 
 namespace ArknightSimulator.Operators
@@ -14,8 +15,19 @@ namespace ArknightSimulator.Operators
         public int MapX { get; set; }   // 地图的格子横坐标
         public int MapY { get; set; }   // 地图的格子纵坐标
         public Directions Direction { get; set; }  // 干员方向
-        public void Attack() { }
-        public void Hurt() { }
+        public int AttackId { get; set; } = -1;   // 索敌：攻击的敌人ID
+
+
+        public void Attack(Enemy enemy)
+        {
+
+            
+        }
+        public void Hurt()
+        {
+
+        
+        }
         public void SkillOn() { }
         
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ArknightSimulator.Operations;
+using ArknightSimulator.Operators;
 
 namespace ArknightSimulator.Enemies
 {
@@ -11,7 +12,7 @@ namespace ArknightSimulator.Enemies
         public string TemplateId { get; set; }      // 敌人模板的ID
         public IEnemyStatus Status { get; set; }    // 属性状态
         public Point Position { get; set; } = new Point();  // 坐标
-
+        public int AttackId { get; set; } = -1;   // 索敌：攻击的干员ID
 
         public Enemy() { }
         public Enemy(Enemy enemy)
@@ -23,6 +24,7 @@ namespace ArknightSimulator.Enemies
             Status = new EnemyStatus(enemy.Status);
             Position.X = enemy.Position.X;
             Position.Y = enemy.Position.Y;
+            AttackId = enemy.AttackId;
         }
 
 
@@ -31,8 +33,14 @@ namespace ArknightSimulator.Enemies
             Position.X += moveX;
             Position.Y += moveY;
         }
-        public void Attack() { }
-        public void Hurt() { }
+        public void Attack(Operator op)
+        {
+
+        }
+        public void Hurt()
+        {
+
+        }
         public void SkillOn() { }
 
     }

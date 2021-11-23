@@ -18,6 +18,10 @@ namespace ArknightSimulator.EventHandlers
         {
             Operator = op;
         }
+        public OperatorEventArgs(OperatorTemplate opt)
+        {
+            OperatorTemplate = opt;
+        }
         public OperatorEventArgs(OperatorTemplate opt, bool costEnough)
         {
             OperatorTemplate = opt;

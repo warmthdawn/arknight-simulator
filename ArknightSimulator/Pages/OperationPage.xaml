@@ -8,8 +8,8 @@
       d:DesignHeight="900" d:DesignWidth="1600"
       Title="OperationPage">
 
-    <Grid x:Name="grid" Background="White" MouseMove="OpSelectedItem_MouseMove">
-        <Image x:Name="imgMap" HorizontalAlignment="Left" Height="900" VerticalAlignment="Top" Width="1600" Margin="0,0,0,0"/>
+    <Grid x:Name="grid" Background="White" MouseMove="OpSelectedItem_MouseMove" MouseLeftButtonUp="OpSelectedItem_MouseLeftButtonUp">
+        <Image x:Name="imgMap" Panel.ZIndex="-3" HorizontalAlignment="Left" Height="900" VerticalAlignment="Top" Width="1600" Margin="0,0,0,0"/>
         <Label x:Name="lblPause" Background="#7F000000" Content="PAUSE" Foreground="White" FontSize="100" Height="900" Width="1600" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 
         <Button x:Name="btnPauseOrContinue" HorizontalAlignment="Left" Margin="1490,10,0,0" VerticalAlignment="Top" Height="100" Width="100" Click="BtnPauseOrContinue_Click"/>
@@ -37,7 +37,7 @@
                     <Border BorderBrush="#7cffffff" BorderThickness="1" Background="#0fffffff">
                         <WrapPanel>
                             <Grid>
-                                <Image DataContext="{Binding}" Width="100" Stretch="UniformToFill" VerticalAlignment="Top" Initialized="OpSelectedItem_Initialized" MouseDown="OpSelectedItem_MouseDown"/>
+                                <Image DataContext="{Binding}" Width="100" Stretch="UniformToFill" VerticalAlignment="Top" Initialized="OpSelectedItem_Initialized" MouseLeftButtonDown="OpSelectedItem_MouseLeftButtonDown"/>
                             </Grid>
                         </WrapPanel>
                     </Border>
@@ -51,6 +51,14 @@
         <Label Content="剩余可放置角色：" FontSize="30" Margin="1310,680,10,170" Background="#B2000000" Foreground="White" />
         <Label x:Name="lblDeployment" Content="{Binding OperatorManager.RestDeploymentCount,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OperationPage}}}" FontSize="30"  Margin="1540,680,10,170" Foreground="White"/>
         <ProgressBar x:Name="pgbCost" Value="{Binding OperatorManager.CostUnit,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OperationPage}}}" Background="#00000000" Foreground="White" BorderThickness="0" Height="5" Width="210" Margin="1375,675,15,220"/>
+
+        <Label Content="敌人数量          /" FontSize="30" Margin="500,10,805,840" Background="#B2000000" Foreground="White"/>
+        <Label x:Name="lblEnemyCount" Content="{Binding MapManager.CurrentEnemyCount,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OperationPage}}}" FontSize="30" Margin="640,10,880,840" Foreground="White" HorizontalContentAlignment="Center"/>
+        <Label x:Name="lblEnemyTotalCount" Content="{Binding MapManager.EnemyTotalCount,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OperationPage}}}" FontSize="30" Margin="720,10,800,840" Foreground="White" HorizontalContentAlignment="Center"/>
+        <Label Content="我方据点" FontSize="30" Margin="805,10,500,840" Background="#B2000000" Foreground="White"/>
+        <Label x:Name="lblHomeLife" Content="{Binding MapManager.CurrentHomeLife,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:OperationPage}}}" FontSize="30" Margin="940,10,500,840" Foreground="White" HorizontalContentAlignment="Center"/>
+
+
 
         <Canvas x:Name="canvasDirection" Visibility="Hidden">
             <Button x:Name="btnTurnUp" BorderThickness="0" Margin="100,0,100,300" Height="100" Width="200" Click="BtnTurnUp_Click">
@@ -79,7 +87,7 @@
                 </Button.Background>
             </Button>
         </Canvas>
-        <Canvas x:Name="gridCanvas" Visibility="Hidden"></Canvas>
+        <Canvas x:Name="gridCanvas" Panel.ZIndex="-2" Visibility="Hidden"></Canvas>
 <!--         <Polygon Points="251,188 55,817 1549,816 1365,188 " StrokeThickness="5" Stroke="Red"></Polygon> -->
     </Grid>
 </Page>

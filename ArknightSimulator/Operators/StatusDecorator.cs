@@ -11,6 +11,7 @@ namespace ArknightSimulator.Operators
             this.Inner = status;
         }
         public IStatus Inner { get; private set; }
+
         public virtual int MaxLife => Inner.MaxLife;
         public virtual int CurrentLife => Inner.CurrentLife;
         public virtual int SkillPoint => Inner.SkillPoint;
@@ -19,8 +20,11 @@ namespace ArknightSimulator.Operators
         public virtual int MagicDefence => Inner.MagicDefence;
         public virtual int Time => Inner.Time;
         public virtual int[] Cost => Inner.Cost;
+        public virtual int DeployCount => Inner.DeployCount;
         public virtual int Block => Inner.Block;
         public virtual float AttackTime => Inner.AttackTime;
         public virtual int[][][] Range => Inner.Range;
+
+
     }
 }

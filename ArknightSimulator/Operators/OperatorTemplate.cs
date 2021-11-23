@@ -16,6 +16,7 @@ namespace ArknightSimulator.Operators
         public string Id { get; set; }  // 编号
         public string Name { get; set; } // 代号
         public PositionType Position { get; set; } // 职业
+        public DeploymentType DeploymentType { get; set; } // 部署位置
         public string Picture { get; set; }// 图片
         public string ModelPicture { get; set; }  // 模型
         public int Rare { get; set; } // 稀有度
@@ -73,6 +74,7 @@ namespace ArknightSimulator.Operators
             Id = opt.Id;
             Name = opt.Name;
             Position = opt.Position;
+            DeploymentType = opt.DeploymentType;
             Picture = opt.Picture;
             ModelPicture = opt.ModelPicture;
             Rare = opt.Rare;

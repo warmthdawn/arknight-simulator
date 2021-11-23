@@ -46,7 +46,8 @@ namespace ArknightSimulator.Pages
 
         public EventHandler OnDeleteOperationPage;  // 结束作战删除本页事件
         public EventHandler OnChangeToEditPage;   // 跳转到编辑页事件
-        public Action<PositionType> OnPlaceOperator;   // 跳转到编辑页事件
+        public Action<DeploymentType> OnPlaceOperator;   // 部署干员事件
+        public OperatorEventHandler OnOperatorRemove;  // 撤退干员事件
 
         public OperationPage(MainWindow mainWindow)
         {
@@ -63,9 +64,6 @@ namespace ArknightSimulator.Pages
             // 初始化控件
             notOnMapItems.DataContext = operatorManager.NotOnMapOperators;
             imgMap.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(mapManager.CurrentOperation.Picture)));
-            lblCost.DataContext = operatorManager.CurrentCost;
-            lblDeployment.DataContext = operatorManager.RestDeploymentCount;
-            pgbCost.DataContext = operatorManager.CostUnit;
 
             gridCanvas.DataContext = this;
             for (int x = 0; x < mapManager.CurrentOperation.MapWidth; x++)
@@ -95,7 +93,7 @@ namespace ArknightSimulator.Pages
                     //                     block.SetBinding(Polygon.VisibilityProperty, binding);
                     //block.IsHitTestVisible = true;
                     block.IsHitTestVisible = true;
-                    block.MouseUp += OpSelectedItem_MouseUp;
+                    block.MouseLeftButtonUp += OpSelectedItem_MouseLeftButtonUp;
                     block.MouseEnter += Block_MouseEnter;
                     block.MouseLeave += Block_MouseLeave;
                     block.Name = $"block{x}_{y}";
@@ -117,12 +115,27 @@ namespace ArknightSimulator.Pages
             btnSpeed.Visibility = Visibility.Hidden;
 
             // 添加事件
+            gameManager.OnLose += Lose;
+            gameManager.OnWin += Win;
             operatorManager.OnOperatorEnable += OperatorEnable;
             mapManager.OnEnemyAppearing += EnemyAppearing;
             mapManager.OnEnemyMoving += EnemyMoving;
-            mapManager.OnLose += Lose;
             mapManager.OnEnemyRemove += EnemyRemove;
             OnPlaceOperator += PlaceOperator;
+            OnOperatorRemove += OperatorRemove;
+        }
+
+        // 删除事件
+        public void DeleteEvent()
+        {
+            // 每次作战结束需要删除与Manager关联的事件
+            gameManager.OnLose -= Lose;
+            gameManager.OnWin -= Win;
+            operatorManager.OnOperatorEnable -= OperatorEnable;
+            mapManager.OnEnemyAppearing -= EnemyAppearing;
+            mapManager.OnEnemyMoving -= EnemyMoving;
+            mapManager.OnEnemyRemove -= EnemyRemove;
+            //OnPlaceOperator -= PlaceOperator;
         }
 
         private void Block_MouseLeave(object sender, MouseEventArgs e)
@@ -173,6 +186,7 @@ namespace ArknightSimulator.Pages
 
 
             grid.RegisterName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString(), enemyImg);
+            Panel.SetZIndex(enemyImg, -1);
             grid.Children.Add(enemyImg);
         }
 
@@ -210,35 +224,63 @@ namespace ArknightSimulator.Pages
 
         private void Lose(object sender, EventArgs e)
         {
-            gameManager.Pause();
             MessageBoxResult result = MessageBox.Show("作战失败", "作战失败", MessageBoxButton.OK);
-            if (result == MessageBoxResult.OK)
-            {
-                gameManager.GameOver();
-                OnChangeToEditPage(this, null);
-                OnDeleteOperationPage(this, null);
-            }
-        }
 
+            gameManager.GameOver();
+            DeleteEvent();
+            OnChangeToEditPage(this, null);
+            OnDeleteOperationPage(this, null);
+
+        }
+        private void Win(object sender, EventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("作战完成", "作战完成", MessageBoxButton.OK);
+
+            gameManager.GameOver();
+            DeleteEvent();
+            OnChangeToEditPage(this, null);
+            OnDeleteOperationPage(this, null);
+
+        }
         private void EnemyRemove(object sender, EnemyEventArgs e)
         {
             Image enemyImg = (Image)grid.FindName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString());
+            grid.UnregisterName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString());
             grid.Children.Remove(enemyImg);
         }
-
-        // 根据干员类型更新可放置网格
-        private void PlaceOperator(PositionType type) // TODO: 待完善
+        private void OperatorRemove(object sender, OperatorEventArgs e)
         {
-            PointType place; // 可放置网格类型
+            if (e.Operator != null)
+                currentDragOperator = new OperatorTemplate(operatorManager.SelectedOperators.Find(o => o.Id == e.Operator.TemplateId));
+
+            Image currentImg = (Image)grid.FindName(currentDragOperator.Id.Replace(" ", "_"));
+            grid.Children.Remove(currentImg);
+            grid.UnregisterName(currentDragOperator.Id.Replace(" ", "_"));
+            currentDragOperatorImg = null;
+            currentDragOperator = null;
+
+            canvasDirection.Visibility = Visibility.Hidden;
+            gridCanvas.Visibility = Visibility.Hidden;
+            gameManager.Continue();
+            btnPauseOrContinue.IsEnabled = true;
+        }
+
+        // 根据干员部署类型更新可放置网格
+        private void PlaceOperator(DeploymentType type) // TODO: 待完善
+        {
+            PointType place1 = PointType.None; // 可放置网格类型
+            PointType place2 = PointType.None;
             switch (type)
             {
-                case PositionType.Guard:
-                case PositionType.Defender:
-                case PositionType.Vanguard:
-                    place = PointType.Land;
+                case DeploymentType.All:
+                    place1 = PointType.Land;
+                    place2 = PointType.HighLand;
                     break;
-                default:
-                    place = PointType.HighLand;
+                case DeploymentType.Land:
+                    place1 = PointType.Land;
+                    break;
+                case DeploymentType.HighLand:
+                    place1 = PointType.HighLand;
                     break;
             }
 
@@ -246,11 +288,20 @@ namespace ArknightSimulator.Pages
             {
                 for (int y = 0; y < mapManager.CurrentOperation.MapHeight; y++)
                 {
-                    if (mapManager.CurrentOperation.Map[y][x] == place)
-                        blocks[x][y].Visibility = Visibility.Visible;
-                    else
-                        blocks[x][y].Visibility = Visibility.Hidden;
-
+                    if (place1 != PointType.None)
+                    {
+                        if (mapManager.CurrentOperation.Map[y][x] == place1)
+                            blocks[x][y].Visibility = Visibility.Visible;
+                        else
+                            blocks[x][y].Visibility = Visibility.Hidden;
+                    }
+                    if (place2 != PointType.None)
+                    {
+                        if (mapManager.CurrentOperation.Map[y][x] == place2)
+                            blocks[x][y].Visibility = Visibility.Visible;
+                        else
+                            blocks[x][y].Visibility = Visibility.Hidden;
+                    }
                 }
             }
         }
@@ -339,6 +390,7 @@ namespace ArknightSimulator.Pages
             if (result == MessageBoxResult.Yes)
             {
                 gameManager.GameOver();
+                DeleteEvent();
                 OnChangeToEditPage(this, null);
                 OnDeleteOperationPage(this, null);
             }
@@ -353,9 +405,9 @@ namespace ArknightSimulator.Pages
         }
 
         // 选中干员准备拖动
-        private void OpSelectedItem_MouseDown(object sender, MouseButtonEventArgs e)
+        private void OpSelectedItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (currentDragOperatorImg == null && currentDragOperator == null && e.LeftButton == MouseButtonState.Pressed)
+            if (currentDragOperatorImg == null && currentDragOperator == null)
             {
                 currentDragOperator = (OperatorTemplate)((Image)sender).DataContext;
 
@@ -379,12 +431,15 @@ namespace ArknightSimulator.Pages
                     grid.ActualHeight - e.GetPosition(grid).Y);
 
                 grid.RegisterName(currentDragOperator.Id.Replace(" ", "_"), currentDragOperatorImg);
+                Panel.SetZIndex(currentDragOperatorImg, -1);
                 grid.Children.Add(currentDragOperatorImg);
+
+
+                // 网格可视化
+                OnPlaceOperator(currentDragOperator.DeploymentType);
+                gridCanvas.Visibility = Visibility.Visible;
+                currentDragOperatorImg.IsHitTestVisible = false;
             }
-            // 网格可视化
-            OnPlaceOperator(currentDragOperator.Position);
-            gridCanvas.Visibility = Visibility.Visible;
-            currentDragOperatorImg.IsHitTestVisible = false;
         }
 
         // 拖动干员
@@ -401,16 +456,19 @@ namespace ArknightSimulator.Pages
         }
 
         // 放下干员
-        private void OpSelectedItem_MouseUp(object sender, MouseButtonEventArgs e)
+        private void OpSelectedItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (currentDragOperatorImg != null && e.LeftButton != MouseButtonState.Pressed)
+            if (currentDragOperatorImg != null)
             {
+                // 若没有放在格子上
+                if (sender.GetType() != typeof(Polygon))
+                {
+                    OnOperatorRemove(this, new OperatorEventArgs(currentDragOperator));
+                    return;
+                }
+
+
                 // 坐标转换，将鼠标位置转换为地图格子坐标
-                // mapManager.CurrentOperation.XXXXXXXX   // 坐标转换
-                // currentMapX = ...     // 地图格子坐标
-                // currentMapY = ...
-                // currentGridX = ...;  // 实际窗口中的坐标
-                // currentGridY = ...;
                 Polygon block = (Polygon)sender;
                 string coordinate = block.Name.Substring(5);
                 currentDragOperatorImg.IsHitTestVisible = true;
@@ -495,10 +553,7 @@ namespace ArknightSimulator.Pages
         }
         private void BtnTurnCancel_Click(object sender, RoutedEventArgs e)
         {
-            currentDragOperator = null;
-            canvasDirection.Visibility = Visibility.Hidden;
-            gameManager.Continue();
-            btnPauseOrContinue.IsEnabled = true;
+            OnOperatorRemove(this, new OperatorEventArgs(currentDragOperator));
         }
 
     }

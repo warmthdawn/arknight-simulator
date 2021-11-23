@@ -12,15 +12,15 @@ namespace ArknightSimulator.Manager
         private int speed;          // 速度
         private bool isGoingOn;     // 游戏正在进行中
         private bool timerTicking;  // 计时器事件进行中
-        private int costRefresh;    // 每秒费用刷新次数
+        private int refresh;        // 每秒刷新次数
         private int interval = 50;  // 刷新间隔
-        private float totalTime;      // 总时间
+        private float totalTime;    // 总时间
 
         public int Speed => this.speed;
         public bool IsGoingOn => this.isGoingOn;
         public bool TimerTicking => this.timerTicking;
-        public int CostRefresh => this.costRefresh;
-
+        public int Refresh => this.refresh;
+        public float TotalTime => this.totalTime;
 
 
         public MapManager MapManager { get; private set; } = new MapManager();
@@ -28,12 +28,15 @@ namespace ArknightSimulator.Manager
 
 
 
+        public EventHandler OnLose;      // 作战失败事件
+        public EventHandler OnWin;       // 作战完成事件
+
 
         public GameManager(DispatcherTimer timer)
         {
             this.timer = timer;
             this.timer.Interval = TimeSpan.FromMilliseconds(interval);
-            costRefresh = 1000 / interval;
+            refresh = 1000 / interval;
             this.timer.Tick += Timer_Tick;
 
         }
@@ -42,6 +45,8 @@ namespace ArknightSimulator.Manager
         {
             speed = 1;
             isGoingOn = false;
+            timerTicking = false;
+            totalTime = 0;
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -62,15 +67,17 @@ namespace ArknightSimulator.Manager
             }
 
 
-
             timerTicking = false;
+
+
+            CheckResult();  // 检查结算
         }
 
         public void Update()
         {
             totalTime += interval * 1.0f / 1000;
-            OperatorManager.Update(costRefresh);
-            MapManager.Update(totalTime, costRefresh);
+            OperatorManager.Update(refresh);
+            MapManager.Update(TotalTime, Refresh);
         }
 
         public void StartGame()
@@ -116,7 +123,25 @@ namespace ArknightSimulator.Manager
             MapManager.GameOver();
         }
 
+        public void CheckResult()
+        {
+            if (MapManager.CurrentHomeLife <= 0)
+                Lose();
+            else if (MapManager.CurrentEnemyCount >= MapManager.EnemyTotalCount)
+                Win();
 
-        
+        }
+
+        public void Lose()
+        {
+            Pause();
+            OnLose(this, null);
+        }
+        public void Win()
+        {
+            Pause();
+            OnWin(this, null);
+        }
+
     }
 }

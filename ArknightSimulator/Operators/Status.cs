@@ -14,6 +14,7 @@ namespace ArknightSimulator.Operators
         public int MagicDefence { get; set; } // 法术抗性
         public int Time { get; set; } // 再部署时间
         public int[] Cost { get; set; } // 部署费用
+        public int DeployCount { get; set; } // 部署位
         public int Block { get; set; } // 阻挡数
         public float AttackTime { get; set; } // 攻击间隔 
         public int[][][] Range { get; set; } // 攻击范围
@@ -35,6 +36,7 @@ namespace ArknightSimulator.Operators
             {
                 Cost[i] = status.Cost[i];
             }
+            DeployCount = status.DeployCount;
             Block = status.Block;
             AttackTime = status.AttackTime;
             Range = new int[status.Range.Length][][];

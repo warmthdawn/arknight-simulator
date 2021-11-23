@@ -5,7 +5,9 @@ using ArknightSimulator.Operators;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -13,7 +15,7 @@ using Point = ArknightSimulator.Operations.Point;
 
 namespace ArknightSimulator.Manager
 {
-    public class MapManager    // 管理地图和敌人
+    public class MapManager : INotifyPropertyChanged    // 管理地图和敌人
     { 
         private Operation operation;
         private List<EnemyMovement> enemiesNotAppear;
@@ -21,19 +23,29 @@ namespace ArknightSimulator.Manager
         private Dictionary<string, float> markTime;
 
         private int currentHomeLife;          // 当前据点耐久
+        private int enemyTotalCount;          // 敌人总数
+        private int currentEnemyCount;        // 当前敌人数
 
 
         public Operation CurrentOperation => operation;
         public List<EnemyMovement> EnemiesNotAppear => enemiesNotAppear;
         public List<EnemyMovement> EnemiesAppear => enemiesAppear;
-        private int CurrentHomeLife => currentHomeLife;
+        public int CurrentHomeLife { get => currentHomeLife; set { currentHomeLife = value; OnPropertyChanged(); } }
+        public int EnemyTotalCount { get => enemyTotalCount; set { enemyTotalCount = value; OnPropertyChanged(); } }
+        public int CurrentEnemyCount { get => currentEnemyCount; set { currentEnemyCount = value; OnPropertyChanged(); } }
 
 
 
-        public EnemyEventHandler OnEnemyAppearing;   // 敌人出现事件
-        public EnemyEventHandler OnEnemyMoving;   // 敌人出现事件
-        public EventHandler OnLose;   // 作战失败
-        public EnemyEventHandler OnEnemyRemove;   // 敌人移除事件
+        public EnemyEventHandler OnEnemyAppearing; // 敌人出现事件
+        public EnemyEventHandler OnEnemyMoving;    // 敌人出现事件
+        public EnemyEventHandler OnEnemyRemove;    // 敌人移除事件
+        
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
 
 
         public MapManager()
@@ -84,16 +96,20 @@ namespace ArknightSimulator.Manager
             }
 
             markTime = new Dictionary<string, float>();
-            currentHomeLife = CurrentOperation.HomeLife;
+            CurrentHomeLife = CurrentOperation.HomeLife;
+            EnemyTotalCount = CurrentOperation.EnemyCount;
+            CurrentEnemyCount = 0;
         }
 
-        public void Update(float totalTime, int costRefresh)
+        public void Update(float totalTime, int refresh)
         {
             EnemyAppearing(totalTime);
 
-            EnemyMoving(totalTime, costRefresh);
+            EnemyMoving(totalTime, refresh);
 
             EnemyAttack();
+
+
         }
 
 
@@ -112,15 +128,12 @@ namespace ArknightSimulator.Manager
                     newEnemy.PassPointCount = 1;
 
 
-
-
                     OnEnemyAppearing(this, new EnemyEventArgs(newEnemy));
-
                 }
             }
         }
         // 敌人移动
-        private void EnemyMoving(float totalTime, int costRefresh)
+        private void EnemyMoving(float totalTime, int refresh)
         {
             List<EnemyMovement> goInsideEnemies = new List<EnemyMovement>(); // 进入据点的敌人
             foreach (var enemy in EnemiesAppear)
@@ -142,7 +155,7 @@ namespace ArknightSimulator.Manager
 
 
                 // 抵达检查点
-                if (x * x + y * y < 4 * Math.Pow(enemy.Enemy.Status.MoveSpeed * 0.5 / costRefresh, 2))
+                if (x * x + y * y < 4 * Math.Pow(enemy.Enemy.Status.MoveSpeed * 0.5 / refresh, 2))
                 {
                     // 判断是否正在滞留
                     if (markTime.ContainsKey("enemy" + enemy.Enemy.InstanceId + "Stay"))
@@ -158,6 +171,17 @@ namespace ArknightSimulator.Manager
                     enemy.PassPointCount++;
 
 
+                    // 是否进入我方据点
+                    if (enemy.PassPointCount >= enemy.MovingPoints.Count)
+                    {
+                        CurrentHomeLife -= enemy.Enemy.Status.Count;
+                        CurrentEnemyCount++;
+                        goInsideEnemies.Add(enemy);
+                        OnEnemyRemove(this, new EnemyEventArgs(enemy));
+                        continue;
+                    }
+
+
                     // 判断是否需要滞留
                     if (Math.Abs(enemy.MovingPoints[enemy.PassPointCount].X
                         - enemy.MovingPoints[enemy.PassPointCount - 1].X) < double.Epsilon
@@ -169,27 +193,16 @@ namespace ArknightSimulator.Manager
                     }
 
 
-                    if (enemy.PassPointCount >= enemy.MovingPoints.Count)  // 进入我方据点
-                    {
-                        currentHomeLife -= enemy.Enemy.Status.Count;
-                        if (currentHomeLife <= 0)
-                        {
-                            Lose();
-                            return;
-                        }
-                        goInsideEnemies.Add(enemy);
-                        OnEnemyRemove(this, new EnemyEventArgs(enemy));
-                        continue;
-                    }
+
                     x = enemy.MovingPoints[enemy.PassPointCount].X - enemy.Enemy.Position.X;
                     y = enemy.MovingPoints[enemy.PassPointCount].Y - enemy.Enemy.Position.Y;
-
                     isTurningDirection = true;
                 }
 
+                // 开始移动
                 double distance = Math.Sqrt(x * x + y * y);
-                double moveX = enemy.Enemy.Status.MoveSpeed * 0.5 * x / distance / costRefresh;
-                double moveY = enemy.Enemy.Status.MoveSpeed * 0.5 * y / distance / costRefresh;
+                double moveX = enemy.Enemy.Status.MoveSpeed * 0.5 * x / distance / refresh;
+                double moveY = enemy.Enemy.Status.MoveSpeed * 0.5 * y / distance / refresh;
 
                 enemy.Enemy.Move(moveX, moveY);
 
@@ -226,18 +239,15 @@ namespace ArknightSimulator.Manager
         }
 
 
-
-
-
-        public void Lose()
-        {
-            OnLose(this, null);
-        }
         public void GameOver()
         {
+            foreach(var e in enemiesAppear)
+            {
+                OnEnemyRemove(this, new EnemyEventArgs(e));
+            }
+
             enemiesNotAppear = null;
             enemiesAppear = null;
-
         }
 
 

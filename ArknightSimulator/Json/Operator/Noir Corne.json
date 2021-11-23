@@ -2,6 +2,7 @@
     "Id": "Noir Corne",
     "Name": "黑角",
     "Position": 3,
+    "DeploymentType": 1,
     "Picture": "./Image/Operator/Noir Corne.png",
     "ModelPicture": "./Image/Operator/model-Noir Corne.png",
     "Rare": 2,
@@ -18,6 +19,7 @@
         "MagicDefence": 0,
         "Time": 70,
         "Cost": [ 14 ],
+        "DeployCount": 1,
         "Block": 3,
         "AttackTime": 1.2,
         "Range": [ [ [ 0 ] ] ]

@@ -41,16 +41,17 @@ namespace ArknightSimulator.Manager
         public OperatorEventHandler OnOperatorEnable;   // 费用足够后干员可用（或不足不可用）事件
 
 
-        public OperatorManager()
-        {
-            AvailableOperators = new List<OperatorTemplate>();
-            LoadOperators();
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+
+        public OperatorManager()
+        {
+            AvailableOperators = new List<OperatorTemplate>();
+            LoadOperators();
         }
 
         public void LoadOperators(string path = "./Json/Operator")
@@ -95,7 +96,7 @@ namespace ArknightSimulator.Manager
             MaxCost = (maxCost >= 0) ? maxCost : 0;
             RestDeploymentCount = (deploymentLimit >= 0) ? deploymentLimit : 0;
             CostUnit = 0;
-            totalDeploymentCount = 0;
+            TotalDeploymentCount = 0;
 
 
         }
@@ -155,9 +156,10 @@ namespace ArknightSimulator.Manager
             op.Position = new Point { X = mapX + 0.5, Y = mapY + 0.5 };
             op.Direction = direction;
 
+            OnMapOperators.Add(op);
 
             CurrentCost -= op.Status.Cost[opt.EliteLevel];
-            RestDeploymentCount--;
+            RestDeploymentCount -= op.Status.DeployCount;
         }
 
 

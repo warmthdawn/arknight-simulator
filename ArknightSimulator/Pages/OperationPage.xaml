@@ -87,6 +87,15 @@
                 </Button.Background>
             </Button>
         </Canvas>
+        <Canvas x:Name="canvasSkillOrWithdraw" Visibility="Hidden">
+            <Button x:Name="btnWithdraw" BorderThickness="0" Margin="0,0,200,200" Height="100" Width="100" Click="BtnWithdraw_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="../Image/cancel.png"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="btnSkill" BorderThickness="0" Margin="200,200,0,0" Height="100" Width="100" Click="BtnSkill_Click">
+            </Button>
+        </Canvas>
         <Canvas x:Name="gridCanvas" Panel.ZIndex="-2" Visibility="Hidden"></Canvas>
 <!--         <Polygon Points="251,188 55,817 1549,816 1365,188 " StrokeThickness="5" Stroke="Red"></Polygon> -->
     </Grid>

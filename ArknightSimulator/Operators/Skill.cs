@@ -24,6 +24,8 @@ namespace ArknightSimulator.Operators
         public int Initial { get; set; }     // 初始技力
         public int Cost { get; set; }        // 启动消耗
         public int Time { get; set; }        // 持续时间
+        public int CurrentTime { get; set; } // 当前技能已使用时间
+        public int TimeUnit { get; set; }   // 已使用时间单元时间
         public SkillRecoveryType RecoveryType { get; set; }   // 技力回复类型
         public SkillStartType StartType { get; set; }   // 触发类型
 
@@ -34,13 +36,28 @@ namespace ArknightSimulator.Operators
             Initial = skill.Initial;
             Cost = skill.Cost;
             Time = skill.Time;
+            CurrentTime = skill.CurrentTime;
+            TimeUnit = skill.TimeUnit;
             RecoveryType = skill.RecoveryType;
             StartType = skill.StartType;
         }
 
         public virtual IStatus Start(IStatus status)
         {
-            return new Decorator(status, this);
+            return default;
+        }
+        public bool Update(int refresh)
+        {
+            if (CurrentTime >= Time)
+                return false;
+
+            int nextTimeUnit = (TimeUnit + 100 / refresh) % 100;
+            if(nextTimeUnit<TimeUnit)
+            {
+                CurrentTime++;
+            }
+            TimeUnit = nextTimeUnit;
+            return true;
         }
 
         public virtual IStatus End(IStatus status)
@@ -48,17 +65,5 @@ namespace ArknightSimulator.Operators
             return default;
         }
 
-
-        private class Decorator : SkillStatusDecorator
-        {
-            private Skill skill;
-            public Decorator(IStatus status, Skill skill) : base(status)
-            {
-                this.skill = skill;
-            }
-
-            public override int Attack => base.Attack + skill.Level;
-
-        }
     }
 }

@@ -88,7 +88,25 @@ namespace ArknightSimulator.Skills
 
         public override IStatus Start(IStatus status)
         {
-            return default;
+            return new Decorator(status, this);
+        }
+
+        public override IStatus End(IStatus status)
+        {
+            return status;
+        }
+
+
+        private class Decorator : StatusDecorator
+        {
+            private SkillAttackEnhanceAlpha skill;
+            public Decorator(IStatus status, SkillAttackEnhanceAlpha skill) : base(status)
+            {
+                this.skill = skill;
+            }
+
+            public override int Attack => (int)(base.Attack + base.Attack*skill.AttackEnhancePercent);
+
         }
 
     }

@@ -114,6 +114,9 @@
     <None Update="Image\pause.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Image\Skills\SkillAttackEnhanceAlpha.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Image\Sniper.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

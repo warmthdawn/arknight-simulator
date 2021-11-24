@@ -48,6 +48,7 @@ namespace ArknightSimulator.Pages
         public EventHandler OnDeleteOperationPage;  // 结束作战删除本页事件
         public EventHandler OnChangeToEditPage;   // 跳转到编辑页事件
         public Action<DeploymentType> OnPlaceOperator;   // 部署干员事件
+        public Action<Operator, OperatorTemplate> OnSelectMapOperator;   // 选中场上干员事件
         public OperatorEventHandler OnOperatorRemove;  // 撤退干员事件
 
         public OperationPage(MainWindow mainWindow)
@@ -123,6 +124,7 @@ namespace ArknightSimulator.Pages
             mapManager.OnEnemyMoving += EnemyMoving;
             mapManager.OnEnemyRemove += EnemyRemove;
             OnPlaceOperator += PlaceOperator;
+            OnSelectMapOperator += SelectMapOperator;
             OnOperatorRemove += OperatorRemove;
         }
 
@@ -307,6 +309,76 @@ namespace ArknightSimulator.Pages
             }
         }
 
+        // 根据干员攻击范围更新网格
+        private void SelectMapOperator(Operator op, OperatorTemplate opt)
+        {
+            // 先将所有网格设为不可见
+            for (int x = 0; x < mapManager.CurrentOperation.MapWidth; x++)
+            {
+                for (int y = 0; y < mapManager.CurrentOperation.MapHeight; y++)
+                {
+                    blocks[x][y].Visibility = Visibility.Hidden;
+                } 
+            }
+
+            int[][] range = op.Status.Range[opt.EliteLevel];
+            int selfi = 0;
+            int selfj = 0;
+            // 寻找自身点
+            for(int i=0;i<range.Length;i++)
+            {
+                int j = 0;
+                for (;j<range[i].Length;j++)
+                {
+                    if (range[i][j] == 0)
+                    {
+                        selfi = i;
+                        selfj = j;
+                        blocks[op.MapX][op.MapY].Visibility = Visibility.Visible;
+                        break;
+                    }
+                }
+                if (j < range[i].Length)
+                    break;
+            }
+
+            // 确定攻击范围
+            for (int i = 0; i < range.Length; i++)
+            {
+                for (int j = 0; j < range[i].Length; j++)
+                {
+                    if (range[i][j] == 1)
+                    {
+                        int di = i - selfi;  // 攻击范围的某一格与自身行距离
+                        int dj = j - selfj;  // 列距离
+                        int mapi = 0;   // 攻击范围在地图的行
+                        int mapj = 0;   // 列
+                        switch (op.Direction)
+                        {
+                            case Directions.Up:
+                                mapi = op.MapY - dj;
+                                mapj = op.MapX + di;
+                                break;
+                            case Directions.Down:
+                                mapi = op.MapY + dj;
+                                mapj = op.MapX - di;
+                                break;
+                            case Directions.Left:
+                                mapi = op.MapY - di;
+                                mapj = op.MapX - dj;
+                                break;
+                            case Directions.Right:
+                                mapi = op.MapY + di;
+                                mapj = op.MapX + dj;
+                                break;
+                        }
+
+                        blocks[mapj][mapi].Visibility = Visibility.Visible; // block的第一维是列
+                    }
+                }
+            }
+        }
+
         // 已入队干员初始化后加载图片
         private void OpSelectedItem_Initialized(object sender, EventArgs e)
         {
@@ -432,6 +504,7 @@ namespace ArknightSimulator.Pages
                     grid.ActualHeight - e.GetPosition(grid).Y);
 
                 grid.RegisterName(currentDragOperator.Id.Replace(" ", "_"), currentDragOperatorImg);
+                currentDragOperatorImg.Name = currentDragOperator.Id.Replace(" ", "_");
                 Panel.SetZIndex(currentDragOperatorImg, -1);
                 grid.Children.Add(currentDragOperatorImg);
 
@@ -499,6 +572,8 @@ namespace ArknightSimulator.Pages
                     currentDragOperatorImg.Margin.Bottom - 100);
                 canvasDirection.Visibility = Visibility.Visible;
 
+                currentDragOperatorImg.MouseLeftButtonDown += CurrentOperatorImg_MouseLeftButtonDown;
+
                 currentDragOperatorImg = null;
                 gridCanvas.Visibility = Visibility.Hidden;
             }
@@ -561,6 +636,69 @@ namespace ArknightSimulator.Pages
         private void BtnTurnCancel_Click(object sender, RoutedEventArgs e)
         {
             OnOperatorRemove(this, new OperatorEventArgs(currentDragOperator));
+        }
+
+        // 选中场上干员，可选择撤退或使用技能
+        private void CurrentOperatorImg_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (gameManager.IsGoingOn == false)
+                return;
+            if (canvasSkillOrWithdraw.Visibility == Visibility)
+                return;
+
+            if (currentDragOperatorImg == null && currentDragOperator == null)
+            {
+                btnPauseOrContinue.IsEnabled = false;
+                gameManager.Pause();   // 部署时先暂停
+
+                string id = ((Image)sender).Name.Replace("_", " ");
+                OperatorTemplate opt = operatorManager.SelectedOperators.Find(o => o.Id == id);
+                Operator op = operatorManager.OnMapOperators.Find(o => o.TemplateId == opt.Id);
+                if(op.Skill==null)
+                {
+                    btnSkill.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    btnSkill.Visibility = Visibility.Visible;
+                    string skillname = opt.SkillNames[opt.SkillChooseId - 1];
+                    ImageBrush brush = new ImageBrush();
+                    brush.ImageSource = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Image/Skills/" + skillname + ".png")));
+                    btnSkill.Background = brush;
+                }
+
+                // 网格可视化
+                OnSelectMapOperator(op, opt);
+                gridCanvas.Visibility = Visibility.Visible;
+
+                imgMap.MouseDown += ImgMap_MouseDown;
+
+                canvasSkillOrWithdraw.Margin = new Thickness(
+                    ((Image)sender).Margin.Left - 50,
+                    ((Image)sender).Margin.Top,
+                    ((Image)sender).Margin.Right - 150,
+                    ((Image)sender).Margin.Bottom - 100);
+                canvasSkillOrWithdraw.Visibility = Visibility.Visible;
+
+            }
+
+
+        }
+
+        // 取消选中场上干员
+        private void ImgMap_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+        // 撤退干员
+        private void BtnWithdraw_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        // 使用技能
+        private void BtnSkill_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
     }

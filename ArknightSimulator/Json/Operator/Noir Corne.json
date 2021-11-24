@@ -24,8 +24,11 @@
         "AttackTime": 1.2,
         "Range": [ [ [ 0 ] ] ]
     },
-    "Gift": [],
-    "Skill": [],
+    "GiftNames": [],
+    "SkillNames": [],
+    "SkillChooseId": 0,
+    "SkillLevel": 0,
+    "SkillMaxLevel": 0,
     "LevelUpLife": [ "1219", "1670", "0", "0" ],
     "LevelUpAttack": [ "180", "240", "0", "0" ],
     "LevelUpDefence": [ "220", "315", "0", "0" ],

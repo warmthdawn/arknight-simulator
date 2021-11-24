@@ -296,6 +296,49 @@ namespace ArknightSimulator.Pages
             }
         }
 
+        // 技能选择减小
+        private void BtnSkillChooseIdDown_Click(object sender, RoutedEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
+            if (opt.SkillNames.Length == 0)
+                return;
+            if (opt.SkillChooseId - 1 > 0)
+            {
+                opt.SkillChooseId--;
+            }
+        }
+
+        // 技能选择增大
+        private void BtnSkillChooseIdUp_Click(object sender, RoutedEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
+            if (opt.SkillChooseId + 1 <= opt.SkillNames.Length)
+            {
+                opt.SkillChooseId++;
+            }
+        }
+
+        // 技能等级减小
+        private void BtnSkillLevelDown_Click(object sender, RoutedEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
+            if (opt.SkillNames.Length == 0)
+                return;
+            if (opt.SkillLevel - 1 > 0)
+            {
+                opt.SkillLevel--;
+            }
+        }
+
+        // 技能选择增大
+        private void BtnSkillLevelUp_Click(object sender, RoutedEventArgs e)
+        {
+            OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
+            if (opt.SkillLevel + 1 <= opt.SkillMaxLevel)
+            {
+                opt.SkillLevel++;
+            }
+        }
 
     }
 }

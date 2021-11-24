@@ -12,6 +12,8 @@ namespace ArknightSimulator.Operators
         private int level;
         private int belief;
         private int potential;
+        private int skillChooseId;
+        private int skillLevel;
 
         public string Id { get; set; }  // 编号
         public string Name { get; set; } // 代号
@@ -26,8 +28,12 @@ namespace ArknightSimulator.Operators
         public int Potential { get => potential; set { potential = value; OnPropertyChanged(); } } // 潜能
         public Status InitStatus { get; set; } // 初始属性状态
         public Status Status { get; set; } // 属性状态
-        public Gift[] Gift { get; set; } // 天赋
-        public Skill[] Skill { get; set; } // 技能
+        public string[] GiftNames { get; set; } // 天赋名
+        public string[] SkillNames { get; set; } // 技能名
+        public int SkillChooseId { get=> skillChooseId; set { skillChooseId = value; OnPropertyChanged(); } }  // 选择的技能序号（从1开始，0表示无技能）
+        public int SkillLevel { get => skillLevel; set { skillLevel = value; OnPropertyChanged(); } }    // 技能等级（从1开始，8、9、10表示专一、二、三）
+        public int SkillMaxLevel { get; set; } // 技能最大等级
+
 
         public int[] LevelUpLife { get; set; }   // 包括各个阶段血量  精英0 1级 	精英0 满级 	精英1 满级 	精英2 满级
         public int[] LevelUpAttack { get; set; } // 包括各个阶段攻击
@@ -84,16 +90,19 @@ namespace ArknightSimulator.Operators
             Potential = opt.Potential;
             InitStatus = new Status(opt.InitStatus);
             Status = new Status(opt.Status);
-            Gift = new Gift[opt.Gift.Length];
-            for (int i = 0; i < opt.Gift.Length; i++)
+            GiftNames = new string[opt.GiftNames.Length];
+            for (int i = 0; i < opt.GiftNames.Length; i++)
             {
-                Gift[i] = new Gift(opt.Gift[i]);
+                GiftNames[i] = opt.GiftNames[i];
             }
-            Skill = new Skill[opt.Skill.Length];
-            for (int i = 0; i < opt.Skill.Length; i++)
+            SkillNames = new string[opt.SkillNames.Length];
+            for (int i = 0; i < opt.SkillNames.Length; i++)
             {
-                Skill[i] = new Skill(opt.Skill[i]);
+                SkillNames[i] = opt.SkillNames[i];
             }
+            SkillChooseId = opt.SkillChooseId;
+            SkillLevel = opt.SkillLevel;
+            SkillMaxLevel = opt.SkillMaxLevel;
             LevelUpLife = new int[opt.LevelUpLife.Length];
             for (int i = 0; i < opt.LevelUpLife.Length; i++)
             {

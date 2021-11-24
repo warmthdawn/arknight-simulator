@@ -17,7 +17,7 @@ namespace ArknightSimulator.Operators
         public int DeployCount { get; set; } // 部署位
         public int Block { get; set; } // 阻挡数
         public float AttackTime { get; set; } // 攻击间隔 
-        public int[][][] Range { get; set; } // 攻击范围
+        public int[][][] Range { get; set; } // 攻击范围（第一维表示精英化等级，第二三维表示的二维数组中，0表示自身，1表示攻击范围，-1表示非攻击范围）
 
         public Status() { }
         public Status(IStatus status)

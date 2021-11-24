@@ -21,7 +21,7 @@ namespace ArknightSimulator.Operators
             return new Decorator(status, this);
         }
 
-        private class Decorator : GiftStatusDecorator
+        private class Decorator : StatusDecorator
         {
             private Gift gift;
             public Decorator(IStatus status, Gift gift) : base(status)

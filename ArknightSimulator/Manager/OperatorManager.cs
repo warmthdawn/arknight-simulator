@@ -2,6 +2,7 @@
 using ArknightSimulator.EventHandlers;
 using ArknightSimulator.Operations;
 using ArknightSimulator.Operators;
+using ArknightSimulator.Skills;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,7 @@ namespace ArknightSimulator.Manager
 
         public ObservableCollection<OperatorTemplate> NotOnMapOperators { get; set; }   // 游戏中未上场干员
         public List<Operator> OnMapOperators { get; set; }   // 游戏中已上场干员
+        public List<Operator> SkillOnOperators { get; set; } // 正在使用技能的干员
 
 
 
@@ -94,6 +96,7 @@ namespace ArknightSimulator.Manager
             }
 
             OnMapOperators = new List<Operator>();
+            SkillOnOperators = new List<Operator>();
             CurrentCost = (initialCost >= 0) ? initialCost : 0;
             MaxCost = (maxCost >= 0) ? maxCost : 0;
             RestDeploymentCount = (deploymentLimit >= 0) ? deploymentLimit : 0;
@@ -103,11 +106,13 @@ namespace ArknightSimulator.Manager
 
         }
 
-        public void Update(int costRefresh, List<EnemyMovement> EnemiesAppear, Operation CurrentOperation, double operatorColliderRadius, double enemyColliderRadius)
+        public void Update(int refresh, List<EnemyMovement> EnemiesAppear, Operation CurrentOperation, double operatorColliderRadius, double enemyColliderRadius)
         {
-            CostIncreasing(costRefresh);
+            CostIncreasing(refresh);
 
             OperatorBlock(EnemiesAppear, CurrentOperation, operatorColliderRadius, enemyColliderRadius);
+
+            SkillUsing(refresh);
 
             OperatorAttack();
         }
@@ -184,6 +189,24 @@ namespace ArknightSimulator.Manager
             }
         }
 
+        // 技能使用
+        public void SkillUsing(int refresh)
+        {
+            List<Operator> skillOffOperators = new List<Operator>();
+            foreach (Operator op in SkillOnOperators)
+            {
+                if (!op.SkillUpdate(refresh))
+                {
+                    op.SkillEnd();
+                    skillOffOperators.Add(op);
+                }
+            }
+            foreach(Operator op in skillOffOperators)
+            {
+                SkillOnOperators.Remove(op);
+            }
+        }
+
         // 干员攻击
         public void OperatorAttack()
         {
@@ -202,6 +225,31 @@ namespace ArknightSimulator.Manager
             TotalDeploymentCount++;
             op.TemplateId = opt.Id;
             op.Status = new Status(opt.Status);
+
+
+            op.Gift = new Gift[opt.GiftNames.Length];
+            if (opt.GiftNames.Length != 0)
+            {
+                foreach (string gift in opt.GiftNames)
+                {
+                    switch (gift)
+                    {
+                        default: break;
+                    }
+                }
+            }
+
+
+            if (opt.SkillNames.Length != 0)
+            {
+                string skill = opt.SkillNames[opt.SkillChooseId - 1];
+                switch (skill)
+                {
+                    case "SkillAttackEnhanceAlpha": op.Skill = new SkillAttackEnhanceAlpha(opt.SkillLevel); break;
+                    default: break;
+                }
+            }
+
             op.MapX = mapX;
             op.MapY = mapY;
             op.Position = new Point { X = mapX + 0.5, Y = mapY + 0.5 };
@@ -214,7 +262,11 @@ namespace ArknightSimulator.Manager
             RestDeploymentCount -= op.Status.DeployCount;
         }
 
-
+        // 技能开始 TODO
+        public void SkillStart(Operator op)
+        {
+            op.SkillStart();
+        }
 
 
 
@@ -223,6 +275,7 @@ namespace ArknightSimulator.Manager
             SelectedOperators = null;
             NotOnMapOperators = null;
             OnMapOperators = null;
+            SkillOnOperators = null;
         }
     }
 }

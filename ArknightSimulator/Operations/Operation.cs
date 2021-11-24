@@ -77,10 +77,6 @@ namespace ArknightSimulator.Operations
             return position;
         }
 
-        // 坐标反转换（实际坐标到格子坐标）
-
-
-
 
 
     }

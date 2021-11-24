@@ -290,14 +290,14 @@ namespace ArknightSimulator.Pages
                 {
                     if (place1 != PointType.None)
                     {
-                        if (mapManager.CurrentOperation.Map[y][x] == place1)
+                        if (mapManager.Map[y][x] == place1)
                             blocks[x][y].Visibility = Visibility.Visible;
                         else
                             blocks[x][y].Visibility = Visibility.Hidden;
                     }
                     if (place2 != PointType.None)
                     {
-                        if (mapManager.CurrentOperation.Map[y][x] == place2)
+                        if (mapManager.Map[y][x] == place2)
                             blocks[x][y].Visibility = Visibility.Visible;
                         else
                             blocks[x][y].Visibility = Visibility.Hidden;

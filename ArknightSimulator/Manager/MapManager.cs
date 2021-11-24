@@ -22,6 +22,7 @@ namespace ArknightSimulator.Manager
         private List<EnemyMovement> enemiesAppear;
         private Dictionary<string, float> markTime;
 
+
         private int currentHomeLife;          // 当前据点耐久
         private int enemyTotalCount;          // 敌人总数
         private int currentEnemyCount;        // 当前敌人数
@@ -34,6 +35,8 @@ namespace ArknightSimulator.Manager
         public int EnemyTotalCount { get => enemyTotalCount; set { enemyTotalCount = value; OnPropertyChanged(); } }
         public int CurrentEnemyCount { get => currentEnemyCount; set { currentEnemyCount = value; OnPropertyChanged(); } }
 
+
+        public PointType[][] Map { get; set; }     // 地图
 
 
         public EnemyEventHandler OnEnemyAppearing; // 敌人出现事件
@@ -53,7 +56,7 @@ namespace ArknightSimulator.Manager
 
 
         }
-
+        // 载入地图
         public bool LoadOperation(string name)
         {
             try
@@ -79,7 +82,7 @@ namespace ArknightSimulator.Manager
 
         
         
-        
+        // 开始作战时初始化
         public void Init()
         {
             enemiesNotAppear = new List<EnemyMovement>();
@@ -99,13 +102,24 @@ namespace ArknightSimulator.Manager
             CurrentHomeLife = CurrentOperation.HomeLife;
             EnemyTotalCount = CurrentOperation.EnemyCount;
             CurrentEnemyCount = 0;
+            
+            Map = new PointType[CurrentOperation.MapHeight][];
+            for (int i = 0; i < Map.Length; i++)
+            {
+                Map[i] = new PointType[CurrentOperation.MapWidth];
+                for (int j = 0; j < Map[i].Length; j++)
+                {
+                    Map[i][j] = CurrentOperation.Map[i][j];
+                }
+            }
         }
 
-        public void Update(float totalTime, int refresh)
+        // 每帧更新
+        public void Update(float totalTime, int refresh, List<Operator> OnMapOperators)
         {
             EnemyAppearing(totalTime);
 
-            EnemyMoving(totalTime, refresh);
+            EnemyMoving(totalTime, refresh, OnMapOperators);
 
             EnemyAttack();
 
@@ -133,16 +147,36 @@ namespace ArknightSimulator.Manager
             }
         }
         // 敌人移动
-        private void EnemyMoving(float totalTime, int refresh)
+        private void EnemyMoving(float totalTime, int refresh, List<Operator> OnMapOperators)
         {
             List<EnemyMovement> goInsideEnemies = new List<EnemyMovement>(); // 进入据点的敌人
             foreach (var enemy in EnemiesAppear)
             {
+                int enemyMapX = (int)enemy.Enemy.Position.X;
+                int enemyMapY = (int)enemy.Enemy.Position.Y;
+                double enemyMapXMod = enemy.Enemy.Position.X % 1;
+                double enemyMapYMod = enemy.Enemy.Position.Y % 1;
 
+                // 判断是否被阻挡 TODO
+                foreach (Operator op in OnMapOperators)
+                {
+                    if (op.Position.X == enemyMapX && op.Position.Y == enemyMapY)
+                    {
+                        if (enemy.Enemy.IsBlock)
+                            return;
+                        else
+                        {
+                            if(op.BlockEnemyCount+1<=op.Status.Block)
+                            {
+                                enemy.Enemy.IsBlock = true;
+                                op.BlockEnemyCount++;
+                                return;
+                            }
+                        }
+                    }
+                }
 
-                // ---------------------------------
-                // 还要判断是否被阻挡
-                // ---------------------------------
+                enemy.Enemy.IsBlock = false;
 
 
                 double x = enemy.MovingPoints[enemy.PassPointCount].X - enemy.Enemy.Position.X;
@@ -248,6 +282,7 @@ namespace ArknightSimulator.Manager
 
             enemiesNotAppear = null;
             enemiesAppear = null;
+            Map = null;
         }
 
 

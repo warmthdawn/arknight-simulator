@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArknightSimulator.Operations
 {
-    public enum PointType: int
+    public enum PointType : int
     {
         None = 0,
         Land = 1,

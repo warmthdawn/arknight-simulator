@@ -1,5 +1,6 @@
 ﻿using ArknightSimulator.Enemies;
 using ArknightSimulator.EventHandlers;
+using ArknightSimulator.Operations;
 using ArknightSimulator.Operators;
 using Newtonsoft.Json;
 using System;
@@ -101,7 +102,7 @@ namespace ArknightSimulator.Manager
 
         }
 
-        public void Update(int costRefresh)
+        public void Update(int costRefresh, List<EnemyMovement> EnemiesAppear)
         {
             CostIncreasing(costRefresh);
 

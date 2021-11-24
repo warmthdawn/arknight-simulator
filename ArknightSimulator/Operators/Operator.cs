@@ -15,6 +15,7 @@ namespace ArknightSimulator.Operators
         public int MapX { get; set; }   // 地图的格子横坐标
         public int MapY { get; set; }   // 地图的格子纵坐标
         public Directions Direction { get; set; }  // 干员方向
+        public int BlockEnemyCount { get; set; } = 0;  // 正在阻挡敌人数
         public int AttackId { get; set; } = -1;   // 索敌：攻击的敌人ID
 
 

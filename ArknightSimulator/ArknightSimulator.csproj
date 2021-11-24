@@ -139,6 +139,7 @@
 
   <ItemGroup>
     <Folder Include="Json\Operator\" />
+    <Folder Include="Gifts\" />
   </ItemGroup>
 
 </Project>

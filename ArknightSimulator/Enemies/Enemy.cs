@@ -12,7 +12,8 @@ namespace ArknightSimulator.Enemies
         public string TemplateId { get; set; }      // 敌人模板的ID
         public IEnemyStatus Status { get; set; }    // 属性状态
         public Point Position { get; set; } = new Point();  // 坐标
-        public bool IsBlock { get; set; } = false; // 是否被阻挡
+        public bool IsBlocked { get; set; } = false; // 是否被阻挡
+        public int BlockId { get; set; } = -1;    // 阻挡的干员ID
         public int AttackId { get; set; } = -1;   // 索敌：攻击的干员ID
 
         public Enemy() { }
@@ -25,7 +26,8 @@ namespace ArknightSimulator.Enemies
             Status = new EnemyStatus(enemy.Status);
             Position.X = enemy.Position.X;
             Position.Y = enemy.Position.Y;
-            IsBlock = enemy.IsBlock;
+            IsBlocked = enemy.IsBlocked;
+            BlockId = enemy.BlockId;
             AttackId = enemy.AttackId;
         }
 

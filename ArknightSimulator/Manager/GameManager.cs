@@ -16,6 +16,9 @@ namespace ArknightSimulator.Manager
         private int interval = 50;  // 刷新间隔
         private float totalTime;    // 总时间
 
+        private readonly double operatorColliderRadius = 0.5; // 碰撞器
+        private readonly double enemyColliderRadius = 0.25;
+
         public int Speed => this.speed;
         public bool IsGoingOn => this.isGoingOn;
         public bool TimerTicking => this.timerTicking;
@@ -76,8 +79,8 @@ namespace ArknightSimulator.Manager
         public void Update()
         {
             totalTime += interval * 1.0f / 1000;
-            OperatorManager.Update(refresh, MapManager.EnemiesAppear);
-            MapManager.Update(TotalTime, Refresh, OperatorManager.OnMapOperators);
+            OperatorManager.Update(refresh, MapManager.EnemiesAppear,MapManager.CurrentOperation, operatorColliderRadius, enemyColliderRadius);
+            MapManager.Update(TotalTime, Refresh, OperatorManager.OnMapOperators, operatorColliderRadius, enemyColliderRadius);
         }
 
         public void StartGame()

@@ -35,6 +35,7 @@ namespace ArknightSimulator.Pages
         private List<Image> notOnMapImg;
         private int currentMapX;
         private int currentMapY;
+        private DeploymentType currentDeploymentType;
 
 
         public GameManager GameManager => gameManager;
@@ -476,6 +477,12 @@ namespace ArknightSimulator.Pages
                 //var mapPoint = mapManager.CurrentOperation.GetPosition(new Point(e.GetPosition(grid).X, e.GetPosition(grid).Y));
                 currentMapX = int.Parse(coordinate.Split("_")[0]);
                 currentMapY = int.Parse(coordinate.Split("_")[1]);
+                switch (mapManager.Map[currentMapY][currentMapX])
+                {
+                    case PointType.Land: currentDeploymentType = DeploymentType.Land; break;
+                    case PointType.HighLand: currentDeploymentType = DeploymentType.HighLand; break;
+                    default: throw new Exception("地图方格类型为特殊，未定义！");
+                }
                 var pos = mapManager.CurrentOperation.GetPosition(new Point(currentMapX + 0.5, currentMapY + 0.5));
 
 
@@ -500,7 +507,7 @@ namespace ArknightSimulator.Pages
         // 调整方向
         private void BtnTurnUp_Click(object sender, RoutedEventArgs e)
         {
-            operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY);
+            operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY, currentDeploymentType);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             notOnMapImg.Remove(img);
@@ -511,7 +518,7 @@ namespace ArknightSimulator.Pages
         }
         private void BtnTurnDown_Click(object sender, RoutedEventArgs e)
         {
-            operatorManager.Deploying(currentDragOperator, Directions.Down, currentMapX, currentMapY);
+            operatorManager.Deploying(currentDragOperator, Directions.Down, currentMapX, currentMapY, currentDeploymentType);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             notOnMapImg.Remove(img);
@@ -531,7 +538,7 @@ namespace ArknightSimulator.Pages
             currentImg.RenderTransform = scaleTransform;
 
 
-            operatorManager.Deploying(currentDragOperator, Directions.Left, currentMapX, currentMapY);
+            operatorManager.Deploying(currentDragOperator, Directions.Left, currentMapX, currentMapY, currentDeploymentType);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             notOnMapImg.Remove(img);
@@ -542,7 +549,7 @@ namespace ArknightSimulator.Pages
         }
         private void BtnTurnRight_Click(object sender, RoutedEventArgs e)
         {
-            operatorManager.Deploying(currentDragOperator, Directions.Right, currentMapX, currentMapY);
+            operatorManager.Deploying(currentDragOperator, Directions.Right, currentMapX, currentMapY, currentDeploymentType);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             notOnMapImg.Remove(img);

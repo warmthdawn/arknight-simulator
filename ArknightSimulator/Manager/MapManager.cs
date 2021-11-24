@@ -23,6 +23,7 @@ namespace ArknightSimulator.Manager
         private Dictionary<string, float> markTime;
 
 
+
         private int currentHomeLife;          // 当前据点耐久
         private int enemyTotalCount;          // 敌人总数
         private int currentEnemyCount;        // 当前敌人数
@@ -115,11 +116,11 @@ namespace ArknightSimulator.Manager
         }
 
         // 每帧更新
-        public void Update(float totalTime, int refresh, List<Operator> OnMapOperators)
+        public void Update(float totalTime, int refresh, List<Operator> OnMapOperators, double operatorColliderRadius, double enemyColliderRadius)
         {
             EnemyAppearing(totalTime);
 
-            EnemyMoving(totalTime, refresh, OnMapOperators);
+            EnemyMoving(totalTime, refresh, OnMapOperators, operatorColliderRadius, enemyColliderRadius);
 
             EnemyAttack();
 
@@ -146,37 +147,50 @@ namespace ArknightSimulator.Manager
                 }
             }
         }
+
+        // 判断是否被阻挡 TODO 暂不考虑空降挤开和特殊敌人
+        private bool EnemyBlocked(EnemyMovement enemy, List<Operator> onMapOperators, double operatorColliderRadius, double enemyColliderRadius)
+        {
+            EnemyTemplate emt = CurrentOperation.AvailableEnemies.Find(e => e.Id == enemy.Enemy.TemplateId);
+            if (emt.Type != EnemyType.Ground)
+                return false;
+
+            foreach (Operator op in onMapOperators)
+            {
+                if (op.CurrentDeploymentType != DeploymentType.Land)
+                    continue;
+
+                double distanceX = op.Position.X - enemy.Enemy.Position.X;
+                double distanceY = op.Position.Y - enemy.Enemy.Position.Y;
+                double distanceBlock = operatorColliderRadius + enemyColliderRadius;
+                if (distanceX * distanceX + distanceY * distanceY <= distanceBlock * distanceBlock)
+                {
+                    if (enemy.Enemy.IsBlocked)
+                        return true;
+                    if (op.BlockEnemiesId.Contains(enemy.Enemy.InstanceId))
+                    {
+                        enemy.Enemy.BlockId = op.InstanceId;
+                        enemy.Enemy.IsBlocked = true;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
         // 敌人移动
-        private void EnemyMoving(float totalTime, int refresh, List<Operator> OnMapOperators)
+        private void EnemyMoving(float totalTime, int refresh, List<Operator> onMapOperators, double operatorColliderRadius, double enemyColliderRadius)
         {
             List<EnemyMovement> goInsideEnemies = new List<EnemyMovement>(); // 进入据点的敌人
             foreach (var enemy in EnemiesAppear)
             {
-                int enemyMapX = (int)enemy.Enemy.Position.X;
-                int enemyMapY = (int)enemy.Enemy.Position.Y;
-                double enemyMapXMod = enemy.Enemy.Position.X % 1;
-                double enemyMapYMod = enemy.Enemy.Position.Y % 1;
+                // 判断是否被阻挡
+                if (EnemyBlocked(enemy, onMapOperators, operatorColliderRadius, enemyColliderRadius) == true)
+                    continue;
 
-                // 判断是否被阻挡 TODO
-                foreach (Operator op in OnMapOperators)
-                {
-                    if (op.Position.X == enemyMapX && op.Position.Y == enemyMapY)
-                    {
-                        if (enemy.Enemy.IsBlock)
-                            return;
-                        else
-                        {
-                            if(op.BlockEnemyCount+1<=op.Status.Block)
-                            {
-                                enemy.Enemy.IsBlock = true;
-                                op.BlockEnemyCount++;
-                                return;
-                            }
-                        }
-                    }
-                }
-
-                enemy.Enemy.IsBlock = false;
+                enemy.Enemy.IsBlocked = false;
+                enemy.Enemy.BlockId = -1;
 
 
                 double x = enemy.MovingPoints[enemy.PassPointCount].X - enemy.Enemy.Position.X;

@@ -23,6 +23,7 @@ namespace ArknightSimulator.Manager
         private int restDeploymentCount;  // 剩余可部署人数 
         private int totalDeploymentCount; // 总部署次数，包括撤回的干员数
 
+
         public int CurrentCost { get => currentCost; set { currentCost = value; OnPropertyChanged(); } }
         public int MaxCost { get => maxCost; set => maxCost = value; }
         public int CostUnit { get => costUnit; set { costUnit = value; OnPropertyChanged(); } }
@@ -102,9 +103,11 @@ namespace ArknightSimulator.Manager
 
         }
 
-        public void Update(int costRefresh, List<EnemyMovement> EnemiesAppear)
+        public void Update(int costRefresh, List<EnemyMovement> EnemiesAppear, Operation CurrentOperation, double operatorColliderRadius, double enemyColliderRadius)
         {
             CostIncreasing(costRefresh);
+
+            OperatorBlock(EnemiesAppear, CurrentOperation, operatorColliderRadius, enemyColliderRadius);
 
             OperatorAttack();
         }
@@ -134,6 +137,53 @@ namespace ArknightSimulator.Manager
             }
         }
 
+        // 干员阻挡 TODO 暂不考虑空降挤开和特殊敌人
+        public void OperatorBlock(List<EnemyMovement> enemiesAppear, Operation currentOperation, double operatorColliderRadius, double enemyColliderRadius)
+        {
+            foreach (Operator op in OnMapOperators)
+            {
+                if (op.CurrentDeploymentType != DeploymentType.Land)
+                    continue;
+                int blockCount = 0;
+                List<int> blockId = new List<int>();
+
+                foreach (EnemyMovement enemy in enemiesAppear)
+                {
+                    EnemyTemplate emt = currentOperation.AvailableEnemies.Find(e => e.Id == enemy.Enemy.TemplateId);
+                    if (emt.Type != EnemyType.Ground)
+                        continue;
+
+                    double distanceX = op.Position.X - enemy.Enemy.Position.X;
+                    double distanceY = op.Position.Y - enemy.Enemy.Position.Y;
+                    double distanceBlock = operatorColliderRadius + enemyColliderRadius;
+                    if (distanceX * distanceX + distanceY * distanceY <= distanceBlock * distanceBlock)
+                    {
+                        blockCount++;
+                        blockId.Add(enemy.Enemy.InstanceId);
+                    }
+                }
+                op.BlockEnemyCount = blockCount;
+                List<int> removeId = new List<int>();
+                op.BlockEnemiesId.ForEach(e =>
+                    {
+                        if (!blockId.Contains(e))
+                            removeId.Add(e);
+                    });
+                op.BlockEnemiesId.RemoveAll(e => removeId.Contains(e));
+                blockId.ForEach(e =>
+                    {
+                        if (op.BlockEnemiesId.Count >= op.Status.Block)
+                        {
+                            op.BlockEnemyCount = op.Status.Block;
+                            return;
+                        }
+                        if (!op.BlockEnemiesId.Contains(e))
+                            op.BlockEnemiesId.Add(e);
+
+                    });
+            }
+        }
+
         // 干员攻击
         public void OperatorAttack()
         {
@@ -143,7 +193,7 @@ namespace ArknightSimulator.Manager
 
 
         // 部署干员
-        public void Deploying(OperatorTemplate opt, Directions direction, int mapX, int mapY)
+        public void Deploying(OperatorTemplate opt, Directions direction, int mapX, int mapY, DeploymentType deploymentType)
         {
             if (NotOnMapOperators.Remove(opt) == false)
                 throw new Exception("不存在该干员！");
@@ -156,6 +206,7 @@ namespace ArknightSimulator.Manager
             op.MapY = mapY;
             op.Position = new Point { X = mapX + 0.5, Y = mapY + 0.5 };
             op.Direction = direction;
+            op.CurrentDeploymentType = deploymentType;
 
             OnMapOperators.Add(op);
 

@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -109,6 +110,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Image\Operator\Noir Corne.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image\Operator\Noir_Corne-Attack-x1.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image\Operator\Noir_Corne-Attack.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image\Operator\Noir_Corne-Attack_1.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Image\pause.png">

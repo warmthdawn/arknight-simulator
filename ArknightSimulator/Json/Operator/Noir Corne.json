@@ -1,59 +1,60 @@
 {
-    "Id": "Noir Corne",
-    "Name": "黑角",
-    "Position": 3,
-    "DeploymentType": 1,
-    "Picture": "./Image/Operator/Noir Corne.png",
-    "ModelPicture": "./Image/Operator/model-Noir Corne.png",
-    "Rare": 2,
-    "EliteLevel": 0,
-    "Level": 1,
-    "Belief": 0,
-    "Potential": 1,
-    "InitStatus": {
-        "MaxLife": 1219,
-        "CurrentLife": 1219,
-        "SkillPoint": 0,
-        "Attack": 180,
-        "Defence": 220,
-        "MagicDefence": 0,
-        "Time": 70,
-        "Cost": [ 14 ],
-        "DeployCount": 1,
-        "Block": 3,
-        "AttackTime": 1.2,
-        "Range": [ [ [ 0 ] ] ]
+  "Id": "Noir Corne",
+  "Name": "黑角",
+  "Position": 3,
+  "DeploymentType": 1,
+  "Picture": "./Image/Operator/Noir Corne.png",
+  "ModelPicture": "./Image/Operator/model-Noir Corne.png",
+  "AttackPicture": "./Image/Operator/Noir_Corne-Attack_1.gif",
+  "Rare": 2,
+  "EliteLevel": 0,
+  "Level": 1,
+  "Belief": 0,
+  "Potential": 1,
+  "InitStatus": {
+    "MaxLife": 1219,
+    "CurrentLife": 1219,
+    "SkillPoint": 0,
+    "Attack": 180,
+    "Defence": 220,
+    "MagicDefence": 0,
+    "Time": 70,
+    "Cost": [ 14 ],
+    "DeployCount": 1,
+    "Block": 3,
+    "AttackTime": 1.2,
+    "Range": [ [ [ 0 ] ] ]
+  },
+  "GiftNames": [],
+  "SkillNames": [],
+  "SkillChooseId": 0,
+  "SkillLevel": 0,
+  "SkillMaxLevel": 0,
+  "LevelUpLife": [ "1219", "1670", "0", "0" ],
+  "LevelUpAttack": [ "180", "240", "0", "0" ],
+  "LevelUpDefence": [ "220", "315", "0", "0" ],
+  "LevelUpMagicDefence": [ "0", "0", "0", "0" ],
+  "BeliefUpStatus": [ "0", "0", "40", "0" ],
+  "PotentialValues": [
+    {
+      "Type": "Cost",
+      "UpValue": -1
     },
-    "GiftNames": [],
-    "SkillNames": [],
-    "SkillChooseId": 0,
-    "SkillLevel": 0,
-    "SkillMaxLevel": 0,
-    "LevelUpLife": [ "1219", "1670", "0", "0" ],
-    "LevelUpAttack": [ "180", "240", "0", "0" ],
-    "LevelUpDefence": [ "220", "315", "0", "0" ],
-    "LevelUpMagicDefence": [ "0", "0", "0", "0" ],
-    "BeliefUpStatus": [ "0", "0", "40", "0" ],
-    "PotentialValues": [
-        {
-            "Type": "Cost",
-            "UpValue": -1
-        },
-        {
-            "Type": "MaxLife",
-            "UpValue": 45
-        },
-        {
-            "Type": "Time",
-            "UpValue": -5
-        },
-        {
-            "Type": "MaxLife",
-            "UpValue": 45
-        },
-        {
-            "Type": "Cost",
-            "UpValue": -1
-        }
-    ]
+    {
+      "Type": "MaxLife",
+      "UpValue": 45
+    },
+    {
+      "Type": "Time",
+      "UpValue": -5
+    },
+    {
+      "Type": "MaxLife",
+      "UpValue": 45
+    },
+    {
+      "Type": "Cost",
+      "UpValue": -1
+    }
+  ]
 }

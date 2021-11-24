@@ -459,32 +459,34 @@
         }
     ],
     "AvailableEnemies": [
-        {
-            "Id": "B1",
-            "Name": "源石虫",
-            "Picture": "./Image/Enemy/B1.png",
-            "Level": 0,
-            "Type": 0,
-            "Status": {
-                "Attack": 130,
-                "AttackSpeed": 100,
-                "AttackTime": 1.7,
-                "Range": -1,
-                "Count": 1,
-                "Defence": 0,
-                "MaxLife": 550,
-                "CurrentLife": 550,
-                "MagicDefence": 0,
-                "RecoverSpeed": 0,
-                "Weight": 0,
-                "SilenceDefence": false,
-                "DizzyDefence": false,
-                "SleepDefence": false,
-                "MoveSpeed": 1.0
-            },
-            "Gift": null,
-            "Skill": null
+      {
+        "Id": "B1",
+        "Name": "源石虫",
+        "Picture": "./Image/Enemy/B1.png",
+        "MovePicture": "./Image/Enemy/B1_Move.gif",
+        "AttackPicture": "./Image/Enemy/B1_Attack.gif",
+        "Level": 0,
+        "Type": 0,
+        "Status": {
+          "Attack": 130,
+          "AttackSpeed": 100,
+          "AttackTime": 1.7,
+          "Range": -1,
+          "Count": 1,
+          "Defence": 0,
+          "MaxLife": 550,
+          "CurrentLife": 550,
+          "MagicDefence": 0,
+          "RecoverSpeed": 0,
+          "Weight": 0,
+          "SilenceDefence": false,
+          "DizzyDefence": false,
+          "SleepDefence": false,
+          "MoveSpeed": 1.0
         },
+        "Gift": null,
+        "Skill": null
+      },
         {
             "Id": "01",
             "Name": "士兵",

@@ -21,6 +21,7 @@ namespace ArknightSimulator.Operators
         public DeploymentType DeploymentType { get; set; } // 部署位置
         public string Picture { get; set; }// 图片
         public string ModelPicture { get; set; }  // 模型
+        public string AttackPicture { get; set; } // 攻击动图
         public int Rare { get; set; } // 稀有度
         public int EliteLevel { get => eliteLevel; set { eliteLevel = value; OnPropertyChanged(); } }  // 精英化等级
         public int Level { get => level; set { level = value; OnPropertyChanged(); } }     // 等级
@@ -83,6 +84,7 @@ namespace ArknightSimulator.Operators
             DeploymentType = opt.DeploymentType;
             Picture = opt.Picture;
             ModelPicture = opt.ModelPicture;
+            AttackPicture = opt.AttackPicture;
             Rare = opt.Rare;
             EliteLevel = opt.EliteLevel;
             Level = opt.Level;

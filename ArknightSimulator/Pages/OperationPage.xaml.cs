@@ -8,6 +8,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -16,6 +17,7 @@ using ArknightSimulator.EventHandlers;
 using ArknightSimulator.Manager;
 using ArknightSimulator.Operations;
 using ArknightSimulator.Operators;
+using WpfAnimatedGif;
 using Point = ArknightSimulator.Operations.Point;
 
 
@@ -85,15 +87,9 @@ namespace ArknightSimulator.Pages
                     block.Points.Add(new System.Windows.Point(point.X, point.Y));
 
                     block.Stroke = Brushes.Black;
-                    
+
                     block.Fill = new SolidColorBrush(Colors.Green);
                     block.Opacity = 0.3;
-                    //                     Binding binding = new Binding("GridVisibility");
-                    //                     binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-                    //                     binding.Mode = BindingMode.TwoWay;
-                    //                     binding.Source = this;
-                    //                     block.SetBinding(Polygon.VisibilityProperty, binding);
-                    //block.IsHitTestVisible = true;
                     block.IsHitTestVisible = true;
                     block.MouseLeftButtonUp += OpSelectedItem_MouseLeftButtonUp;
                     block.MouseEnter += Block_MouseEnter;
@@ -322,17 +318,17 @@ namespace ArknightSimulator.Pages
                 for (int y = 0; y < mapManager.CurrentOperation.MapHeight; y++)
                 {
                     blocks[x][y].Visibility = Visibility.Hidden;
-                } 
+                }
             }
 
             int[][] range = op.Status.Range[opt.EliteLevel];
             int selfi = 0;
             int selfj = 0;
             // 寻找自身点
-            for(int i=0;i<range.Length;i++)
+            for (int i = 0; i < range.Length; i++)
             {
                 int j = 0;
-                for (;j<range[i].Length;j++)
+                for (; j < range[i].Length; j++)
                 {
                     if (range[i][j] == 0)
                     {
@@ -498,14 +494,28 @@ namespace ArknightSimulator.Pages
                 gameManager.Pause();   // 部署时先暂停
 
                 currentDragOperatorImg = new Image();
-                currentDragOperatorImg.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(currentDragOperator.ModelPicture)));
-                currentDragOperatorImg.Width = 200;
-                currentDragOperatorImg.Height = 200;
+
+                //ImageSource cropped = new CroppedBitmap(new BitmapImage(new Uri(System.IO.Path.GetFullPath(currentDragOperator.AttackPicture))), new Int32Rect(160, 200, 320, 320));
+                //currentDragOperatorImg.Clip = new RectangleGeometry(new Rect(160, 200, 320, 320));
+                //ImageBehavior.SetRepeatBehavior(currentDragOperatorImg, new RepeatBehavior(1));
+                ImageBehavior.SetAnimatedSource(currentDragOperatorImg, new BitmapImage(new Uri(System.IO.Path.GetFullPath(currentDragOperator.AttackPicture))));
+                //ImageBehavior.GetAnimationController(currentDragOperatorImg).Pause();
+                ImageBehavior.SetAutoStart(currentDragOperatorImg, false);
+
+
+                //ImageBehavior.SetAnimationDuration(currentDragOperatorImg, TimeSpan.FromSeconds(3));
+                //currentDragOperatorImg.Source = cropped;
+
+                //currentDragOperatorImg.ClipToBounds = true;
+                //ImageBehavior.SetRepeatBehavior(currentDragOperatorImg, RepeatBehavior.Forever);
+                //currentDragOperatorImg.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(currentDragOperator.ModelPicture)));
+                currentDragOperatorImg.Width = 400;
+                currentDragOperatorImg.Height = 400;
                 currentDragOperatorImg.Margin = new Thickness(
-                    e.GetPosition(grid).X - 0.5 * currentDragOperatorImg.Width,
-                    e.GetPosition(grid).Y - currentDragOperatorImg.Width,
+                    e.GetPosition(grid).X - 0.8 * currentDragOperatorImg.Width,
+                    e.GetPosition(grid).Y - 0.2 * currentDragOperatorImg.Width,
                     grid.ActualWidth - e.GetPosition(grid).X - 0.5 * currentDragOperatorImg.Width,
-                    grid.ActualHeight - e.GetPosition(grid).Y);
+                    grid.ActualHeight - e.GetPosition(grid).Y - 0.2 * currentDragOperatorImg.Width);
 
                 grid.RegisterName(currentDragOperator.Id.Replace(" ", "_"), currentDragOperatorImg);
                 currentDragOperatorImg.Name = currentDragOperator.Id.Replace(" ", "_");
@@ -527,9 +537,9 @@ namespace ArknightSimulator.Pages
             {
                 currentDragOperatorImg.Margin = new Thickness(
                     e.GetPosition(grid).X - 0.5 * currentDragOperatorImg.Width,
-                    e.GetPosition(grid).Y - currentDragOperatorImg.Width,
+                    e.GetPosition(grid).Y - 0.8 * currentDragOperatorImg.Width,
                     grid.ActualWidth - e.GetPosition(grid).X - 0.5 * currentDragOperatorImg.Width,
-                    grid.ActualHeight - e.GetPosition(grid).Y);
+                    grid.ActualHeight - e.GetPosition(grid).Y - 0.2 * currentDragOperatorImg.Width);
             }
         }
 
@@ -565,15 +575,22 @@ namespace ArknightSimulator.Pages
 
                 currentDragOperatorImg.Margin = new Thickness(
                     pos.X - 0.5 * currentDragOperatorImg.Width,
-                    pos.Y - currentDragOperatorImg.Width,
+                    pos.Y - 0.65 * currentDragOperatorImg.Height,
                     grid.ActualWidth - pos.X - 0.5 * currentDragOperatorImg.Width,
-                    grid.ActualHeight - pos.Y);
+                    grid.ActualHeight - pos.Y - 0.35 * currentDragOperatorImg.Height);
+
+                //                 canvasDirection.Margin = new Thickness(
+                //                     currentDragOperatorImg.Margin.Left - 100,
+                //                     currentDragOperatorImg.Margin.Top - 100,
+                //                     currentDragOperatorImg.Margin.Right - 100,
+                //                     currentDragOperatorImg.Margin.Bottom - 100);
+
 
                 canvasDirection.Margin = new Thickness(
-                    currentDragOperatorImg.Margin.Left - 100,
-                    currentDragOperatorImg.Margin.Top - 100,
-                    currentDragOperatorImg.Margin.Right - 100,
-                    currentDragOperatorImg.Margin.Bottom - 100);
+                    pos.X - 200,
+                    pos.Y - 200,
+                    grid.ActualWidth - pos.X - 200,
+                    grid.ActualHeight - pos.Y - 200);
                 canvasDirection.Visibility = Visibility.Visible;
 
                 currentDragOperatorImg.MouseLeftButtonDown += CurrentOperatorImg_MouseLeftButtonDown;
@@ -587,6 +604,7 @@ namespace ArknightSimulator.Pages
         private void BtnTurnUp_Click(object sender, RoutedEventArgs e)
         {
             Operator op = operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY, currentDeploymentType);
+            op.AttackEvent += OperatorAttack;
             AddOperatorProgressBar(op);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
@@ -598,7 +616,8 @@ namespace ArknightSimulator.Pages
         }
         private void BtnTurnDown_Click(object sender, RoutedEventArgs e)
         {
-            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Down, currentMapX, currentMapY, currentDeploymentType);
+            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY, currentDeploymentType);
+            op.AttackEvent += OperatorAttack;
             AddOperatorProgressBar(op);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
@@ -619,7 +638,8 @@ namespace ArknightSimulator.Pages
             currentImg.RenderTransform = scaleTransform;
 
 
-            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Left, currentMapX, currentMapY, currentDeploymentType);
+            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY, currentDeploymentType);
+            op.AttackEvent += OperatorAttack;
             AddOperatorProgressBar(op);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
@@ -631,7 +651,8 @@ namespace ArknightSimulator.Pages
         }
         private void BtnTurnRight_Click(object sender, RoutedEventArgs e)
         {
-            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Right, currentMapX, currentMapY, currentDeploymentType);
+            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY, currentDeploymentType);
+            op.AttackEvent += OperatorAttack;
             AddOperatorProgressBar(op);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
@@ -671,18 +692,32 @@ namespace ArknightSimulator.Pages
             skillBar.Foreground = new SolidColorBrush(Colors.YellowGreen);
             lifeBar.BorderThickness = new Thickness(0);
             skillBar.BorderThickness = new Thickness(0);
-            Image img = (Image)grid.FindName(currentDragOperator.Id.Replace(" ", "_"));
+            var pos = mapManager.CurrentOperation.GetPosition(new Point(op.MapX + 0.5, op.MapY + 0.5));
+            //Image img = (Image)grid.FindName(currentDragOperator.Id.Replace(" ", "_"));
+            //             lifeBar.Margin = new Thickness(
+            //                 img.Margin.Left + 50,
+            //                 img.Margin.Top + 205,
+            //                 img.Margin.Right + 50,
+            //                 img.Margin.Bottom - 12
+            //                 );
+            //             skillBar.Margin = new Thickness(
+            //                 img.Margin.Left + 50,
+            //                 img.Margin.Top + 212,
+            //                 img.Margin.Right + 50,
+            //                 img.Margin.Bottom - 19
+            //                 );
+
             lifeBar.Margin = new Thickness(
-                img.Margin.Left + 50,
-                img.Margin.Top + 205,
-                img.Margin.Right + 50,
-                img.Margin.Bottom - 12
+                pos.X - 50,
+                pos.Y + 50,
+                grid.ActualWidth - pos.X - 50,
+                grid.ActualHeight - pos.Y - 55
                 );
             skillBar.Margin = new Thickness(
-                img.Margin.Left + 50,
-                img.Margin.Top + 212,
-                img.Margin.Right + 50,
-                img.Margin.Bottom - 19
+                pos.X - 50,
+                pos.Y + 55,
+                grid.ActualWidth - pos.X - 50,
+                grid.ActualHeight - pos.Y - 60
                 );
 
             grid.RegisterName("lifeBar" + currentDragOperator.Id.Replace(" ", "_"), lifeBar);
@@ -692,7 +727,7 @@ namespace ArknightSimulator.Pages
         }
 
 
-        
+
         // 添加敌人血条和技能条
         private void AddEnemyProgressBar(Enemy enemy)
         {
@@ -748,7 +783,7 @@ namespace ArknightSimulator.Pages
                 string id = ((Image)sender).Name.Replace("_", " ");
                 OperatorTemplate opt = operatorManager.SelectedOperators.Find(o => o.Id == id);
                 Operator op = operatorManager.OnMapOperators.Find(o => o.TemplateId == opt.Id);
-                if(op.Skill==null)
+                if (op.Skill == null)
                 {
                     btnSkill.Visibility = Visibility.Hidden;
                 }
@@ -767,11 +802,12 @@ namespace ArknightSimulator.Pages
 
                 imgMap.MouseDown += ImgMap_MouseDown;
 
+                var pos = mapManager.CurrentOperation.GetPosition(new Point(op.MapX + 0.5, op.MapY + 0.5));
                 canvasSkillOrWithdraw.Margin = new Thickness(
-                    ((Image)sender).Margin.Left - 50,
-                    ((Image)sender).Margin.Top,
-                    ((Image)sender).Margin.Right - 150,
-                    ((Image)sender).Margin.Bottom - 100);
+                    pos.X - 200,
+                    pos.Y - 200,
+                    grid.ActualWidth - pos.X - 200,
+                    grid.ActualHeight - pos.Y - 200);
                 canvasSkillOrWithdraw.Visibility = Visibility.Visible;
 
             }
@@ -798,6 +834,22 @@ namespace ArknightSimulator.Pages
         // 使用技能
         private void BtnSkill_Click(object sender, RoutedEventArgs e)
         {
+
+        }
+
+        // 干员攻击
+        private void OperatorAttack(Operator op)
+        {
+            Image opImg = (Image)grid.FindName(op.TemplateId.Replace(" ", "_"));
+            if (opImg == null)
+                return;
+            var controller = ImageBehavior.GetAnimationController(opImg);
+            ImageBehavior.SetAnimationDuration(opImg, TimeSpan.FromSeconds(op.Status.AttackTime / gameManager.Speed));
+            ImageBehavior.SetRepeatBehavior(opImg, new RepeatBehavior(1));
+            controller.GotoFrame(0);
+            controller.Play();
+
+            //ImageBehavior.SetRepeatBehavior(opImg, new RepeatBehavior(1));
 
         }
 

@@ -114,7 +114,7 @@ namespace ArknightSimulator.Manager
 
             SkillUsing(refresh);
 
-            OperatorAttack();
+            OperatorAttack(refresh, EnemiesAppear);
         }
 
 
@@ -147,12 +147,12 @@ namespace ArknightSimulator.Manager
         {
             foreach (Operator op in OnMapOperators)
             {
-                if (op.CurrentDeploymentType != DeploymentType.Land)
+                if (op.CurrentDeploymentType != DeploymentType.Land) // Land 上干员才能阻挡敌人
                     continue;
                 int blockCount = 0;
                 List<int> blockId = new List<int>();
 
-                foreach (EnemyMovement enemy in enemiesAppear)
+                foreach (EnemyMovement enemy in enemiesAppear) // 遍历场上所有敌人，找到碰撞的敌人
                 {
                     EnemyTemplate emt = currentOperation.AvailableEnemies.Find(e => e.Id == enemy.Enemy.TemplateId);
                     if (emt.Type != EnemyType.Ground)
@@ -173,7 +173,7 @@ namespace ArknightSimulator.Manager
                     {
                         if (!blockId.Contains(e))
                             removeId.Add(e);
-                    });
+                    }); 
                 op.BlockEnemiesId.RemoveAll(e => removeId.Contains(e));
                 blockId.ForEach(e =>
                     {
@@ -208,9 +208,91 @@ namespace ArknightSimulator.Manager
         }
 
         // 干员攻击
-        public void OperatorAttack()
+        public void OperatorAttack(int attackRefresh, List<EnemyMovement> movements)
         {
+            foreach (Operator op in OnMapOperators) // 遍历场上干员
+            {
+                if (op.BlockEnemiesId.Count != 0) // 有阻挡敌人，则优先攻击
+                {
+                    var enemy = movements.Find(e => e.Enemy.InstanceId == op.BlockEnemiesId[0]);
+                    op.AttackId = enemy.Enemy.InstanceId;
+                    op.RefreshAttack(attackRefresh ,enemy.Enemy);
+                    continue;
+                }
 
+                int[][] range = op.Status.Range[AvailableOperators.Find(e => e.Id == op.TemplateId).EliteLevel]; // 待优化
+                int selfi = 0;
+                int selfj = 0;
+                // 寻找自身点
+                for (int i = 0; i < range.Length; i++)
+                {
+                    int j = 0;
+                    for (; j < range[i].Length; j++)
+                    {
+                        if (range[i][j] == 0)
+                        {
+                            selfi = i;
+                            selfj = j;
+                            break;
+                        }
+                    }
+                    if (j < range[i].Length)
+                        break;
+                }
+
+                List<EnemyMovement> enemiesInRange = new List<EnemyMovement>();
+                // 扫描攻击范围
+                for (int i = 0; i < range.Length; i++)
+                {
+                    for (int j = 0; j < range[i].Length; j++)
+                    {
+                        if (range[i][j] == 1)
+                        {
+                            int di = i - selfi;  // 攻击范围的某一格与自身行距离
+                            int dj = j - selfj;  // 列距离
+                            int mapi = 0;   // 攻击范围在地图的行
+                            int mapj = 0;   // 列
+                            switch (op.Direction)
+                            {
+                                case Directions.Up:
+                                    mapi = op.MapY - dj;
+                                    mapj = op.MapX + di;
+                                    break;
+                                case Directions.Down:
+                                    mapi = op.MapY + dj;
+                                    mapj = op.MapX - di;
+                                    break;
+                                case Directions.Left:
+                                    mapi = op.MapY - di;
+                                    mapj = op.MapX - dj;
+                                    break;
+                                case Directions.Right:
+                                    mapi = op.MapY + di;
+                                    mapj = op.MapX + dj;
+                                    break;
+                            }
+
+                            //blocks[mapj][mapi].Visibility = Visibility.Visible; // block的第一维是列
+                            foreach(EnemyMovement em in movements)
+                            {
+                                var pos = em.Enemy.Position;
+                                if (pos.X < mapi + 1 && pos.X > 1 && pos.Y < mapj + 1 && pos.Y > mapj) 
+                                    enemiesInRange.Add(em);
+                            }
+                        }
+                    }
+                }
+                if (enemiesInRange.Count > 0)
+                {
+                    enemiesInRange.Sort((a, b) => b.Enemy.Status.Defence - a.Enemy.Status.Defence); // 按照防御力降序排序（复杂了
+                    op.RefreshAttack(attackRefresh, enemiesInRange[0].Enemy);
+                }
+
+                op.RefreshAttack(attackRefresh, null);
+
+
+
+            }
         }
 
 
@@ -225,6 +307,7 @@ namespace ArknightSimulator.Manager
             TotalDeploymentCount++;
             op.TemplateId = opt.Id;
             op.Status = new Status(opt.Status);
+            op.AttackUnit = (int)(100 * op.Status.AttackTime);
 
 
             op.Gift = new Gift[opt.GiftNames.Length];
@@ -260,8 +343,7 @@ namespace ArknightSimulator.Manager
 
             CurrentCost -= op.Status.Cost[opt.EliteLevel];
             RestDeploymentCount -= op.Status.DeployCount;
-
-            return op; // 返回干员实例
+            return op;
         }
 
         // 技能开始 TODO

@@ -21,17 +21,36 @@ namespace ArknightSimulator.Operators
         public int BlockEnemyCount { get; set; } = 0;  // 正在阻挡敌人数
         public List<int> BlockEnemiesId { get; set; } = new List<int>();  // 正在阻挡敌人
         public int AttackId { get; set; } = -1;   // 索敌：攻击的敌人ID
+        public int AttackUnit { get; set; } = 0; // 攻击冷却计数
+        public Action<Operator> AttackEvent { get; set; } // 干员攻击事件
 
-
-        public void Attack(Enemy enemy)
+        public void RefreshAttack(int attackRefresh, Enemy enemy = null)
         {
+            // 若无攻击对象且 下次可攻击则干员空闲
+            if (enemy == null && (int)(100 * Status.AttackTime) - AttackUnit <= 100 / attackRefresh)
+            {
+                AttackUnit = (int)(100 * Status.AttackTime);
+                return;
+            }
 
-            
+
+
+            int next = (AttackUnit + 100 / attackRefresh) % (int)(100 * Status.AttackTime);
+            if (enemy != null && next < AttackUnit)
+                Attack(enemy);
+            AttackUnit = next;
+        }
+
+        private void Attack(Enemy enemy)
+        {
+            if (AttackEvent != null)
+                AttackEvent(this); // 触发攻击事件
+
         }
         public void Hurt()
         {
 
-        
+
         }
         public void SkillStart()
         {

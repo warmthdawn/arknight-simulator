@@ -121,6 +121,9 @@
     <None Update="Image\Operator\Noir_Corne-Attack_1.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Image\Operator\Noir_Corne-Attack_2.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Image\pause.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -191,6 +191,8 @@ namespace ArknightSimulator.Pages
             grid.RegisterName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString(), enemyImg);
             Panel.SetZIndex(enemyImg, -1);
             grid.Children.Add(enemyImg);
+
+            AddEnemyProgressBar(e.EnemyMovement.Enemy);
         }
 
 
@@ -223,6 +225,8 @@ namespace ArknightSimulator.Pages
                 grid.ActualWidth - pos.X - 0.5 * enemyImg.Width,
                 grid.ActualHeight - pos.Y
                 );
+
+            UpdateEnemyProgressBar(e.EnemyMovement.Enemy);
         }
 
         private void Lose(object sender, EventArgs e)
@@ -582,7 +586,8 @@ namespace ArknightSimulator.Pages
         // 调整方向
         private void BtnTurnUp_Click(object sender, RoutedEventArgs e)
         {
-            operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY, currentDeploymentType);
+            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY, currentDeploymentType);
+            AddOperatorProgressBar(op);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             notOnMapImg.Remove(img);
@@ -593,7 +598,8 @@ namespace ArknightSimulator.Pages
         }
         private void BtnTurnDown_Click(object sender, RoutedEventArgs e)
         {
-            operatorManager.Deploying(currentDragOperator, Directions.Down, currentMapX, currentMapY, currentDeploymentType);
+            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Down, currentMapX, currentMapY, currentDeploymentType);
+            AddOperatorProgressBar(op);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             notOnMapImg.Remove(img);
@@ -613,7 +619,8 @@ namespace ArknightSimulator.Pages
             currentImg.RenderTransform = scaleTransform;
 
 
-            operatorManager.Deploying(currentDragOperator, Directions.Left, currentMapX, currentMapY, currentDeploymentType);
+            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Left, currentMapX, currentMapY, currentDeploymentType);
+            AddOperatorProgressBar(op);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             notOnMapImg.Remove(img);
@@ -624,7 +631,8 @@ namespace ArknightSimulator.Pages
         }
         private void BtnTurnRight_Click(object sender, RoutedEventArgs e)
         {
-            operatorManager.Deploying(currentDragOperator, Directions.Right, currentMapX, currentMapY, currentDeploymentType);
+            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Right, currentMapX, currentMapY, currentDeploymentType);
+            AddOperatorProgressBar(op);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             notOnMapImg.Remove(img);
@@ -636,6 +644,92 @@ namespace ArknightSimulator.Pages
         private void BtnTurnCancel_Click(object sender, RoutedEventArgs e)
         {
             OnOperatorRemove(this, new OperatorEventArgs(currentDragOperator));
+        }
+
+        // 添加干员血条和技能条
+        private void AddOperatorProgressBar(Operator op)
+        {
+            ProgressBar lifeBar = new ProgressBar();
+            ProgressBar skillBar = new ProgressBar();
+            Binding binding = new Binding();
+            binding.Source = op.Status;
+            binding.Path = new PropertyPath("CurrentLife");
+            lifeBar.SetBinding(ProgressBar.ValueProperty, binding);
+            lifeBar.Maximum = op.Status.MaxLife;
+            binding = new Binding();
+            binding.Source = op.Status;
+            binding.Path = new PropertyPath("SkillPoint");
+            skillBar.SetBinding(ProgressBar.ValueProperty, binding);
+            if (op.Skill == null)
+                skillBar.Maximum = 100;
+            else
+                skillBar.Maximum = op.Skill.Cost;
+
+            lifeBar.Background = new SolidColorBrush(Colors.Black);
+            lifeBar.Foreground = new SolidColorBrush(Colors.SkyBlue);
+            skillBar.Background = new SolidColorBrush(Colors.Black);
+            skillBar.Foreground = new SolidColorBrush(Colors.YellowGreen);
+            lifeBar.BorderThickness = new Thickness(0);
+            skillBar.BorderThickness = new Thickness(0);
+            Image img = (Image)grid.FindName(currentDragOperator.Id.Replace(" ", "_"));
+            lifeBar.Margin = new Thickness(
+                img.Margin.Left + 50,
+                img.Margin.Top + 205,
+                img.Margin.Right + 50,
+                img.Margin.Bottom - 12
+                );
+            skillBar.Margin = new Thickness(
+                img.Margin.Left + 50,
+                img.Margin.Top + 212,
+                img.Margin.Right + 50,
+                img.Margin.Bottom - 19
+                );
+
+            grid.RegisterName("lifeBar" + currentDragOperator.Id.Replace(" ", "_"), lifeBar);
+            grid.RegisterName("skillBar" + currentDragOperator.Id.Replace(" ", "_"), skillBar);
+            grid.Children.Add(lifeBar);
+            grid.Children.Add(skillBar);
+        }
+
+
+        
+        // 添加敌人血条和技能条
+        private void AddEnemyProgressBar(Enemy enemy)
+        {
+            ProgressBar lifeBar = new ProgressBar();
+            Binding binding = new Binding();
+            binding.Source = enemy.Status;
+            binding.Path = new PropertyPath("CurrentLife");
+            lifeBar.SetBinding(ProgressBar.ValueProperty, binding);
+            lifeBar.Maximum = enemy.Status.MaxLife;
+            lifeBar.Background = new SolidColorBrush(Colors.Black);
+            lifeBar.Foreground = new SolidColorBrush(Colors.DarkOrange);
+            lifeBar.BorderThickness = new Thickness(0);
+            Image img = (Image)grid.FindName("enemy" + enemy.InstanceId);
+            lifeBar.Margin = new Thickness(
+                img.Margin.Left + 50,
+                img.Margin.Top + 205,
+                img.Margin.Right + 50,
+                img.Margin.Bottom - 12
+                );
+            grid.RegisterName("enemylifeBar" + enemy.InstanceId, lifeBar);
+            grid.Children.Add(lifeBar);
+        }
+
+        // 血条随敌人移动
+        private void UpdateEnemyProgressBar(Enemy enemy)
+        {
+            Image img = (Image)grid.FindName("enemy" + enemy.InstanceId);
+            ProgressBar bar = (ProgressBar)grid.FindName("enemylifeBar" + enemy.InstanceId);
+            if (enemy.Status.CurrentLife >= enemy.Status.MaxLife)
+                bar.Visibility = Visibility.Hidden;
+
+            bar.Margin = new Thickness(
+            img.Margin.Left + 50,
+            img.Margin.Top + 205,
+            img.Margin.Right + 50,
+            img.Margin.Bottom - 12
+            );
         }
 
         // 选中场上干员，可选择撤退或使用技能
@@ -688,6 +782,12 @@ namespace ArknightSimulator.Pages
         // 取消选中场上干员
         private void ImgMap_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            imgMap.MouseDown -= ImgMap_MouseDown;
+            canvasSkillOrWithdraw.Visibility = Visibility.Hidden;
+            gridCanvas.Visibility = Visibility.Hidden;
+
+            gameManager.Continue();
+            btnPauseOrContinue.IsEnabled = true;
 
         }
         // 撤退干员

@@ -216,7 +216,7 @@ namespace ArknightSimulator.Manager
 
 
         // 部署干员
-        public void Deploying(OperatorTemplate opt, Directions direction, int mapX, int mapY, DeploymentType deploymentType)
+        public Operator Deploying(OperatorTemplate opt, Directions direction, int mapX, int mapY, DeploymentType deploymentType)
         {
             if (NotOnMapOperators.Remove(opt) == false)
                 throw new Exception("不存在该干员！");
@@ -260,6 +260,8 @@ namespace ArknightSimulator.Manager
 
             CurrentCost -= op.Status.Cost[opt.EliteLevel];
             RestDeploymentCount -= op.Status.DeployCount;
+
+            return op; // 返回干员实例
         }
 
         // 技能开始 TODO

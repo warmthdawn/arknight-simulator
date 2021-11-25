@@ -264,8 +264,11 @@ namespace ArknightSimulator.Pages
                 currentDragOperator = new OperatorTemplate(e.Operator.Template);
 
             Image currentImg = (Image)grid.FindName(currentDragOperator.Id.Replace(" ", "_"));
+            Canvas currentHitArea = (Canvas)grid.FindName("hit_" + currentDragOperator.Id.Replace(" ", "_"));
             grid.Children.Remove(currentImg);
+            grid.Children.Remove(currentHitArea);
             grid.UnregisterName(currentDragOperator.Id.Replace(" ", "_"));
+            grid.UnregisterName(currentHitArea.Name);
 
 
             ProgressBar lifebar = (ProgressBar)grid.FindName("lifeBar" + currentDragOperator.Id.Replace(" ", "_"));
@@ -587,7 +590,7 @@ namespace ArknightSimulator.Pages
                 // 坐标转换，将鼠标位置转换为地图格子坐标
                 Polygon block = (Polygon)sender;
                 string coordinate = block.Name.Substring(5);
-                currentDragOperatorImg.IsHitTestVisible = true;
+                //currentDragOperatorImg.IsHitTestVisible = true;
 
                 //var mapPoint = mapManager.CurrentOperation.GetPosition(new Point(e.GetPosition(grid).X, e.GetPosition(grid).Y));
                 currentMapX = int.Parse(coordinate.Split("_")[0]);
@@ -613,6 +616,22 @@ namespace ArknightSimulator.Pages
                 //                     currentDragOperatorImg.Margin.Right - 100,
                 //                     currentDragOperatorImg.Margin.Bottom - 100);
 
+                // 任务添加选中区域
+                Canvas hitArea = new Canvas();
+                hitArea.Background = new SolidColorBrush(Colors.Transparent);
+                //hitArea.Opacity = 0;
+                hitArea.DataContext = currentDragOperatorImg.DataContext;
+                hitArea.Margin = new Thickness(
+                    pos.X - 50,
+                    pos.Y - 50,
+                    grid.ActualWidth - pos.X - 50,
+                    grid.ActualHeight - pos.Y - 50);
+
+                grid.RegisterName("hit_" + currentDragOperator.Id.Replace(" ", "_"), hitArea);
+                hitArea.Name = "hit_" + currentDragOperator.Id.Replace(" ", "_");
+                Panel.SetZIndex(hitArea, -1);
+                grid.Children.Add(hitArea);
+
 
                 canvasDirection.Margin = new Thickness(
                     pos.X - 200,
@@ -621,7 +640,8 @@ namespace ArknightSimulator.Pages
                     grid.ActualHeight - pos.Y - 200);
                 canvasDirection.Visibility = Visibility.Visible;
 
-                currentDragOperatorImg.MouseLeftButtonDown += CurrentOperatorImg_MouseLeftButtonDown;
+                hitArea.MouseLeftButtonDown += CurrentOperatorImg_MouseLeftButtonDown;
+                // currentDragOperatorImg.MouseLeftButtonDown += CurrentOperatorImg_MouseLeftButtonDown;
 
                 currentDragOperatorImg = null;
                 gridCanvas.Visibility = Visibility.Hidden;
@@ -812,7 +832,7 @@ namespace ArknightSimulator.Pages
                 btnPauseOrContinue.IsEnabled = false;
                 gameManager.Pause();   // 选中干员时先暂停
 
-                string id = ((Image)sender).Name.Replace("_", " ");
+                string id = ((Canvas)sender).Name.Substring(4).Replace("_", " ");
                 OperatorTemplate opt = operatorManager.SelectedOperators.Find(o => o.Id == id);
                 Operator op = operatorManager.OnMapOperators.Find(o => o.Template.Id == opt.Id);
                 if (op.Skill == null)
@@ -836,10 +856,10 @@ namespace ArknightSimulator.Pages
 
                 var pos = mapManager.CurrentOperation.GetPosition(new Point(op.MapX + 0.5, op.MapY + 0.5));
                 canvasSkillOrWithdraw.Margin = new Thickness(
-                    pos.X - 200,
-                    pos.Y - 200,
-                    grid.ActualWidth - pos.X - 200,
-                    grid.ActualHeight - pos.Y - 200);
+                    pos.X - 150,
+                    pos.Y - 150,
+                    grid.ActualWidth - pos.X - 250,
+                    grid.ActualHeight - pos.Y - 250);
                 canvasSkillOrWithdraw.Visibility = Visibility.Visible;
 
             }

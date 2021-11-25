@@ -485,7 +485,10 @@
                 "MoveSpeed": 1.0
             },
             "Gift": null,
-            "Skill": null
+            "Skill": null,
+            "SearchOperatorType": [ 0 ],
+            "AttackType": 1,
+            "DamageType": 0
         },
         {
             "Id": "01",
@@ -511,7 +514,10 @@
                 "MoveSpeed": 1.1
             },
             "Gift": null,
-            "Skill": null
+            "Skill": null,
+            "SearchOperatorType": [ 0 ],
+            "AttackType": 1,
+            "DamageType": 0
         }
 
     ]

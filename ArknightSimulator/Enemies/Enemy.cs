@@ -19,6 +19,9 @@ namespace ArknightSimulator.Enemies
         public int AttackId { get; set; } = -1;   // 索敌：攻击的干员ID
         public int AttackUnit { get; set; } = 0; // 攻击冷却计数
         public Action<Enemy> AttackEvent { get; set; } // 敌人攻击事件
+        public SearchOperatorType[] SearchOperatorType { get; set; } = new SearchOperatorType[] { }; // 索敌类型
+        public AttackType AttackType { get; set; } // 攻击类型（不攻击、单体、群体）
+        public DamageType DamageType { get; set; } // 伤害类型
 
         public Enemy() { }
         public Enemy(Enemy enemy)
@@ -27,19 +30,27 @@ namespace ArknightSimulator.Enemies
                 return;
             InstanceId = enemy.InstanceId;
             Template = enemy.Template;  // 引用，无需new
-            //TemplateId = enemy.TemplateId;
+            TemplateId = enemy.TemplateId;
             Status = new EnemyStatus(enemy.Status);
             Position.X = enemy.Position.X;
             Position.Y = enemy.Position.Y;
             IsBlocked = enemy.IsBlocked;
             BlockId = enemy.BlockId;
             AttackId = enemy.AttackId;
+            AttackUnit = enemy.AttackUnit;
+            SearchOperatorType = new SearchOperatorType[enemy.SearchOperatorType.Length];
+            for (int i = 0; i < enemy.SearchOperatorType.Length; i++)
+            {
+                SearchOperatorType[i] = enemy.SearchOperatorType[i];
+            }
+            AttackType = enemy.AttackType;
+            DamageType = enemy.DamageType;
         }
 
-        public void RefreshAttack(int attackRefresh, Operator op = null)
+        public void RefreshAttack(int attackRefresh, List<Operator> op = null)
         {
             // 若无攻击对象且 下次可攻击则干员空闲
-            if (op == null && (int)(100 * Status.AttackTime) - AttackUnit <= 100 / attackRefresh)
+            if ((op == null || op.Count == 0) && (int)(100 * Status.AttackTime) - AttackUnit <= 100 / attackRefresh)
             {
                 AttackUnit = (int)(100 * Status.AttackTime);
                 return;
@@ -49,7 +60,11 @@ namespace ArknightSimulator.Enemies
 
             int next = (AttackUnit + 100 / attackRefresh) % (int)(100 * Status.AttackTime);
             if (op != null && next < AttackUnit)
-                Attack(op);
+            {
+                foreach (var o in op)
+                    Attack(o);
+            }
+
             AttackUnit = next;
         }
 
@@ -63,7 +78,7 @@ namespace ArknightSimulator.Enemies
             if (AttackEvent != null)
                 AttackEvent(this); // 触发攻击事件
 
-            op.Hurt(Template.AttackType, Status.Attack);
+            op.Hurt(DamageType, Status.Attack);
         }
         public void Hurt(DamageType type, int damage)
         {

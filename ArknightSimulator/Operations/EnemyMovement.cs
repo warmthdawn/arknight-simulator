@@ -29,6 +29,17 @@ namespace ArknightSimulator.Operations
             PassPointCount = enemyMovement.PassPointCount;
         }
 
+        public double DistanceToHome()
+        {
+            double distance = 0;
+            for (int i = MovingPoints.Count - 1; i > PassPointCount; i--)
+            {
+                distance += MovingPoints[i] - MovingPoints[i - 1];
+            }
+            distance += MovingPoints[PassPointCount] - Enemy.Position;
+            return distance;
+        }
+
     }
 
    

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using ArknightSimulator.Utils;
 
 namespace ArknightSimulator.Enemies
 {
@@ -16,7 +15,9 @@ namespace ArknightSimulator.Enemies
         public EnemyStatus Status { get; set; } // 属性状态
         public EnemyGift Gift { get; set; }
         public EnemySkill Skill { get; set; }
-        public DamageType AttackType { get; set; }
+        public SearchOperatorType[] SearchOperatorType { get; set; } // 索敌类型
+        public AttackType AttackType { get; set; } // 攻击类型（不攻击、单体、群体）
+        public DamageType DamageType { get; set; } // 伤害类型
         
     }
 }

@@ -142,7 +142,13 @@ namespace ArknightSimulator.Manager
                     newEnemy.Enemy.Position.X = newEnemy.MovingPoints[0].X;
                     newEnemy.Enemy.Position.Y = newEnemy.MovingPoints[0].Y;
                     newEnemy.PassPointCount = 1;
-
+                    newEnemy.Enemy.SearchOperatorType = new SearchOperatorType[newEnemy.Enemy.Template.SearchOperatorType.Length];
+                    for(int i=0;i< newEnemy.Enemy.Template.SearchOperatorType.Length;i++)
+                    {
+                        newEnemy.Enemy.SearchOperatorType[i] = newEnemy.Enemy.Template.SearchOperatorType[i];
+                    }
+                    newEnemy.Enemy.AttackType = newEnemy.Enemy.Template.AttackType;
+                    newEnemy.Enemy.DamageType = newEnemy.Enemy.Template.DamageType;
 
                     OnEnemyAppearing(this, new EnemyEventArgs(newEnemy));
                 }

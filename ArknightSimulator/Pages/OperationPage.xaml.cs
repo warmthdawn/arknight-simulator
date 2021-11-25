@@ -268,7 +268,7 @@ namespace ArknightSimulator.Pages
             grid.Children.Remove(currentImg);
             grid.Children.Remove(currentHitArea);
             grid.UnregisterName(currentDragOperator.Id.Replace(" ", "_"));
-            grid.UnregisterName(currentHitArea.Name);
+            grid.UnregisterName("hit_" + currentDragOperator.Id.Replace(" ", "_"));
 
 
             ProgressBar lifebar = (ProgressBar)grid.FindName("lifeBar" + currentDragOperator.Id.Replace(" ", "_"));
@@ -720,15 +720,18 @@ namespace ArknightSimulator.Pages
         {
             ProgressBar lifeBar = new ProgressBar();
             ProgressBar skillBar = new ProgressBar();
-            Binding binding = new Binding();
-            binding.Source = op.Status;
-            binding.Path = new PropertyPath("CurrentLife");
-            lifeBar.SetBinding(ProgressBar.ValueProperty, binding);
+            //Binding binding = new Binding();     // 由于status引用会改变，无法绑定，只能实时更新
+            //binding.Source = op.Status;
+            //binding.Path = new PropertyPath("CurrentLife");
+            //lifeBar.SetBinding(ProgressBar.ValueProperty, binding);
+            //lifeBar.Maximum = op.Status.MaxLife;
+            //binding = new Binding();
+            //binding.Source = op.Status;
+            //binding.Path = new PropertyPath("SkillPoint");
+            //skillBar.SetBinding(ProgressBar.ValueProperty, binding);
+            lifeBar.Value = op.Status.CurrentLife;
             lifeBar.Maximum = op.Status.MaxLife;
-            binding = new Binding();
-            binding.Source = op.Status;
-            binding.Path = new PropertyPath("SkillPoint");
-            skillBar.SetBinding(ProgressBar.ValueProperty, binding);
+            skillBar.Value = op.Status.SkillPoint;
             if (op.Skill == null)
                 skillBar.Maximum = 100;
             else
@@ -782,10 +785,11 @@ namespace ArknightSimulator.Pages
         private void AddEnemyProgressBar(Enemy enemy)
         {
             ProgressBar lifeBar = new ProgressBar();
-            Binding binding = new Binding();
-            binding.Source = enemy.Status;
-            binding.Path = new PropertyPath("CurrentLife");
-            lifeBar.SetBinding(ProgressBar.ValueProperty, binding);
+            //Binding binding = new Binding();  // 由于status引用会改变，无法绑定，只能实时更新
+            //binding.Source = enemy;
+            //binding.Path = new PropertyPath("Status.CurrentLife");
+            //lifeBar.SetBinding(ProgressBar.ValueProperty, binding);
+            lifeBar.Value = enemy.Status.CurrentLife;
             lifeBar.Maximum = enemy.Status.MaxLife;
             lifeBar.Background = new SolidColorBrush(Colors.Black);
             lifeBar.Foreground = new SolidColorBrush(Colors.DarkOrange);
@@ -803,13 +807,18 @@ namespace ArknightSimulator.Pages
             grid.Children.Add(lifeBar);
         }
 
-        // 血条随敌人移动
+        // 干员血条和技能条更新 TODO
+
+        // 敌人血条更新
         private void UpdateEnemyProgressBar(Enemy enemy)
         {
             Image img = (Image)grid.FindName("enemy" + enemy.InstanceId);
             ProgressBar bar = (ProgressBar)grid.FindName("enemylifeBar" + enemy.InstanceId);
+            bar.Value = enemy.Status.CurrentLife;
             if (enemy.Status.CurrentLife >= enemy.Status.MaxLife)
                 bar.Visibility = Visibility.Hidden;
+            else
+                bar.Visibility = Visibility;
 
             bar.Margin = new Thickness(
             img.Margin.Left + 50,
@@ -899,7 +908,7 @@ namespace ArknightSimulator.Pages
             ImageBehavior.SetAnimationDuration(opImg, TimeSpan.FromSeconds(op.Status.AttackTime / gameManager.Speed));
             ImageBehavior.SetRepeatBehavior(opImg, new RepeatBehavior(1));
             controller.GotoFrame(0);
-            controller.Play();    // TODO: 还有停止播放
+            controller.Play();
 
             //ImageBehavior.SetRepeatBehavior(opImg, new RepeatBehavior(1));
 

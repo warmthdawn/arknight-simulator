@@ -277,7 +277,7 @@ namespace ArknightSimulator.Pages
         private void BtnBeliefUp_Click(object sender, RoutedEventArgs e)
         {
             OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
-            if (opt.Belief + 1 <= 200)
+            if (opt.Belief + 1 <= 100)
             {
                 opt.Belief++;
                 opt.ResetStatus();

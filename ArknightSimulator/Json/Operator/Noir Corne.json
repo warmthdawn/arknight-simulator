@@ -31,6 +31,9 @@
     "SkillChooseId": 0,
     "SkillLevel": 0,
     "SkillMaxLevel": 0,
+    "SearchEnemyType": [ 0, 10 ],
+    "AttackType": 1,
+    "DamageType": 0,
     "LevelUpLife": [ "1219", "1670", "0", "0" ],
     "LevelUpAttack": [ "180", "240", "0", "0" ],
     "LevelUpDefence": [ "220", "315", "0", "0" ],
@@ -57,6 +60,5 @@
             "Type": "Cost",
             "UpValue": -1
         }
-    ],
-    "AttackType": 0
+    ]
 }

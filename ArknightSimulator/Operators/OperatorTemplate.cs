@@ -35,6 +35,10 @@ namespace ArknightSimulator.Operators
         public int SkillChooseId { get=> skillChooseId; set { skillChooseId = value; OnPropertyChanged(); } }  // 选择的技能序号（从1开始，0表示无技能）
         public int SkillLevel { get => skillLevel; set { skillLevel = value; OnPropertyChanged(); } }    // 技能等级（从1开始，8、9、10表示专一、二、三）
         public int SkillMaxLevel { get; set; } // 技能最大等级
+        public SearchEnemyType[] SearchEnemyType { get; set; } // 索敌类型
+        public AttackType AttackType { get; set; } // 攻击类型（不攻击、单体、群体）
+        public DamageType DamageType { get; set; } // 干员普通攻击伤害类型
+        
 
 
         public int[] LevelUpLife { get; set; }   // 包括各个阶段血量  精英0 1级 	精英0 满级 	精英1 满级 	精英2 满级
@@ -43,7 +47,7 @@ namespace ArknightSimulator.Operators
         public int[] LevelUpMagicDefence { get; set; } // 包括各个阶段法抗
         public int[] BeliefUpStatus { get; set; }  // 信赖提升时各属性最大增值 生命上限，攻击，防御，法抗
         public PotentialModifier[] PotentialValues { get; set; }   // 每级潜能提升属性修改
-        public DamageType AttackType { get; set; } // 干员普通攻击类型
+
         public class PotentialModifier
         {
             public string Type { get; set; }
@@ -87,7 +91,6 @@ namespace ArknightSimulator.Operators
             Picture = opt.Picture;
             //ModelPicture = opt.ModelPicture;
             AttackPicture = opt.AttackPicture;
-            AttackType = opt.AttackType;
             Rare = opt.Rare;
             EliteLevel = opt.EliteLevel;
             Level = opt.Level;
@@ -108,6 +111,15 @@ namespace ArknightSimulator.Operators
             SkillChooseId = opt.SkillChooseId;
             SkillLevel = opt.SkillLevel;
             SkillMaxLevel = opt.SkillMaxLevel;
+            SearchEnemyType = new SearchEnemyType[opt.SearchEnemyType.Length];
+            for (int i = 0; i < opt.SearchEnemyType.Length; i++)
+            {
+                SearchEnemyType[i] = opt.SearchEnemyType[i];
+            }
+            AttackType = opt.AttackType;
+            DamageType = opt.DamageType;
+
+
             LevelUpLife = new int[opt.LevelUpLife.Length];
             for (int i = 0; i < opt.LevelUpLife.Length; i++)
             {

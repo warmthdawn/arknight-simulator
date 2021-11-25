@@ -235,13 +235,36 @@ namespace ArknightSimulator.Manager
         {
             foreach (Operator op in OnMapOperators) // 遍历场上干员
             {
-                if (op.BlockEnemiesId.Count != 0) // 有阻挡敌人，则优先攻击
-                {
-                    var enemy = movements.Find(e => e.Enemy.InstanceId == op.BlockEnemiesId[0]);
-                    op.AttackId = enemy.Enemy.InstanceId;
-                    op.RefreshAttack(attackRefresh ,enemy.Enemy);
+                if (op.AttackType == AttackType.None) // 不攻击的干员
                     continue;
+
+                List<Enemy> attackEnemies = new List<Enemy>();  // 总的攻击对象
+                op.AttackId.Clear();
+                int attackCount = (int)op.AttackType;  // 攻击数量
+
+
+                if (attackCount > 0)  // 攻击数量大于0
+                {
+                    if (op.BlockEnemiesId.Count != 0) // 有阻挡敌人，则优先攻击
+                    {
+                        int i = 0;
+                        for (; i < attackCount && i < op.BlockEnemiesId.Count; i++)
+                        {
+                            var enemy = movements.Find(e => e.Enemy.InstanceId == op.BlockEnemiesId[i]);
+                            attackEnemies.Add(enemy.Enemy);
+                            op.AttackId.Add(enemy.Enemy.InstanceId);
+                        }
+                        attackCount -= i;
+
+                        if (attackCount <= 0)  // 攻击数量满了，则不再攻击范围内的敌人
+                        {
+                            op.RefreshAttack(attackRefresh, attackEnemies);
+                            continue;
+                        }
+
+                    }
                 }
+
 
                 int[][] range = op.Status.Range[op.Template.EliteLevel]; // 待优化
                 int selfi = 0;
@@ -295,27 +318,105 @@ namespace ArknightSimulator.Manager
                                     break;
                             }
 
-                            //blocks[mapj][mapi].Visibility = Visibility.Visible; // block的第一维是列
-                            foreach(EnemyMovement em in movements)
+                            foreach (EnemyMovement em in movements)
                             {
                                 var pos = em.Enemy.Position;
-                                if (pos.X < mapi + 1 && pos.X > 1 && pos.Y < mapj + 1 && pos.Y > mapj)  // TODO:好像不对
-                                    enemiesInRange.Add(em);
+                                if (pos.Y <= mapi + 1 && pos.Y >= mapi && pos.X <= mapj + 1 && pos.X >= mapj) // x，j是列，y，i是行
+                                {
+                                    if (!enemiesInRange.Contains(em))
+                                        enemiesInRange.Add(em);
+                                }
+
                             }
                         }
                     }
                 }
+
+
+                // 攻击所有敌人的干员单独计算
+                if (attackCount == -1)
+                {
+                    for (int i = 0; i < op.BlockEnemiesId.Count; i++)
+                    {
+                        var enemyall = movements.Find(e => e.Enemy.InstanceId == op.BlockEnemiesId[i]);
+                        attackEnemies.Add(enemyall.Enemy);
+                        op.AttackId.Add(enemyall.Enemy.InstanceId);
+                    }
+                    foreach (var e in enemiesInRange)
+                    {
+                        if (!attackEnemies.Contains(e.Enemy))
+                        {
+                            attackEnemies.Add(e.Enemy);
+                            op.AttackId.Add(e.Enemy.InstanceId);
+                        }
+                    }
+                    op.RefreshAttack(attackRefresh, attackEnemies);
+                    continue;
+                }
+
+
+
                 if (enemiesInRange.Count > 0)
                 {
-                    // TODO:不对，是优先攻击离我方据点近的（或者再写一个索敌类型，然后switch）
-                    enemiesInRange.Sort((a, b) => b.Enemy.Status.Defence - a.Enemy.Status.Defence); // 按照防御力降序排序（复杂了
-                    op.RefreshAttack(attackRefresh, enemiesInRange[0].Enemy);
-                    return;
+                    List<EnemyMovement> selectEnemies = new List<EnemyMovement>();
+
+                    foreach (var type in op.SearchEnemyType)
+                    {
+                        // TODO: 索敌类型增加
+                        switch (type)
+                        {
+                            case SearchEnemyType.Default:
+                                // 选择离我方据点最近的敌人
+                                if (selectEnemies.Count == 0)
+                                {
+                                    double distance = enemiesInRange[0].DistanceToHome();
+                                    EnemyMovement movement = enemiesInRange[0];
+                                    foreach (var e in enemiesInRange)
+                                    {
+                                        if (e.DistanceToHome() < movement.DistanceToHome())
+                                        {
+                                            distance = movement.DistanceToHome();
+                                            movement = e;
+                                        }
+                                    }
+                                    selectEnemies.Add(movement);
+                                }
+                                else
+                                    selectEnemies.Sort((a, b) => (int)(a.DistanceToHome() - b.DistanceToHome()));
+                                break;
+                            case SearchEnemyType.Fly:
+                                foreach (var e in enemiesInRange)
+                                {
+                                    if (e.Enemy.Template.Type == EnemyType.Fly)
+                                        selectEnemies.Add(e);
+                                }
+                                break;
+                            case SearchEnemyType.NoFly:
+                                foreach (var e in enemiesInRange)
+                                {
+                                    if (e.Enemy.Template.Type == EnemyType.Fly)
+                                        selectEnemies.Remove(e);
+                                }
+                                break;
+                            default:
+                                throw new Exception("新的索敌类型未定义");
+                        }
+                    }
+
+                    for (int i = 0; i < attackCount && i < selectEnemies.Count; i++)
+                    {
+                        if (!attackEnemies.Contains(selectEnemies[i].Enemy))
+                        {
+                            attackEnemies.Add(selectEnemies[i].Enemy);
+                            op.AttackId.Add(selectEnemies[i].Enemy.InstanceId);
+                        }
+                    }
+
+                    op.RefreshAttack(attackRefresh, attackEnemies);
+                    continue;
                 }
 
                 op.RefreshAttack(attackRefresh, null);
-
-
 
             }
         }
@@ -366,7 +467,13 @@ namespace ArknightSimulator.Manager
             op.Position = new Point { X = mapX + 0.5, Y = mapY + 0.5 };
             op.Direction = direction;
             op.CurrentDeploymentType = deploymentType;
-            op.Template.AttackType = op.Template.AttackType;
+            op.SearchEnemyType = new SearchEnemyType[opt.SearchEnemyType.Length];
+            for (int i = 0; i < opt.SearchEnemyType.Length; i++)
+            {
+                op.SearchEnemyType[i] = opt.SearchEnemyType[i];
+            }
+            op.AttackType = opt.AttackType;
+            op.DamageType = opt.DamageType;
 
             OnMapOperators.Add(op);
 

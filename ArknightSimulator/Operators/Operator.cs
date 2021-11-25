@@ -22,15 +22,17 @@ namespace ArknightSimulator.Operators
         public DeploymentType CurrentDeploymentType { get; set; }  // 部署后的部署位置
         public int BlockEnemyCount { get; set; } = 0;  // 正在阻挡敌人数
         public List<int> BlockEnemiesId { get; set; } = new List<int>();  // 正在阻挡敌人
-        public int AttackId { get; set; } = -1;   // 索敌：攻击的敌人ID   TODO:是否要删
+        public List<int> AttackId { get; set; } = new List<int>();   // 索敌：攻击的敌人ID   TODO:是否要删
         public int AttackUnit { get; set; } = 0; // 攻击冷却计数
         public Action<Operator> AttackEvent { get; set; } // 干员攻击事件
-        //public DamageType AttackType { get; set; } // 攻击伤害类型
+        public SearchEnemyType[] SearchEnemyType { get; set; } = new SearchEnemyType[] { }; // 索敌类型
+        public AttackType AttackType { get; set; } // 攻击类型（不攻击、单体、群体）
+        public DamageType DamageType { get; set; } // 攻击伤害类型
 
-        public void RefreshAttack(int attackRefresh, Enemy enemy = null)
+        public void RefreshAttack(int attackRefresh, List<Enemy> enemies = null)
         {
             // 若无攻击对象且 下次可攻击则干员空闲
-            if (enemy == null && (int)(100 * Status.AttackTime) - AttackUnit <= 100 / attackRefresh)
+            if ((enemies == null || enemies.Count == 0) && (int)(100 * Status.AttackTime) - AttackUnit <= 100 / attackRefresh)
             {
                 AttackUnit = (int)(100 * Status.AttackTime);
                 return;
@@ -39,8 +41,12 @@ namespace ArknightSimulator.Operators
 
 
             int next = (AttackUnit + 100 / attackRefresh) % (int)(100 * Status.AttackTime);
-            if (enemy != null && next < AttackUnit)
-                Attack(enemy);
+            if (enemies != null && next < AttackUnit)
+            {
+                foreach(var e in enemies)
+                    Attack(e);
+            }
+
             AttackUnit = next;
         }
 
@@ -49,7 +55,7 @@ namespace ArknightSimulator.Operators
             if (AttackEvent != null)
                 AttackEvent(this); // 触发攻击事件
 
-            enemy.Hurt(Template.AttackType, Status.Attack);
+            enemy.Hurt(DamageType, Status.Attack);
         }
         public void Hurt(DamageType type, int damage)
         {

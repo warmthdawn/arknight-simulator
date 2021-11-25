@@ -1,0 +1,73 @@
+{
+    "Id": "Adnachiel",
+    "Name": "安德切尔",
+    "Position": 2,
+    "DeploymentType": 2,
+    "Picture": "./Image/Operator/Adnachiel.png",
+    //"ModelPicture": "./Image/Operator/model-Noir Corne.png", //"./Image/Operator/model-Adnachiel.png",
+    "AttackPicture": "./Image/Operator/Noir_Corne-Attack_2.gif", // TODO
+    "Rare": 3,
+    "EliteLevel": 0,
+    "Level": 1,
+    "Belief": 0,
+    "Potential": 1,
+    "InitStatus": {
+        "MaxLife": 531,
+        "CurrentLife": 531,
+        "SkillPoint": 0,
+        "SkillPointUnit": 0,
+        "Attack": 150,
+        "Defence": 55,
+        "MagicDefence": 0,
+        "Time": 70,
+        "Cost": [ 9, 11 ],
+        "DeployCount": 1,
+        "Block": 1,
+        "AttackTime": 1.0,
+        "Range": [
+            [
+                [ 1, 1, 1 ],
+                [ 0, 1, 1, 1 ],
+                [ 1, 1, 1 ]
+            ],
+            [
+                [ 1, 1, 1, 1 ],
+                [ 0, 1, 1, 1 ],
+                [ 1, 1, 1, 1 ]
+            ]
+        ]
+    },
+    "GiftNames": [],
+    "SkillNames": [ "SkillAttackEnhanceAlpha" ],
+    "SkillChooseId": 1,
+    "SkillLevel": 1,
+    "SkillMaxLevel": 7,
+    "LevelUpLife": [ "531", "831", "1080", "0" ],
+    "LevelUpAttack": [ "150", "251", "365", "0" ],
+    "LevelUpDefence": [ "55", "93", "134", "0" ],
+    "LevelUpMagicDefence": [ "0", "0", "0", "0" ],
+    "BeliefUpStatus": [ "0", "50", "0", "0" ],
+    "PotentialValues": [
+        {
+            "Type": "Cost",
+            "UpValue": -1
+        },
+        {
+            "Type": "Time",
+            "UpValue": -4
+        },
+        {
+            "Type": "Attack",
+            "UpValue": 23
+        },
+        {
+            "Type": "Time",
+            "UpValue": -6
+        },
+        {
+            "Type": "Cost",
+            "UpValue": -1
+        }
+    ],
+    "AttackType": 0
+}

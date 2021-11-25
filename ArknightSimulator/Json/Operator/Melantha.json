@@ -1,0 +1,69 @@
+{
+    "Id": "Melantha",
+    "Name": "玫兰莎",
+    "Position": 1,
+    "DeploymentType": 1,
+    "Picture": "./Image/Operator/Melantha.png",
+    //"ModelPicture": "./Image/Operator/model-Noir Corne.png", //"./Image/Operator/model-Melantha.png",
+    "AttackPicture": "./Image/Operator/Noir_Corne-Attack_2.gif", // TODO
+    "Rare": 3,
+    "EliteLevel": 0,
+    "Level": 1,
+    "Belief": 0,
+    "Potential": 1,
+    "InitStatus": {
+        "MaxLife": 1395,
+        "CurrentLife": 1395,
+        "SkillPoint": 0,
+        "SkillPointUnit": 0,
+        "Attack": 396,
+        "Defence": 83,
+        "MagicDefence": 0,
+        "Time": 70,
+        "Cost": [ 13, 15 ],
+        "DeployCount": 1,
+        "Block": 1,
+        "AttackTime": 1.5,
+        "Range": [
+            [
+                [ 0, 1 ]
+            ],
+            [
+                [ 0, 1 ]
+            ]
+        ]
+    },
+    "GiftNames": [],
+    "SkillNames": [ "SkillAttackEnhanceAlpha" ],
+    "SkillChooseId": 1,
+    "SkillLevel": 1,
+    "SkillMaxLevel": 7,
+    "LevelUpLife": [ "1395", "1993", "2745", "0" ],
+    "LevelUpAttack": [ "396", "583", "738", "0" ],
+    "LevelUpDefence": [ "83", "119", "155", "0" ],
+    "LevelUpMagicDefence": [ "0", "0", "0", "0" ],
+    "BeliefUpStatus": [ "0", "65", "0", "0" ],
+    "PotentialValues": [
+        {
+            "Type": "Cost",
+            "UpValue": -1
+        },
+        {
+            "Type": "Time",
+            "UpValue": -4
+        },
+        {
+            "Type": "Attack",
+            "UpValue": 25
+        },
+        {
+            "Type": "Time",
+            "UpValue": -6
+        },
+        {
+            "Type": "Cost",
+            "UpValue": -1
+        }
+    ],
+    "AttackType": 0
+}

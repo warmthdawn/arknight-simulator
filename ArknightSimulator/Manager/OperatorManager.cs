@@ -3,6 +3,7 @@ using ArknightSimulator.EventHandlers;
 using ArknightSimulator.Operations;
 using ArknightSimulator.Operators;
 using ArknightSimulator.Skills;
+using ArknightSimulator.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -119,11 +120,11 @@ namespace ArknightSimulator.Manager
 
 
         // 费用随时间增加
-        public void CostIncreasing(int costRefresh)
+        public void CostIncreasing(int refresh)
         {
             if (CurrentCost < MaxCost)
             {
-                int nextCostUnit = (CostUnit + 100 / costRefresh) % 100;
+                int nextCostUnit = (CostUnit + 100 / refresh) % 100;
                 if (nextCostUnit < CostUnit)
                 {
                     CurrentCost++;
@@ -192,6 +193,28 @@ namespace ArknightSimulator.Manager
         // 技能使用
         public void SkillUsing(int refresh)
         {
+            // 技力增加
+            foreach(Operator op in OnMapOperators)
+            {
+                if (SkillOnOperators.Contains(op))
+                    continue;
+                if (op.Skill == null)
+                    continue;
+
+                if (op.Status.SkillPoint < op.Skill.Cost)
+                {
+                    StatusDecorator status = new StatusDecorator(op.Status);
+                    int nextSkillPointUnit = (status.SkillPointUnit + 100 / refresh) % 100;
+                    if (nextSkillPointUnit < status.SkillPointUnit)
+                    {
+                        status.SkillPoint++;
+                    }
+                    op.Status.SkillPointUnit = nextSkillPointUnit;
+                }
+            }
+
+
+            // 正在使用的技能更新
             List<Operator> skillOffOperators = new List<Operator>();
             foreach (Operator op in SkillOnOperators)
             {
@@ -276,7 +299,7 @@ namespace ArknightSimulator.Manager
                             foreach(EnemyMovement em in movements)
                             {
                                 var pos = em.Enemy.Position;
-                                if (pos.X < mapi + 1 && pos.X > 1 && pos.Y < mapj + 1 && pos.Y > mapj) 
+                                if (pos.X < mapi + 1 && pos.X > 1 && pos.Y < mapj + 1 && pos.Y > mapj)  // TODO:好像不对
                                     enemiesInRange.Add(em);
                             }
                         }
@@ -284,8 +307,10 @@ namespace ArknightSimulator.Manager
                 }
                 if (enemiesInRange.Count > 0)
                 {
+                    // TODO:不对，是优先攻击离我方据点近的（或者再写一个索敌类型，然后switch）
                     enemiesInRange.Sort((a, b) => b.Enemy.Status.Defence - a.Enemy.Status.Defence); // 按照防御力降序排序（复杂了
                     op.RefreshAttack(attackRefresh, enemiesInRange[0].Enemy);
+                    return;
                 }
 
                 op.RefreshAttack(attackRefresh, null);
@@ -328,7 +353,10 @@ namespace ArknightSimulator.Manager
                 string skill = opt.SkillNames[opt.SkillChooseId - 1];
                 switch (skill)
                 {
-                    case "SkillAttackEnhanceAlpha": op.Skill = new SkillAttackEnhanceAlpha(opt.SkillLevel); break;
+                    case "SkillAttackEnhanceAlpha": 
+                        op.Skill = new SkillAttackEnhanceAlpha(opt.SkillLevel);
+                        op.Status.SkillPoint = op.Skill.Initial;
+                        break;
                     default: break;
                 }
             }
@@ -338,6 +366,7 @@ namespace ArknightSimulator.Manager
             op.Position = new Point { X = mapX + 0.5, Y = mapY + 0.5 };
             op.Direction = direction;
             op.CurrentDeploymentType = deploymentType;
+            op.AttackType = op.Template.AttackType;
 
             OnMapOperators.Add(op);
 

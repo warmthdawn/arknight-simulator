@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ArknightSimulator.Operators
+namespace ArknightSimulator.Utils
 {
     public enum Directions : int   // 干员面朝的方向
     {

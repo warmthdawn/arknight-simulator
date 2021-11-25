@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ArknightSimulator.Operators
+namespace ArknightSimulator.Utils
 {
     public enum PositionType : int
     {

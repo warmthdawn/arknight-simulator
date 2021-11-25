@@ -22,7 +22,7 @@ namespace ArknightSimulator.Operators
         public DeploymentType CurrentDeploymentType { get; set; }  // 部署后的部署位置
         public int BlockEnemyCount { get; set; } = 0;  // 正在阻挡敌人数
         public List<int> BlockEnemiesId { get; set; } = new List<int>();  // 正在阻挡敌人
-        public int AttackId { get; set; } = -1;   // 索敌：攻击的敌人ID
+        public int AttackId { get; set; } = -1;   // 索敌：攻击的敌人ID   TODO:是否要删
         public int AttackUnit { get; set; } = 0; // 攻击冷却计数
         public Action<Operator> AttackEvent { get; set; } // 干员攻击事件
         public DamageType AttackType { get; set; } // 攻击伤害类型

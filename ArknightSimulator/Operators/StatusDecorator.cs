@@ -14,7 +14,8 @@ namespace ArknightSimulator.Operators
 
         public virtual int MaxLife => Inner.MaxLife;
         public virtual int CurrentLife => Inner.CurrentLife;
-        public virtual int SkillPoint => Inner.SkillPoint;
+        public virtual int SkillPoint { get => Inner.SkillPoint; set => Inner.SkillPoint = value; }    // 技力需要更新
+        public virtual int SkillPointUnit { get => Inner.SkillPointUnit; set => Inner.SkillPointUnit = value; }   // 技力单元需要更新
         public virtual int Attack => Inner.Attack;
         public virtual int Defence => Inner.Defence;
         public virtual int MagicDefence => Inner.MagicDefence;

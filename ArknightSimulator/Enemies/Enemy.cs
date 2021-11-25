@@ -24,7 +24,7 @@ namespace ArknightSimulator.Enemies
             if (enemy == null)
                 return;
             InstanceId = enemy.InstanceId;
-            Template = enemy.Template;
+            Template = enemy.Template;  // 引用，无需new
             //TemplateId = enemy.TemplateId;
             Status = new EnemyStatus(enemy.Status);
             Position.X = enemy.Position.X;

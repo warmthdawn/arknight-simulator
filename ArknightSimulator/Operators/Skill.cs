@@ -52,7 +52,7 @@ namespace ArknightSimulator.Operators
                 return false;
 
             int nextTimeUnit = (TimeUnit + 100 / refresh) % 100;
-            if(nextTimeUnit<TimeUnit)
+            if (nextTimeUnit < TimeUnit)
             {
                 CurrentTime++;
             }

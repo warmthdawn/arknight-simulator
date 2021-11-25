@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ArknightSimulator.Enemies
+namespace ArknightSimulator.Utils
 {
     public enum EnemyType : int
     {

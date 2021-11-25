@@ -214,6 +214,11 @@ namespace ArknightSimulator.Pages
             OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
             if (opt.EliteLevel - 1 >= 0)
             {
+                opt.Level = 1;
+                if (opt.SkillNames.Length == 0)
+                    opt.SkillChooseId = 0;
+                else
+                    opt.SkillChooseId = 1;
                 opt.EliteLevel--;
                 opt.ResetStatus();
             }
@@ -225,6 +230,11 @@ namespace ArknightSimulator.Pages
             OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
             if (opt.EliteLevel + 1 <= OperatorTemplate.LevelLimit[opt.Rare-1].Length-1)
             {
+                opt.Level = 1;
+                if (opt.SkillNames.Length == 0)
+                    opt.SkillChooseId = 0;
+                else
+                    opt.SkillChooseId = 1;
                 opt.EliteLevel++;
                 opt.ResetStatus();
             }
@@ -312,7 +322,7 @@ namespace ArknightSimulator.Pages
         private void BtnSkillChooseIdUp_Click(object sender, RoutedEventArgs e)
         {
             OperatorTemplate opt = (OperatorTemplate)detailBoard.DataContext;
-            if (opt.SkillChooseId + 1 <= opt.SkillNames.Length)
+            if (opt.SkillChooseId + 1 <= opt.SkillNames.Length && opt.SkillChooseId + 1 <= opt.EliteLevel + 1)
             {
                 opt.SkillChooseId++;
             }

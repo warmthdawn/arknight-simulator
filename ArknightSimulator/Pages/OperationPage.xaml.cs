@@ -17,6 +17,7 @@ using ArknightSimulator.EventHandlers;
 using ArknightSimulator.Manager;
 using ArknightSimulator.Operations;
 using ArknightSimulator.Operators;
+using ArknightSimulator.Utils;
 using WpfAnimatedGif;
 using Point = ArknightSimulator.Operations.Point;
 
@@ -183,6 +184,7 @@ namespace ArknightSimulator.Pages
                 grid.ActualHeight - pos.Y
                 );
 
+            enemyImg.IsHitTestVisible = false;
 
             grid.RegisterName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString(), enemyImg);
             Panel.SetZIndex(enemyImg, -1);
@@ -250,6 +252,11 @@ namespace ArknightSimulator.Pages
             Image enemyImg = (Image)grid.FindName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString());
             grid.UnregisterName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString());
             grid.Children.Remove(enemyImg);
+
+            ProgressBar bar = (ProgressBar)grid.FindName("enemylifeBar" + e.EnemyMovement.Enemy.InstanceId);
+            grid.UnregisterName("enemylifeBar" + e.EnemyMovement.Enemy.InstanceId);
+            grid.Children.Remove(bar);
+
         }
         private void OperatorRemove(object sender, OperatorEventArgs e)
         {
@@ -259,13 +266,33 @@ namespace ArknightSimulator.Pages
             Image currentImg = (Image)grid.FindName(currentDragOperator.Id.Replace(" ", "_"));
             grid.Children.Remove(currentImg);
             grid.UnregisterName(currentDragOperator.Id.Replace(" ", "_"));
+
+
+            ProgressBar lifebar = (ProgressBar)grid.FindName("lifeBar" + currentDragOperator.Id.Replace(" ", "_"));
+            ProgressBar skillbar = (ProgressBar)grid.FindName("skillBar" + currentDragOperator.Id.Replace(" ", "_"));
+            if (lifebar != null)
+            {
+                grid.UnregisterName("lifeBar" + currentDragOperator.Id.Replace(" ", "_"));
+                grid.Children.Remove(lifebar);
+            }
+            if (skillbar != null)
+            {
+                grid.UnregisterName("skillbar" + currentDragOperator.Id.Replace(" ", "_"));
+                grid.Children.Remove(skillbar);
+            }
+
+
+
+
             currentDragOperatorImg = null;
             currentDragOperator = null;
 
             canvasDirection.Visibility = Visibility.Hidden;
+            canvasSkillOrWithdraw.Visibility = Visibility.Hidden;
             gridCanvas.Visibility = Visibility.Hidden;
             gameManager.Continue();
             btnPauseOrContinue.IsEnabled = true;
+
         }
 
         // 根据干员部署类型更新可放置网格
@@ -372,8 +399,9 @@ namespace ArknightSimulator.Pages
                                 mapj = op.MapX + dj;
                                 break;
                         }
-
-                        blocks[mapj][mapi].Visibility = Visibility.Visible; // block的第一维是列
+                        if (mapi >= 0 && mapi <= mapManager.CurrentOperation.MapHeight - 1
+                            && mapj >= 0 && mapj <= mapManager.CurrentOperation.MapWidth - 1)
+                            blocks[mapj][mapi].Visibility = Visibility.Visible; // block的第一维是列
                     }
                 }
             }
@@ -616,7 +644,7 @@ namespace ArknightSimulator.Pages
         }
         private void BtnTurnDown_Click(object sender, RoutedEventArgs e)
         {
-            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY, currentDeploymentType);
+            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Down, currentMapX, currentMapY, currentDeploymentType);
             op.AttackEvent += OperatorAttack;
             AddOperatorProgressBar(op);
 
@@ -638,7 +666,7 @@ namespace ArknightSimulator.Pages
             currentImg.RenderTransform = scaleTransform;
 
 
-            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY, currentDeploymentType);
+            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Left, currentMapX, currentMapY, currentDeploymentType);
             op.AttackEvent += OperatorAttack;
             AddOperatorProgressBar(op);
 
@@ -651,7 +679,7 @@ namespace ArknightSimulator.Pages
         }
         private void BtnTurnRight_Click(object sender, RoutedEventArgs e)
         {
-            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY, currentDeploymentType);
+            Operator op = operatorManager.Deploying(currentDragOperator, Directions.Right, currentMapX, currentMapY, currentDeploymentType);
             op.AttackEvent += OperatorAttack;
             AddOperatorProgressBar(op);
 
@@ -692,6 +720,8 @@ namespace ArknightSimulator.Pages
             skillBar.Foreground = new SolidColorBrush(Colors.YellowGreen);
             lifeBar.BorderThickness = new Thickness(0);
             skillBar.BorderThickness = new Thickness(0);
+            lifeBar.IsHitTestVisible = false;
+            skillBar.IsHitTestVisible = false;
             var pos = mapManager.CurrentOperation.GetPosition(new Point(op.MapX + 0.5, op.MapY + 0.5));
             //Image img = (Image)grid.FindName(currentDragOperator.Id.Replace(" ", "_"));
             //             lifeBar.Margin = new Thickness(
@@ -740,6 +770,8 @@ namespace ArknightSimulator.Pages
             lifeBar.Background = new SolidColorBrush(Colors.Black);
             lifeBar.Foreground = new SolidColorBrush(Colors.DarkOrange);
             lifeBar.BorderThickness = new Thickness(0);
+            lifeBar.IsHitTestVisible = false;
+
             Image img = (Image)grid.FindName("enemy" + enemy.InstanceId);
             lifeBar.Margin = new Thickness(
                 img.Margin.Left + 50,
@@ -778,7 +810,7 @@ namespace ArknightSimulator.Pages
             if (currentDragOperatorImg == null && currentDragOperator == null)
             {
                 btnPauseOrContinue.IsEnabled = false;
-                gameManager.Pause();   // 部署时先暂停
+                gameManager.Pause();   // 选中干员时先暂停
 
                 string id = ((Image)sender).Name.Replace("_", " ");
                 OperatorTemplate opt = operatorManager.SelectedOperators.Find(o => o.Id == id);
@@ -847,7 +879,7 @@ namespace ArknightSimulator.Pages
             ImageBehavior.SetAnimationDuration(opImg, TimeSpan.FromSeconds(op.Status.AttackTime / gameManager.Speed));
             ImageBehavior.SetRepeatBehavior(opImg, new RepeatBehavior(1));
             controller.GotoFrame(0);
-            controller.Play();
+            controller.Play();    // TODO: 还有停止播放
 
             //ImageBehavior.SetRepeatBehavior(opImg, new RepeatBehavior(1));
 

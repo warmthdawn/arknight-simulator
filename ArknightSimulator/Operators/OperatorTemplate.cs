@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using ArknightSimulator.Utils;
 
 namespace ArknightSimulator.Operators
 {
@@ -42,6 +43,7 @@ namespace ArknightSimulator.Operators
         public int[] LevelUpMagicDefence { get; set; } // 包括各个阶段法抗
         public int[] BeliefUpStatus { get; set; }  // 信赖提升时各属性最大增值 生命上限，攻击，防御，法抗
         public PotentialModifier[] PotentialValues { get; set; }   // 每级潜能提升属性修改
+        public DamageType AttackType { get; set; } // 干员普通攻击类型
         public class PotentialModifier
         {
             public string Type { get; set; }

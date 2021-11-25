@@ -154,7 +154,7 @@ namespace ArknightSimulator.Manager
 
                 foreach (EnemyMovement enemy in enemiesAppear) // 遍历场上所有敌人，找到碰撞的敌人
                 {
-                    EnemyTemplate emt = currentOperation.AvailableEnemies.Find(e => e.Id == enemy.Enemy.TemplateId);
+                    EnemyTemplate emt = enemy.Enemy.Template;
                     if (emt.Type != EnemyType.Ground)
                         continue;
 
@@ -220,7 +220,7 @@ namespace ArknightSimulator.Manager
                     continue;
                 }
 
-                int[][] range = op.Status.Range[AvailableOperators.Find(e => e.Id == op.TemplateId).EliteLevel]; // 待优化
+                int[][] range = op.Status.Range[op.Template.EliteLevel]; // 待优化
                 int selfi = 0;
                 int selfj = 0;
                 // 寻找自身点
@@ -305,10 +305,10 @@ namespace ArknightSimulator.Manager
             Operator op = new Operator();
             op.InstanceId = TotalDeploymentCount;
             TotalDeploymentCount++;
-            op.TemplateId = opt.Id;
+            //op.TemplateId = opt.Id;
             op.Status = new Status(opt.Status);
             op.AttackUnit = (int)(100 * op.Status.AttackTime);
-
+            op.Template = opt;
 
             op.Gift = new Gift[opt.GiftNames.Length];
             if (opt.GiftNames.Length != 0)

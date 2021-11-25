@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using ArknightSimulator.Enemies;
 using ArknightSimulator.Operations;
+using ArknightSimulator.Utils;
 
 namespace ArknightSimulator.Operators
 {
     public class Operator // 已部署干员
     {
         public int InstanceId { get; set; }    // 干员实例的ID
-        public string TemplateId { get; set; } // 干员模板的ID
+        public OperatorTemplate Template { get; set; } // 干员实例
+        //public string TemplateId { get; set; } // 干员模板的ID
         public IStatus Status { get; set; }    // 属性状态
         public Gift[] Gift { get; set; } // 天赋
         public Skill Skill { get; set; } // 技能
@@ -23,6 +25,7 @@ namespace ArknightSimulator.Operators
         public int AttackId { get; set; } = -1;   // 索敌：攻击的敌人ID
         public int AttackUnit { get; set; } = 0; // 攻击冷却计数
         public Action<Operator> AttackEvent { get; set; } // 干员攻击事件
+        public DamageType AttackType { get; set; } // 攻击伤害类型
 
         public void RefreshAttack(int attackRefresh, Enemy enemy = null)
         {
@@ -46,10 +49,23 @@ namespace ArknightSimulator.Operators
             if (AttackEvent != null)
                 AttackEvent(this); // 触发攻击事件
 
+            enemy.Hurt(AttackType, Status.Attack);
         }
-        public void Hurt()
+        public void Hurt(DamageType type, int damage)
         {
-
+            switch (type)
+            {
+                case DamageType.Physical:
+                        break;
+                case DamageType.Spell:
+                    break;
+                case DamageType.True:
+                    break;
+                case DamageType.Heal:
+                    break;
+                default:
+                    throw new ArgumentException("非法伤害类型");
+            }
 
         }
         public void SkillStart()

@@ -170,7 +170,7 @@ namespace ArknightSimulator.Pages
         private void EnemyAppearing(object sender, EnemyEventArgs e)
         {
             Image enemyImg = new Image();
-            EnemyTemplate et = mapManager.CurrentOperation.AvailableEnemies.Find(en => en.Id == e.EnemyMovement.Enemy.TemplateId);
+            EnemyTemplate et = e.EnemyMovement.Enemy.Template;
             enemyImg.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(et.Picture)));
             enemyImg.Width = 200;
             enemyImg.Height = 200;
@@ -254,7 +254,7 @@ namespace ArknightSimulator.Pages
         private void OperatorRemove(object sender, OperatorEventArgs e)
         {
             if (e.Operator != null)
-                currentDragOperator = new OperatorTemplate(operatorManager.SelectedOperators.Find(o => o.Id == e.Operator.TemplateId));
+                currentDragOperator = new OperatorTemplate(e.Operator.Template);
 
             Image currentImg = (Image)grid.FindName(currentDragOperator.Id.Replace(" ", "_"));
             grid.Children.Remove(currentImg);
@@ -782,7 +782,7 @@ namespace ArknightSimulator.Pages
 
                 string id = ((Image)sender).Name.Replace("_", " ");
                 OperatorTemplate opt = operatorManager.SelectedOperators.Find(o => o.Id == id);
-                Operator op = operatorManager.OnMapOperators.Find(o => o.TemplateId == opt.Id);
+                Operator op = operatorManager.OnMapOperators.Find(o => o.Template.Id == opt.Id);
                 if (op.Skill == null)
                 {
                     btnSkill.Visibility = Visibility.Hidden;
@@ -840,7 +840,7 @@ namespace ArknightSimulator.Pages
         // 干员攻击
         private void OperatorAttack(Operator op)
         {
-            Image opImg = (Image)grid.FindName(op.TemplateId.Replace(" ", "_"));
+            Image opImg = (Image)grid.FindName(op.Template.Id.Replace(" ", "_"));
             if (opImg == null)
                 return;
             var controller = ImageBehavior.GetAnimationController(opImg);

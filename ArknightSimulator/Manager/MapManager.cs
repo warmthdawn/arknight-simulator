@@ -76,8 +76,6 @@ namespace ArknightSimulator.Manager
                 return false;
             }
 
-         
-
             return true;
         }
 
@@ -89,12 +87,14 @@ namespace ArknightSimulator.Manager
             enemiesNotAppear = new List<EnemyMovement>();
             foreach (EnemyMovement t in operation.TimeLine)
             {
+                //EnemyMovement em = new EnemyMovement(t);
+                t.Enemy.Template = CurrentOperation.AvailableEnemies.Find(e => e.Id == t.Enemy.TemplateId);
                 enemiesNotAppear.Add(new EnemyMovement(t));
             }
             enemiesAppear = new List<EnemyMovement>();
             foreach (EnemyMovement enemy in enemiesNotAppear)
             {
-                EnemyTemplate et = operation.AvailableEnemies.Find(e => e.Id == enemy.Enemy.TemplateId);
+                EnemyTemplate et = enemy.Enemy.Template;
                 enemy.Enemy.Status = new EnemyStatus(et.Status);
                 enemy.PassPointCount = 0;
             }
@@ -151,7 +151,7 @@ namespace ArknightSimulator.Manager
         // 判断是否被阻挡 TODO 暂不考虑空降挤开和特殊敌人
         private bool EnemyBlocked(EnemyMovement enemy, List<Operator> onMapOperators, double operatorColliderRadius, double enemyColliderRadius)
         {
-            EnemyTemplate emt = CurrentOperation.AvailableEnemies.Find(e => e.Id == enemy.Enemy.TemplateId);
+            EnemyTemplate emt = enemy.Enemy.Template;
             if (emt.Type != EnemyType.Ground)
                 return false;
 

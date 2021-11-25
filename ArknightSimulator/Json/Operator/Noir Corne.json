@@ -56,5 +56,6 @@
       "Type": "Cost",
       "UpValue": -1
     }
-  ]
+  ],
+  "AttackType": 0
 }

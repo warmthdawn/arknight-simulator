@@ -34,7 +34,7 @@ namespace ArknightSimulator.Operators
             // 若无攻击对象且 下次可攻击则干员空闲
             if ((enemies == null || enemies.Count == 0) && (int)(100 * Status.AttackTime) - AttackUnit <= 100 / attackRefresh)
             {
-                AttackUnit = (int)(100 * Status.AttackTime);
+                AttackUnit = (int)(100 * Status.AttackTime) - 50;// 暂定半秒延迟
                 return;
             }
 
@@ -63,10 +63,16 @@ namespace ArknightSimulator.Operators
             switch (type)
             {
                 case DamageType.Physical:
-                    actualDamage = damage - Status.Defence; // Defence 计算交给装饰器 (目标防御力-数值减防御)×(1-百分比减防御)
+                    if (Status.Defence >= 0.95 * damage)
+                        actualDamage = (int)0.05 * damage;  // 保底伤害
+                    else
+                        actualDamage = damage - Status.Defence; // Defence 计算交给装饰器 (目标防御力-数值减防御)×(1-百分比减防御)
                     break;
                 case DamageType.Spell:
-                    actualDamage = (int)(damage * 0.01 * (100 - Status.MagicDefence)); // 同上 法抗 = (目标法术抗性-数值减法抗)×(1-百分比减法抗)
+                    if (Status.MagicDefence >= 95)
+                        actualDamage = (int)0.05 * damage;   // 保底伤害
+                    else
+                        actualDamage = (int)(damage * 0.01 * (100 - Status.MagicDefence)); // 同上 法抗 = (目标法术抗性-数值减法抗)×(1-百分比减法抗)
                     break;
                 case DamageType.True:
                     actualDamage = damage;
@@ -80,6 +86,8 @@ namespace ArknightSimulator.Operators
 
             Status newStatus = new Status(Status);
             newStatus.CurrentLife -= actualDamage;
+            if (newStatus.CurrentLife >= newStatus.MaxLife)
+                newStatus.CurrentLife = newStatus.MaxLife;
             Status = newStatus;
 
         }

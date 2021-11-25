@@ -44,7 +44,8 @@ namespace ArknightSimulator.Manager
         public EnemyEventHandler OnEnemyAppearing; // 敌人出现事件
         public EnemyEventHandler OnEnemyMoving;    // 敌人出现事件
         public EnemyEventHandler OnEnemyRemove;    // 敌人移除事件
-        
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -123,8 +124,7 @@ namespace ArknightSimulator.Manager
 
             EnemyMoving(totalTime, refresh, OnMapOperators, operatorColliderRadius, enemyColliderRadius);
 
-            EnemyAttack();
-
+            EnemyAttack(refresh, OnMapOperators, operatorColliderRadius);
 
         }
 
@@ -285,11 +285,120 @@ namespace ArknightSimulator.Manager
 
 
         // 敌人攻击
-        private void EnemyAttack()
+        private void EnemyAttack(int refresh, List<Operator> OnMapOperators, double operatorColliderRadius)
         {
-            foreach (var enemy in EnemiesAppear)
+            foreach (var e in EnemiesAppear)
             {
+                Enemy enemy = e.Enemy;
+                if (enemy.AttackType == AttackType.None) // 不攻击的敌人
+                    continue;
 
+                List<Operator> attackop = new List<Operator>();  // 总的攻击对象
+                enemy.AttackId.Clear();
+                int attackCount = (int)enemy.AttackType;  // 攻击数量
+
+
+                if (attackCount > 0)  // 攻击数量大于0
+                {
+                    if (enemy.IsBlocked == true) // 被阻挡，则优先攻击
+                    {
+                        var op = OnMapOperators.Find(o => o.InstanceId == enemy.BlockId);
+                        attackop.Add(op);
+                        enemy.AttackId.Add(op.InstanceId);
+
+                        attackCount--;
+
+                        if (attackCount <= 0)  // 攻击数量满了，则不再攻击范围内的干员
+                        {
+                            enemy.RefreshAttack(refresh, attackop);
+                            continue;
+                        }
+
+                    }
+                }
+
+                if (enemy.Status.Range == -1)   // 攻击范围为-1的敌人，即近战攻击（阻挡攻击）
+                {
+                    enemy.RefreshAttack(refresh, null);
+                    continue;
+                }
+
+
+                // 敌人在攻击半径内检测到干员的碰撞体（半径为operatorColliderRadius）则攻击
+                List<Operator> opInRange = OnMapOperators.FindAll(o => (o.Position - enemy.Position) <= enemy.Status.Range + operatorColliderRadius);
+
+
+                // 攻击半径内所有干员的敌人单独计算
+                if (attackCount == -1)
+                {
+                    var op = OnMapOperators.Find(o => o.InstanceId == enemy.BlockId);
+                    attackop.Add(op);
+                    enemy.AttackId.Add(op.InstanceId);
+                    foreach (var o in opInRange)
+                    {
+                        if (!attackop.Contains(o))
+                        {
+                            attackop.Add(o);
+                            enemy.AttackId.Add(o.InstanceId);
+                        }
+                    }
+                    enemy.RefreshAttack(refresh, attackop);
+                    continue;
+                }
+
+
+
+                // 剩余攻击位
+                if (opInRange.Count > 0)
+                {
+                    List<Operator> selectop = new List<Operator>();
+                    foreach (var type in enemy.SearchOperatorType)
+                    {
+                        // TODO: 索敌类型增加
+                        switch (type)
+                        {
+                            case SearchOperatorType.Default:
+                                // 最后部署的干员
+                                if (selectop.Count == 0)
+                                {
+                                    for (int i = 0; i < attackCount; i++)
+                                    {
+                                        int maxId = 0;
+                                        foreach (var o in opInRange)
+                                        {
+                                            if (selectop.Contains(o))
+                                                continue;
+                                            if (o.InstanceId > maxId)
+                                            {
+                                                maxId = o.InstanceId;
+                                            }
+                                        }
+                                        selectop.Add(opInRange.Find(o => o.InstanceId == maxId));
+                                    }
+                                }
+                                else
+                                    selectop.Sort((a, b) => b.InstanceId - a.InstanceId);
+                                break;
+                            default: throw new Exception("新的敌人索敌类型未定义");
+                        }
+                    }
+
+
+                    for (int i = 0; i < attackCount && i < selectop.Count; i++)
+                    {
+                        if (!attackop.Contains(selectop[i]))
+                        {
+                            attackop.Add(selectop[i]);
+                            enemy.AttackId.Add(selectop[i].InstanceId);
+                        }
+                    }
+
+
+                    enemy.RefreshAttack(refresh, attackop);
+                    continue;
+                }
+
+                enemy.RefreshAttack(refresh, null);
             }
         }
 

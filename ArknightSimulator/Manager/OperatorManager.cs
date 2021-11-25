@@ -355,7 +355,7 @@ namespace ArknightSimulator.Manager
                 }
 
 
-
+                // 剩余攻击位
                 if (enemiesInRange.Count > 0)
                 {
                     List<EnemyMovement> selectEnemies = new List<EnemyMovement>();
@@ -369,17 +369,22 @@ namespace ArknightSimulator.Manager
                                 // 选择离我方据点最近的敌人
                                 if (selectEnemies.Count == 0)
                                 {
-                                    double distance = enemiesInRange[0].DistanceToHome();
-                                    EnemyMovement movement = enemiesInRange[0];
-                                    foreach (var e in enemiesInRange)
+                                    for (int i = 0; i < attackCount; i++)
                                     {
-                                        if (e.DistanceToHome() < movement.DistanceToHome())
+                                        EnemyMovement movement = enemiesInRange.Find(e => !selectEnemies.Contains(e));
+                                        double distance = movement.DistanceToHome();
+                                        foreach (var e in enemiesInRange)
                                         {
-                                            distance = movement.DistanceToHome();
-                                            movement = e;
+                                            if (selectEnemies.Contains(e))
+                                                continue;
+                                            if (e.DistanceToHome() < distance)
+                                            {
+                                                movement = e;
+                                                distance = movement.DistanceToHome();
+                                            }
                                         }
+                                        selectEnemies.Add(movement);
                                     }
-                                    selectEnemies.Add(movement);
                                 }
                                 else
                                     selectEnemies.Sort((a, b) => (int)(a.DistanceToHome() - b.DistanceToHome()));
@@ -399,7 +404,7 @@ namespace ArknightSimulator.Manager
                                 }
                                 break;
                             default:
-                                throw new Exception("新的索敌类型未定义");
+                                throw new Exception("新的干员索敌类型未定义");
                         }
                     }
 

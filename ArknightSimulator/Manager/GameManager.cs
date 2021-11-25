@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using ArknightSimulator.EventHandlers;
 
 namespace ArknightSimulator.Manager
 {
@@ -33,6 +34,9 @@ namespace ArknightSimulator.Manager
 
         public EventHandler OnLose;      // 作战失败事件
         public EventHandler OnWin;       // 作战完成事件
+        public OperatorEventHandler OnUpdateOperatorProgressBar;  // 干员血条更新事件
+        public EnemyEventHandler OnUpdateEnemyProgressBar;  // 敌人血条更新事件
+
 
 
         public GameManager(DispatcherTimer timer)
@@ -81,6 +85,11 @@ namespace ArknightSimulator.Manager
             totalTime += interval * 1.0f / 1000;
             OperatorManager.Update(refresh, MapManager.EnemiesAppear,MapManager.CurrentOperation, operatorColliderRadius, enemyColliderRadius);
             MapManager.Update(TotalTime, Refresh, OperatorManager.OnMapOperators, operatorColliderRadius, enemyColliderRadius);
+
+            foreach (var o in OperatorManager.OnMapOperators)
+                OnUpdateOperatorProgressBar(this, new OperatorEventArgs(o));
+            foreach (var e in MapManager.EnemiesAppear)
+                OnUpdateEnemyProgressBar(this, new EnemyEventArgs(e));
         }
 
         public void StartGame()

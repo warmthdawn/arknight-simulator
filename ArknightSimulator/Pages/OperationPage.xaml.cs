@@ -116,6 +116,8 @@ namespace ArknightSimulator.Pages
             // 添加事件
             gameManager.OnLose += Lose;
             gameManager.OnWin += Win;
+            gameManager.OnUpdateOperatorProgressBar += UpdateOperatorProgressBar;
+            gameManager.OnUpdateEnemyProgressBar += UpdateEnemyProgressBar;
             operatorManager.OnOperatorEnable += OperatorEnable;
             mapManager.OnEnemyAppearing += EnemyAppearing;
             mapManager.OnEnemyMoving += EnemyMoving;
@@ -123,6 +125,7 @@ namespace ArknightSimulator.Pages
             OnPlaceOperator += PlaceOperator;
             OnSelectMapOperator += SelectMapOperator;
             OnOperatorRemove += OperatorRemove;
+
         }
 
         // 删除事件
@@ -131,11 +134,13 @@ namespace ArknightSimulator.Pages
             // 每次作战结束需要删除与Manager关联的事件
             gameManager.OnLose -= Lose;
             gameManager.OnWin -= Win;
+            gameManager.OnUpdateOperatorProgressBar -= UpdateOperatorProgressBar;
+            gameManager.OnUpdateEnemyProgressBar -= UpdateEnemyProgressBar;
             operatorManager.OnOperatorEnable -= OperatorEnable;
             mapManager.OnEnemyAppearing -= EnemyAppearing;
             mapManager.OnEnemyMoving -= EnemyMoving;
             mapManager.OnEnemyRemove -= EnemyRemove;
-            //OnPlaceOperator -= PlaceOperator;
+
         }
 
         private void Block_MouseLeave(object sender, MouseEventArgs e)
@@ -224,7 +229,6 @@ namespace ArknightSimulator.Pages
                 grid.ActualHeight - pos.Y
                 );
 
-            UpdateEnemyProgressBar(e.EnemyMovement.Enemy);
         }
 
         private void Lose(object sender, EventArgs e)
@@ -264,11 +268,16 @@ namespace ArknightSimulator.Pages
                 currentDragOperator = new OperatorTemplate(e.Operator.Template);
 
             Image currentImg = (Image)grid.FindName(currentDragOperator.Id.Replace(" ", "_"));
-            Canvas currentHitArea = (Canvas)grid.FindName("hit_" + currentDragOperator.Id.Replace(" ", "_"));
             grid.Children.Remove(currentImg);
-            grid.Children.Remove(currentHitArea);
-            grid.UnregisterName(currentDragOperator.Id.Replace(" ", "_"));
-            grid.UnregisterName("hit_" + currentDragOperator.Id.Replace(" ", "_"));
+            grid.UnregisterName(currentImg.Name);
+            Canvas currentHitArea = (Canvas)grid.FindName("hit_" + currentDragOperator.Id.Replace(" ", "_"));
+            if(currentHitArea != null)
+            {
+                grid.Children.Remove(currentHitArea);
+                grid.UnregisterName(currentHitArea.Name);
+            }
+
+
 
 
             ProgressBar lifebar = (ProgressBar)grid.FindName("lifeBar" + currentDragOperator.Id.Replace(" ", "_"));
@@ -616,11 +625,11 @@ namespace ArknightSimulator.Pages
                 //                     currentDragOperatorImg.Margin.Right - 100,
                 //                     currentDragOperatorImg.Margin.Bottom - 100);
 
-                // 任务添加选中区域
+                // 人物添加选中区域
                 Canvas hitArea = new Canvas();
                 hitArea.Background = new SolidColorBrush(Colors.Transparent);
                 //hitArea.Opacity = 0;
-                hitArea.DataContext = currentDragOperatorImg.DataContext;
+                //hitArea.DataContext = currentDragOperatorImg.DataContext;
                 hitArea.Margin = new Thickness(
                     pos.X - 50,
                     pos.Y - 50,
@@ -640,7 +649,7 @@ namespace ArknightSimulator.Pages
                     grid.ActualHeight - pos.Y - 200);
                 canvasDirection.Visibility = Visibility.Visible;
 
-                hitArea.MouseLeftButtonDown += CurrentOperatorImg_MouseLeftButtonDown;
+                hitArea.MouseLeftButtonDown += CurrentOperator_MouseLeftButtonDown;
                 // currentDragOperatorImg.MouseLeftButtonDown += CurrentOperatorImg_MouseLeftButtonDown;
 
                 currentDragOperatorImg = null;
@@ -720,7 +729,7 @@ namespace ArknightSimulator.Pages
         {
             ProgressBar lifeBar = new ProgressBar();
             ProgressBar skillBar = new ProgressBar();
-            //Binding binding = new Binding();     // 由于status引用会改变，无法绑定，只能实时更新
+            //Binding binding = new Binding();     // 由于status由装饰器控制，无法绑定，只能实时更新
             //binding.Source = op.Status;
             //binding.Path = new PropertyPath("CurrentLife");
             //lifeBar.SetBinding(ProgressBar.ValueProperty, binding);
@@ -779,16 +788,15 @@ namespace ArknightSimulator.Pages
             grid.Children.Add(skillBar);
         }
 
-
-
         // 添加敌人血条和技能条
         private void AddEnemyProgressBar(Enemy enemy)
         {
             ProgressBar lifeBar = new ProgressBar();
-            //Binding binding = new Binding();  // 由于status引用会改变，无法绑定，只能实时更新
-            //binding.Source = enemy;
-            //binding.Path = new PropertyPath("Status.CurrentLife");
+            //Binding binding = new Binding();  // 由于status由装饰器控制，无法绑定，只能实时更新
+            //binding.Source = enemy.Status;
+            //binding.Path = new PropertyPath("CurrentLife");
             //lifeBar.SetBinding(ProgressBar.ValueProperty, binding);
+
             lifeBar.Value = enemy.Status.CurrentLife;
             lifeBar.Maximum = enemy.Status.MaxLife;
             lifeBar.Background = new SolidColorBrush(Colors.Black);
@@ -807,11 +815,21 @@ namespace ArknightSimulator.Pages
             grid.Children.Add(lifeBar);
         }
 
-        // 干员血条和技能条更新 TODO
+        // 干员血条和技能条更新
+        private void UpdateOperatorProgressBar(object sender, OperatorEventArgs e)
+        {
+            Operator op = e.Operator;
+            ProgressBar lifebar = (ProgressBar)grid.FindName("lifeBar" + op.Template.Id.Replace(" ", "_"));
+            ProgressBar skillBar = (ProgressBar)grid.FindName("skillBar" + op.Template.Id.Replace(" ", "_"));
+            lifebar.Value = op.Status.CurrentLife;
+            skillBar.Value = op.Status.SkillPoint;
+
+        }
 
         // 敌人血条更新
-        private void UpdateEnemyProgressBar(Enemy enemy)
+        private void UpdateEnemyProgressBar(object sender, EnemyEventArgs e)
         {
+            Enemy enemy = e.EnemyMovement.Enemy;
             Image img = (Image)grid.FindName("enemy" + enemy.InstanceId);
             ProgressBar bar = (ProgressBar)grid.FindName("enemylifeBar" + enemy.InstanceId);
             bar.Value = enemy.Status.CurrentLife;
@@ -829,7 +847,7 @@ namespace ArknightSimulator.Pages
         }
 
         // 选中场上干员，可选择撤退或使用技能
-        private void CurrentOperatorImg_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void CurrentOperator_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (gameManager.IsGoingOn == false)
                 return;

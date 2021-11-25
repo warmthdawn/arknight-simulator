@@ -6,15 +6,11 @@ using System.Text;
 
 namespace ArknightSimulator.Operators
 {
-    public class Status : IStatus, INotifyPropertyChanged
+    public class Status : IStatus
     {
-        private int currentLife;
-        private int skillPoint;
-
-
         public int MaxLife { get; set; } // 最大生命
-        public int CurrentLife { get => currentLife; set { currentLife = value; OnPropertyChanged(); } } // 当前生命
-        public int SkillPoint { get => skillPoint; set { skillPoint = value; OnPropertyChanged(); } } // 技力
+        public int CurrentLife { get; set; } // 当前生命
+        public int SkillPoint { get; set; } // 技力
         public int SkillPointUnit { get; set; } // 技力单元
         public int Attack { get; set; } // 攻击力
         public int Defence { get; set; } // 防御 defence
@@ -63,12 +59,6 @@ namespace ArknightSimulator.Operators
         }
 
 
-        // 数据更新
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
 
     }
 }

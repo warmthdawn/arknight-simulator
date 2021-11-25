@@ -17,7 +17,7 @@ using Point = ArknightSimulator.Operations.Point;
 namespace ArknightSimulator.Manager
 {
     public class MapManager : INotifyPropertyChanged    // 管理地图和敌人
-    { 
+    {
         private Operation operation;
         private List<EnemyMovement> enemiesNotAppear;
         private List<EnemyMovement> enemiesAppear;
@@ -44,7 +44,6 @@ namespace ArknightSimulator.Manager
         public EnemyEventHandler OnEnemyAppearing; // 敌人出现事件
         public EnemyEventHandler OnEnemyMoving;    // 敌人出现事件
         public EnemyEventHandler OnEnemyRemove;    // 敌人移除事件
-
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -81,8 +80,8 @@ namespace ArknightSimulator.Manager
             return true;
         }
 
-        
-        
+
+
         // 开始作战时初始化
         public void Init()
         {
@@ -105,7 +104,7 @@ namespace ArknightSimulator.Manager
             CurrentHomeLife = CurrentOperation.HomeLife;
             EnemyTotalCount = CurrentOperation.EnemyCount;
             CurrentEnemyCount = 0;
-            
+
             Map = new PointType[CurrentOperation.MapHeight][];
             for (int i = 0; i < Map.Length; i++)
             {
@@ -143,7 +142,7 @@ namespace ArknightSimulator.Manager
                     newEnemy.Enemy.Position.Y = newEnemy.MovingPoints[0].Y;
                     newEnemy.PassPointCount = 1;
                     newEnemy.Enemy.SearchOperatorType = new SearchOperatorType[newEnemy.Enemy.Template.SearchOperatorType.Length];
-                    for(int i=0;i< newEnemy.Enemy.Template.SearchOperatorType.Length;i++)
+                    for (int i = 0; i < newEnemy.Enemy.Template.SearchOperatorType.Length; i++)
                     {
                         newEnemy.Enemy.SearchOperatorType[i] = newEnemy.Enemy.Template.SearchOperatorType[i];
                     }
@@ -177,6 +176,7 @@ namespace ArknightSimulator.Manager
                     if (op.BlockEnemiesId.Contains(enemy.Enemy.InstanceId))
                     {
                         enemy.Enemy.BlockId = op.InstanceId;
+                        enemy.Enemy.BlockOp = op;
                         enemy.Enemy.IsBlocked = true;
                         return true;
                     }
@@ -198,6 +198,7 @@ namespace ArknightSimulator.Manager
 
                 enemy.Enemy.IsBlocked = false;
                 enemy.Enemy.BlockId = -1;
+                enemy.Enemy.BlockOp = null;
 
 
                 double x = enemy.MovingPoints[enemy.PassPointCount].X - enemy.Enemy.Position.X;
@@ -400,12 +401,14 @@ namespace ArknightSimulator.Manager
 
                 enemy.RefreshAttack(refresh, null);
             }
+
+
         }
 
 
         public void GameOver()
         {
-            foreach(var e in enemiesAppear)
+            foreach (var e in enemiesAppear)
             {
                 OnEnemyRemove(this, new EnemyEventArgs(e));
             }

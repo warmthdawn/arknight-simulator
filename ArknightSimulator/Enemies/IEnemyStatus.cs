@@ -1,4 +1,6 @@
-﻿namespace ArknightSimulator.Enemies
+﻿using System;
+
+namespace ArknightSimulator.Enemies
 {
     public interface IEnemyStatus
     {
@@ -17,5 +19,6 @@
         bool DizzyDefence { get; }
         bool SleepDefence { get; }
         float MoveSpeed { get; }
+        Action DieEvent { get; }
     }
 }

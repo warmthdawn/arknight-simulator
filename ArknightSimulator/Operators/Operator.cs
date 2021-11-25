@@ -38,8 +38,6 @@ namespace ArknightSimulator.Operators
                 return;
             }
 
-
-
             int next = (AttackUnit + 100 / attackRefresh) % (int)(100 * Status.AttackTime);
             if (enemies != null && next < AttackUnit)
             {
@@ -84,11 +82,9 @@ namespace ArknightSimulator.Operators
                     throw new ArgumentException("非法伤害类型");
             }
 
-            Status newStatus = new Status(Status);
-            newStatus.CurrentLife -= actualDamage;
-            if (newStatus.CurrentLife >= newStatus.MaxLife)
-                newStatus.CurrentLife = newStatus.MaxLife;
-            Status = newStatus;
+            ((Status)Status).CurrentLife -= actualDamage;
+            if (((Status)Status).CurrentLife > ((Status)Status).MaxLife)
+                ((Status)Status).CurrentLife = ((Status)Status).CurrentLife;
 
         }
         public void SkillStart()

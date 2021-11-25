@@ -9,16 +9,28 @@ namespace ArknightSimulator.Enemies
 {
     public class Enemy
     {
+        private IEnemyStatus _status;
         public int InstanceId { get; set; }         // 敌人实例的ID
         public EnemyTemplate Template { get; set; } // 敌人模板
         public string TemplateId { get; set; }      // 敌人模板的ID，用于反序列化时索引Template
-        public IEnemyStatus Status { get; set; }    // 属性状态
+        public IEnemyStatus Status
+        {
+            get { return _status; }
+            set
+            {
+                _status = value;
+                if (_status is EnemyStatus) // 更新绑定死亡事件
+                    ((EnemyStatus)_status).DieEvent += () => { DieEvent(this); };
+            }
+        }    // 属性状态
         public Point Position { get; set; } = new Point();  // 坐标
         public bool IsBlocked { get; set; } = false; // 是否被阻挡
         public int BlockId { get; set; } = -1;    // 阻挡的干员ID
-        public List<int> AttackId { get; set; } = new List<int>();   // 索敌：攻击的干员ID  TODO: 是否要删
+        public Operator BlockOp { get; set; } // 阻挡干员引用
+        public List<int> AttackId { get; set; } = new List<int>();  // 索敌：攻击的干员ID
         public int AttackUnit { get; set; } = 0; // 攻击冷却计数
         public Action<Enemy> AttackEvent { get; set; } // 敌人攻击事件
+        public Action<Enemy> DieEvent { get; set; } // 敌人死亡事件
         public SearchOperatorType[] SearchOperatorType { get; set; } = new SearchOperatorType[] { }; // 索敌类型
         public AttackType AttackType { get; set; } // 攻击类型（不攻击、单体、群体）
         public DamageType DamageType { get; set; } // 伤害类型
@@ -36,6 +48,7 @@ namespace ArknightSimulator.Enemies
             Position.Y = enemy.Position.Y;
             IsBlocked = enemy.IsBlocked;
             BlockId = enemy.BlockId;
+            BlockOp = enemy.BlockOp;
             AttackId = new List<int>();
             foreach (var i in enemy.AttackId)
                 AttackId.Add(i);
@@ -47,6 +60,11 @@ namespace ArknightSimulator.Enemies
             }
             AttackType = enemy.AttackType;
             DamageType = enemy.DamageType;
+            ((EnemyStatus)Status).DieEvent += () =>
+            {
+                if (DieEvent != null)
+                    DieEvent(this);
+            };
         }
 
         public void RefreshAttack(int attackRefresh, List<Operator> op = null)
@@ -57,8 +75,6 @@ namespace ArknightSimulator.Enemies
                 AttackUnit = (int)(100 * Status.AttackTime) - 50;// 暂定半秒延迟
                 return;
             }
-
-
 
             int next = (AttackUnit + 100 / attackRefresh) % (int)(100 * Status.AttackTime);
             if (op != null && next < AttackUnit)
@@ -109,11 +125,11 @@ namespace ArknightSimulator.Enemies
                     throw new ArgumentException("非法伤害类型");
             }
 
-            EnemyStatus newStatus = new EnemyStatus(Status);
-            newStatus.CurrentLife -= actualDamage;
-            if (newStatus.CurrentLife >= newStatus.MaxLife)
-                newStatus.CurrentLife = newStatus.MaxLife;
-            Status = newStatus;
+            //EnemyStatus newStatus = new EnemyStatus(Status);
+            //newStatus.CurrentLife -= actualDamage;
+            ((EnemyStatus)Status).CurrentLife -= actualDamage;
+            if (((EnemyStatus)Status).CurrentLife > ((EnemyStatus)Status).MaxLife)
+                ((EnemyStatus)Status).CurrentLife = ((EnemyStatus)Status).CurrentLife;
         }
         public void SkillOn() { }
 

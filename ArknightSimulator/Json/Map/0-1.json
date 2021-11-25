@@ -490,35 +490,37 @@
             "AttackType": 1,
             "DamageType": 0
         },
-        {
-            "Id": "01",
-            "Name": "士兵",
-            "Picture": "./Image/Enemy/01.png",
-            "Level": 0,
-            "Type": 0,
-            "Status": {
-                "Attack": 200,
-                "AttackSpeed": 100,
-                "AttackTime": 2.0,
-                "Range": -1,
-                "Count": 1,
-                "Defence": 30,
-                "MaxLife": 1650,
-                "CurrentLife": 1650,
-                "MagicDefence": 0,
-                "RecoverSpeed": 0,
-                "Weight": 1,
-                "SilenceDefence": false,
-                "DizzyDefence": false,
-                "SleepDefence": false,
-                "MoveSpeed": 1.1
-            },
-            "Gift": null,
-            "Skill": null,
-            "SearchOperatorType": [ 0 ],
-            "AttackType": 1,
-            "DamageType": 0
-        }
+      {
+        "Id": "01",
+        "Name": "士兵",
+        "Picture": "./Image/Enemy/01.png",
+        "MovePicture": "./Image/Enemy/01_Move.gif",
+        "AttackPicture": "./Image/Enemy/01_Attack.gif",
+        "Level": 0,
+        "Type": 0,
+        "Status": {
+          "Attack": 200,
+          "AttackSpeed": 100,
+          "AttackTime": 2.0,
+          "Range": -1,
+          "Count": 1,
+          "Defence": 30,
+          "MaxLife": 1650,
+          "CurrentLife": 1650,
+          "MagicDefence": 0,
+          "RecoverSpeed": 0,
+          "Weight": 1,
+          "SilenceDefence": false,
+          "DizzyDefence": false,
+          "SleepDefence": false,
+          "MoveSpeed": 1.1
+        },
+        "Gift": null,
+        "Skill": null,
+        "SearchOperatorType": [ 0 ],
+        "AttackType": 1,
+        "DamageType": 0
+      }
 
     ]
 }

@@ -40,5 +40,7 @@ namespace ArknightSimulator.Enemies
         public bool SleepDefence => Inner.SleepDefence;
 
         public int Weight => Inner.Weight;
+
+        public Action DieEvent => Inner.DieEvent;
     }
 }

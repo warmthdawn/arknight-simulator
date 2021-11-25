@@ -177,17 +177,23 @@ namespace ArknightSimulator.Pages
         {
             Image enemyImg = new Image();
             EnemyTemplate et = e.EnemyMovement.Enemy.Template;
-            enemyImg.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(et.Picture)));
-            enemyImg.Width = 200;
-            enemyImg.Height = 200;
+            // ./Image/Enemy/B1_Attack.gif
+            //enemyImg.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(et.Picture)));
+            ImageBehavior.SetAnimatedSource(enemyImg, new BitmapImage(new Uri(System.IO.Path.GetFullPath(et.MovePicture))));
+            //ImageBehavior.Set
+            enemyImg.Width = 400;
+            enemyImg.Height = 400;
+
+            e.EnemyMovement.Enemy.DieEvent += EnemyDie;
+            e.EnemyMovement.Enemy.AttackEvent += EnemyAttack;
+
             var pos = mapManager.CurrentOperation.GetPosition(e.EnemyMovement.Enemy.Position);
 
             enemyImg.Margin = new Thickness(
-                pos.X - 0.5 * enemyImg.Width,
-                pos.Y - enemyImg.Height,
-                grid.ActualWidth - pos.X - 0.5 * enemyImg.Width,
-                grid.ActualHeight - pos.Y
-                );
+                    pos.X - 0.5 * enemyImg.Width,
+                    pos.Y - 0.7 * enemyImg.Height,
+                    grid.ActualWidth - pos.X - 0.5 * enemyImg.Width,
+                    grid.ActualHeight - pos.Y - 0.3 * enemyImg.Height);
 
             enemyImg.IsHitTestVisible = false;
 
@@ -223,11 +229,10 @@ namespace ArknightSimulator.Pages
 
 
             enemyImg.Margin = new Thickness(
-                pos.X - 0.5 * enemyImg.Width,
-                pos.Y - enemyImg.Height,
-                grid.ActualWidth - pos.X - 0.5 * enemyImg.Width,
-                grid.ActualHeight - pos.Y
-                );
+                    pos.X - 0.5 * enemyImg.Width,
+                    pos.Y - 0.7 * enemyImg.Height,
+                    grid.ActualWidth - pos.X - 0.5 * enemyImg.Width,
+                    grid.ActualHeight - pos.Y - 0.3 * enemyImg.Height);
 
         }
 
@@ -535,20 +540,9 @@ namespace ArknightSimulator.Pages
 
                 currentDragOperatorImg = new Image();
 
-                //ImageSource cropped = new CroppedBitmap(new BitmapImage(new Uri(System.IO.Path.GetFullPath(currentDragOperator.AttackPicture))), new Int32Rect(160, 200, 320, 320));
-                //currentDragOperatorImg.Clip = new RectangleGeometry(new Rect(160, 200, 320, 320));
-                //ImageBehavior.SetRepeatBehavior(currentDragOperatorImg, new RepeatBehavior(1));
                 ImageBehavior.SetAnimatedSource(currentDragOperatorImg, new BitmapImage(new Uri(System.IO.Path.GetFullPath(currentDragOperator.AttackPicture))));
-                //ImageBehavior.GetAnimationController(currentDragOperatorImg).Pause();
                 ImageBehavior.SetAutoStart(currentDragOperatorImg, false);
 
-
-                //ImageBehavior.SetAnimationDuration(currentDragOperatorImg, TimeSpan.FromSeconds(3));
-                //currentDragOperatorImg.Source = cropped;
-
-                //currentDragOperatorImg.ClipToBounds = true;
-                //ImageBehavior.SetRepeatBehavior(currentDragOperatorImg, RepeatBehavior.Forever);
-                //currentDragOperatorImg.Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(currentDragOperator.ModelPicture)));
                 currentDragOperatorImg.Width = 400;
                 currentDragOperatorImg.Height = 400;
                 currentDragOperatorImg.Margin = new Thickness(
@@ -803,13 +797,13 @@ namespace ArknightSimulator.Pages
             lifeBar.Foreground = new SolidColorBrush(Colors.DarkOrange);
             lifeBar.BorderThickness = new Thickness(0);
             lifeBar.IsHitTestVisible = false;
-
-            Image img = (Image)grid.FindName("enemy" + enemy.InstanceId);
+            var pos = mapManager.CurrentOperation.GetPosition(enemy.Position);
+            //Image img = (Image)grid.FindName("enemy" + enemy.InstanceId);
             lifeBar.Margin = new Thickness(
-                img.Margin.Left + 50,
-                img.Margin.Top + 205,
-                img.Margin.Right + 50,
-                img.Margin.Bottom - 12
+                pos.X - 50,
+                pos.Y + 55,
+                grid.ActualWidth - pos.X - 50,
+                grid.ActualHeight - pos.Y - 60
                 );
             grid.RegisterName("enemylifeBar" + enemy.InstanceId, lifeBar);
             grid.Children.Add(lifeBar);
@@ -829,8 +823,8 @@ namespace ArknightSimulator.Pages
         // 敌人血条更新
         private void UpdateEnemyProgressBar(object sender, EnemyEventArgs e)
         {
+            //Image img = (Image)grid.FindName("enemy" + enemy.InstanceId);
             Enemy enemy = e.EnemyMovement.Enemy;
-            Image img = (Image)grid.FindName("enemy" + enemy.InstanceId);
             ProgressBar bar = (ProgressBar)grid.FindName("enemylifeBar" + enemy.InstanceId);
             bar.Value = enemy.Status.CurrentLife;
             if (enemy.Status.CurrentLife >= enemy.Status.MaxLife)
@@ -838,12 +832,14 @@ namespace ArknightSimulator.Pages
             else
                 bar.Visibility = Visibility;
 
+            var pos = mapManager.CurrentOperation.GetPosition(enemy.Position);
+            //Image img = (Image)grid.FindName("enemy" + enemy.InstanceId);
             bar.Margin = new Thickness(
-            img.Margin.Left + 50,
-            img.Margin.Top + 205,
-            img.Margin.Right + 50,
-            img.Margin.Bottom - 12
-            );
+                pos.X - 50,
+                pos.Y + 55,
+                grid.ActualWidth - pos.X - 50,
+                grid.ActualHeight - pos.Y - 60
+                );
         }
 
         // 选中场上干员，可选择撤退或使用技能
@@ -930,6 +926,38 @@ namespace ArknightSimulator.Pages
 
             //ImageBehavior.SetRepeatBehavior(opImg, new RepeatBehavior(1));
 
+        }
+
+        private void EnemyAttack(Enemy enemy)
+        {
+            Image enemyImg = (Image)grid.FindName("enemy" + enemy.InstanceId.ToString());
+            if (enemyImg == null)
+                return;
+            ImageBehavior.SetAnimatedSource(enemyImg, new BitmapImage(new Uri(System.IO.Path.GetFullPath(enemy.Template.AttackPicture))));
+            var controller = ImageBehavior.GetAnimationController(enemyImg);
+            ImageBehavior.SetAnimationDuration(enemyImg, TimeSpan.FromSeconds(enemy.Status.AttackTime / gameManager.Speed));
+            ImageBehavior.SetRepeatBehavior(enemyImg, new RepeatBehavior(1));
+            controller.GotoFrame(0);
+            controller.Play();
+            //ImageBehavior.SetRepeatBehavior(opImg, new RepeatBehavior(1));
+
+        }
+
+        // 敌人死亡事件
+        private void EnemyDie(Enemy enemy)
+        {
+            // 移除敌人
+            Image enemyImg = (Image)grid.FindName("enemy" + enemy.InstanceId.ToString());
+            grid.Children.Remove(enemyImg);
+            grid.UnregisterName("enemy" + enemy.InstanceId.ToString());
+
+            // 移除敌人血条
+            ProgressBar bar = (ProgressBar)grid.FindName("enemylifeBar" + enemy.InstanceId);
+            grid.UnregisterName("enemylifeBar" + enemy.InstanceId);
+            grid.Children.Remove(bar);
+
+            // 从mapManager中删除
+            mapManager.EnemiesAppear.RemoveAll((em) => em.Enemy.InstanceId == enemy.InstanceId);
         }
 
     }

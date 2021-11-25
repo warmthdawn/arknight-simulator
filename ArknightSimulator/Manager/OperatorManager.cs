@@ -366,7 +366,7 @@ namespace ArknightSimulator.Manager
             op.Position = new Point { X = mapX + 0.5, Y = mapY + 0.5 };
             op.Direction = direction;
             op.CurrentDeploymentType = deploymentType;
-            op.AttackType = op.Template.AttackType;
+            op.Template.AttackType = op.Template.AttackType;
 
             OnMapOperators.Add(op);
 

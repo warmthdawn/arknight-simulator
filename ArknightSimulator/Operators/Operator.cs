@@ -25,7 +25,7 @@ namespace ArknightSimulator.Operators
         public int AttackId { get; set; } = -1;   // 索敌：攻击的敌人ID   TODO:是否要删
         public int AttackUnit { get; set; } = 0; // 攻击冷却计数
         public Action<Operator> AttackEvent { get; set; } // 干员攻击事件
-        public DamageType AttackType { get; set; } // 攻击伤害类型
+        //public DamageType AttackType { get; set; } // 攻击伤害类型
 
         public void RefreshAttack(int attackRefresh, Enemy enemy = null)
         {
@@ -49,23 +49,32 @@ namespace ArknightSimulator.Operators
             if (AttackEvent != null)
                 AttackEvent(this); // 触发攻击事件
 
-            enemy.Hurt(AttackType, Status.Attack);
+            enemy.Hurt(Template.AttackType, Status.Attack);
         }
         public void Hurt(DamageType type, int damage)
         {
+            int actualDamage = 0;
             switch (type)
             {
                 case DamageType.Physical:
-                        break;
+                    actualDamage = damage - Status.Defence; // Defence 计算交给装饰器 (目标防御力-数值减防御)×(1-百分比减防御)
+                    break;
                 case DamageType.Spell:
+                    actualDamage = (int)(damage * 0.01 * (100 - Status.MagicDefence)); // 同上 法抗 = (目标法术抗性-数值减法抗)×(1-百分比减法抗)
                     break;
                 case DamageType.True:
+                    actualDamage = damage;
                     break;
                 case DamageType.Heal:
+                    actualDamage = -damage;
                     break;
                 default:
                     throw new ArgumentException("非法伤害类型");
             }
+
+            Status newStatus = new Status(Status);
+            newStatus.CurrentLife -= actualDamage;
+            Status = newStatus;
 
         }
         public void SkillStart()

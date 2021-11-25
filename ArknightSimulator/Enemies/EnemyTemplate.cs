@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArknightSimulator.Utils;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using ArknightSimulator.Utils;
@@ -15,6 +16,7 @@ namespace ArknightSimulator.Enemies
         public EnemyStatus Status { get; set; } // 属性状态
         public EnemyGift Gift { get; set; }
         public EnemySkill Skill { get; set; }
+        public DamageType AttackType { get; set; }
         
     }
 }

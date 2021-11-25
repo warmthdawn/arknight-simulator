@@ -130,6 +130,15 @@
     <None Update="Image\Operator\Noir_Corne-Attack_2.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Image\Operator\Adnachiel-Front.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image\Operator\Melantha-Front.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image\Operator\魅兰莎.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Image\pause.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

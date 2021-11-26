@@ -36,6 +36,7 @@ namespace ArknightSimulator.Pages
         private OperatorTemplate currentDragOperator;
         private Image currentDragOperatorImg;
         private Image currentOperatorImg;
+        private Operator currentOp;
         private List<Image> notOnMapImg;
         private List<Label> notOnMapLbl;
         private int currentMapX;
@@ -146,16 +147,128 @@ namespace ArknightSimulator.Pages
 
         }
 
+        private void HandleRange(int mapX, int mapY, int[][] range, Action<Polygon> act, Directions dir = Directions.Right, bool reset = false, bool? self = null)
+        {
+            // 先将所有网格设为不可见
+            if (reset)
+            {
+                for (int x = 0; x < mapManager.CurrentOperation.MapWidth; x++)
+                {
+                    for (int y = 0; y < mapManager.CurrentOperation.MapHeight; y++)
+                    {
+                        blocks[x][y].Visibility = Visibility.Hidden;
+                    }
+                }
+            }
+            if (act == null)
+                return;
+            int selfi = 0;
+            int selfj = 0;
+            // 寻找自身点
+            for (int i = 0; i < range.Length; i++)
+            {
+                int j = 0;
+                for (; j < range[i].Length; j++)
+                {
+                    if (range[i][j] == 0)
+                    {
+                        selfi = i;
+                        selfj = j;
+                        if (self != null)
+                            blocks[mapX][mapY].Visibility = self.Value ? Visibility.Visible : Visibility.Hidden;
+                        break;
+                    }
+                }
+                if (j < range[i].Length)
+                    break;
+            }
+
+            // 确定攻击范围
+            for (int i = 0; i < range.Length; i++)
+            {
+                for (int j = 0; j < range[i].Length; j++)
+                {
+                    if (range[i][j] == 1)
+                    {
+                        int di = i - selfi;  // 攻击范围的某一格与自身行距离
+                        int dj = j - selfj;  // 列距离
+                        int mapi = 0;   // 攻击范围在地图的行
+                        int mapj = 0;   // 列
+                        switch (dir) // TODO
+                        {
+                            case Directions.Up:
+                                mapi = mapY - dj;
+                                mapj = mapX + di;
+                                break;
+                            case Directions.Down:
+                                mapi = mapY + dj;
+                                mapj = mapX - di;
+                                break;
+                            case Directions.Left:
+                                mapi = mapY - di;
+                                mapj = mapX - dj;
+                                break;
+                            case Directions.Right:
+                                mapi = mapY + di;
+                                mapj = mapX + dj;
+                                break;
+                        }
+                        if (mapi >= 0 && mapi <= mapManager.CurrentOperation.MapHeight - 1
+                            && mapj >= 0 && mapj <= mapManager.CurrentOperation.MapWidth - 1)
+                            act(blocks[mapj][mapi]);
+                        //blocks[mapj][mapi].Visibility = Visibility.Visible; // block的第一维是列
+                    }
+                }
+            }
+        }
+
         private void Block_MouseLeave(object sender, MouseEventArgs e)
         {
+            if (currentDragOperatorImg == null)
+                return;
             Polygon block = (Polygon)sender;
             block.Opacity -= 0.2;
+            string coordinate = block.Name.Substring(5);
+            //currentDragOperatorImg.IsHitTestVisible = true;
+
+            //var mapPoint = mapManager.CurrentOperation.GetPosition(new Point(e.GetPosition(grid).X, e.GetPosition(grid).Y));
+            int mapX = int.Parse(coordinate.Split("_")[0]);
+            int mapY = int.Parse(coordinate.Split("_")[1]);
+            OperatorTemplate opt = currentDragOperator;
+            int[][] range = opt.Status.Range[opt.EliteLevel];
+            HandleRange(mapX, mapY, range, p =>
+            {
+                var color = (SolidColorBrush)p.Fill;
+                p.Fill = new SolidColorBrush(Colors.Green);
+                if (color.Color.Equals(Colors.Orange)) // 原先不可见点，继续不可见
+                    p.Visibility = Visibility.Hidden;
+            });
         }
 
         private void Block_MouseEnter(object sender, MouseEventArgs e)
         {
+            if (currentDragOperatorImg == null)
+                return;
             Polygon block = (Polygon)sender;
             block.Opacity += 0.2;
+            string coordinate = block.Name.Substring(5);
+            //currentDragOperatorImg.IsHitTestVisible = true;
+
+            //var mapPoint = mapManager.CurrentOperation.GetPosition(new Point(e.GetPosition(grid).X, e.GetPosition(grid).Y));
+            int mapX = int.Parse(coordinate.Split("_")[0]);
+            int mapY = int.Parse(coordinate.Split("_")[1]);
+            OperatorTemplate opt = currentDragOperator;
+            int[][] range = opt.Status.Range[opt.EliteLevel];
+            HandleRange(mapX, mapY, range, p =>
+            {
+                if (p.Visibility == Visibility.Visible)
+                    p.Fill = new SolidColorBrush(Colors.Yellow);
+                else
+                {
+                    p.Visibility = Visibility.Visible;
+                    p.Fill = new SolidColorBrush(Colors.Orange);
+                }
+            });
         }
 
 
@@ -380,75 +493,16 @@ namespace ArknightSimulator.Pages
             }
         }
 
-        // 根据干员攻击范围更新网格
+        // 显示干员攻击范围
         private void SelectMapOperator(Operator op, OperatorTemplate opt)
         {
-            // 先将所有网格设为不可见
-            for (int x = 0; x < mapManager.CurrentOperation.MapWidth; x++)
-            {
-                for (int y = 0; y < mapManager.CurrentOperation.MapHeight; y++)
-                {
-                    blocks[x][y].Visibility = Visibility.Hidden;
-                }
-            }
-
             int[][] range = op.Status.Range[opt.EliteLevel];
-            int selfi = 0;
-            int selfj = 0;
-            // 寻找自身点
-            for (int i = 0; i < range.Length; i++)
+            currentOp = op;
+            HandleRange(op.MapX, op.MapY, range, p =>
             {
-                int j = 0;
-                for (; j < range[i].Length; j++)
-                {
-                    if (range[i][j] == 0)
-                    {
-                        selfi = i;
-                        selfj = j;
-                        blocks[op.MapX][op.MapY].Visibility = Visibility.Visible;
-                        break;
-                    }
-                }
-                if (j < range[i].Length)
-                    break;
-            }
-
-            // 确定攻击范围
-            for (int i = 0; i < range.Length; i++)
-            {
-                for (int j = 0; j < range[i].Length; j++)
-                {
-                    if (range[i][j] == 1)
-                    {
-                        int di = i - selfi;  // 攻击范围的某一格与自身行距离
-                        int dj = j - selfj;  // 列距离
-                        int mapi = 0;   // 攻击范围在地图的行
-                        int mapj = 0;   // 列
-                        switch (op.Direction)
-                        {
-                            case Directions.Up:
-                                mapi = op.MapY - dj;
-                                mapj = op.MapX + di;
-                                break;
-                            case Directions.Down:
-                                mapi = op.MapY + dj;
-                                mapj = op.MapX - di;
-                                break;
-                            case Directions.Left:
-                                mapi = op.MapY - di;
-                                mapj = op.MapX - dj;
-                                break;
-                            case Directions.Right:
-                                mapi = op.MapY + di;
-                                mapj = op.MapX + dj;
-                                break;
-                        }
-                        if (mapi >= 0 && mapi <= mapManager.CurrentOperation.MapHeight - 1
-                            && mapj >= 0 && mapj <= mapManager.CurrentOperation.MapWidth - 1)
-                            blocks[mapj][mapi].Visibility = Visibility.Visible; // block的第一维是列
-                    }
-                }
-            }
+                p.Visibility = Visibility.Visible;
+                p.Fill = new SolidColorBrush(Colors.Orange);
+            }, op.Direction, true, true);
         }
 
         // 已入队干员初始化后加载图片
@@ -472,7 +526,7 @@ namespace ArknightSimulator.Pages
         private void LblCost_Initialized(object sender, EventArgs e)
         {
             Label lblCost = (Label)sender;
-            lblCost.Content = "C "+((OperatorTemplate)lblCost.DataContext).Status.Cost[((OperatorTemplate)lblCost.DataContext).EliteLevel];
+            lblCost.Content = "C " + ((OperatorTemplate)lblCost.DataContext).Status.Cost[((OperatorTemplate)lblCost.DataContext).EliteLevel];
         }
 
         // 游戏开始
@@ -713,6 +767,7 @@ namespace ArknightSimulator.Pages
                 canvasDirection.Visibility = Visibility.Visible;
 
                 hitArea.MouseLeftButtonDown += CurrentOperator_MouseLeftButtonDown;
+                Block_MouseLeave(sender, e); // 触发离开事件，恢复网格
                 // currentDragOperatorImg.MouseLeftButtonDown += CurrentOperatorImg_MouseLeftButtonDown;
                 currentOperatorImg = currentDragOperatorImg;
                 currentDragOperatorImg = null;
@@ -1016,8 +1071,13 @@ namespace ArknightSimulator.Pages
             canvasSkillOrWithdraw.Visibility = Visibility.Hidden;
             gridCanvas.Visibility = Visibility.Hidden;
             currentDragOperator = null;
-
+            HandleRange(currentOp.MapX, currentMapY, currentOp.Status.Range[currentOp.Template.EliteLevel], p =>
+            {
+                p.Fill = new SolidColorBrush(Colors.Green);
+                p.Visibility = Visibility.Hidden;
+            }, currentOp.Direction);
             gameManager.Continue();
+            currentOp = null;
             btnPauseOrContinue.IsEnabled = true;
 
         }
@@ -1055,7 +1115,7 @@ namespace ArknightSimulator.Pages
                 return;
             var controller = ImageBehavior.GetAnimationController(opImg);
             Duration? duration = ImageBehavior.GetAnimationDuration(opImg);
-            if (!duration.HasValue || !(duration.Value.TimeSpan.TotalSeconds == op.Status.AttackTime / gameManager.Speed -0.2))
+            if (!duration.HasValue || !(duration.Value.TimeSpan.TotalSeconds == op.Status.AttackTime / gameManager.Speed - 0.2))
             {
                 op.IsChanged = true;
                 ImageBehavior.SetAnimationDuration(opImg, TimeSpan.FromSeconds(op.Status.AttackTime / gameManager.Speed - 0.2));

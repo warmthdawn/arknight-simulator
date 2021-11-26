@@ -67,7 +67,6 @@ namespace ArknightSimulator.Operators
         private void Attack(Enemy enemy)
         {
             
-
             enemy.Hurt(DamageType, Status.Attack);
         }
         public void Hurt(DamageType type, int damage)

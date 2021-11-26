@@ -121,6 +121,9 @@
     <None Update="Image\Operator\Adnachiel.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Image\Operator\Hibiscus-Front.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Image\Operator\Melantha.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -139,13 +142,16 @@
     <None Update="Image\Operator\Noir_Corne-Attack_1.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Image\Operator\Noir_Corne-Attack_2.gif">
+    <None Update="Image\Operator\Noir_Corne-Front.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Image\Operator\Adnachiel-Front.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Image\Operator\Melantha-Front.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image\Operator\Steward-Front.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Image\Operator\魅兰莎.gif">

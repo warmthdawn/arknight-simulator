@@ -34,6 +34,7 @@ namespace ArknightSimulator.Enemies
         public SearchOperatorType[] SearchOperatorType { get; set; } = new SearchOperatorType[] { }; // 索敌类型
         public AttackType AttackType { get; set; } // 攻击类型（不攻击、单体、群体）
         public DamageType DamageType { get; set; } // 伤害类型
+        public bool IsChanged { get; set; } // 图片是否需要重新加载
 
         public Enemy() { }
         public Enemy(Enemy enemy)

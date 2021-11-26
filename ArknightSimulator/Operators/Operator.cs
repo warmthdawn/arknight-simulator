@@ -28,6 +28,7 @@ namespace ArknightSimulator.Operators
         public SearchEnemyType[] SearchEnemyType { get; set; } = new SearchEnemyType[] { }; // 索敌类型
         public AttackType AttackType { get; set; } // 攻击类型（不攻击、单体、群体）
         public DamageType DamageType { get; set; } // 攻击伤害类型
+        public bool IsChanged { get; set; } // 攻击
 
         public void RefreshAttack(int attackRefresh, List<Enemy> enemies = null)
         {
@@ -41,7 +42,9 @@ namespace ArknightSimulator.Operators
             int next = (AttackUnit + 100 / attackRefresh) % (int)(100 * Status.AttackTime);
             if (enemies != null && next < AttackUnit)
             {
-                foreach(var e in enemies)
+                if (AttackEvent != null)
+                    AttackEvent(this); // 触发攻击事件
+                foreach (var e in enemies)
                     Attack(e);
             }
 
@@ -50,8 +53,7 @@ namespace ArknightSimulator.Operators
 
         private void Attack(Enemy enemy)
         {
-            if (AttackEvent != null)
-                AttackEvent(this); // 触发攻击事件
+            
 
             enemy.Hurt(DamageType, Status.Attack);
         }

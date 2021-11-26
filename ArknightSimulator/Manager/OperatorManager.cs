@@ -291,6 +291,8 @@ namespace ArknightSimulator.Manager
                         for (; i < attackCount && i < op.BlockEnemiesId.Count; i++)
                         {
                             var enemy = movements.Find(e => e.Enemy.InstanceId == op.BlockEnemiesId[i]);
+                            if (enemy == null)
+                                continue;
                             attackEnemies.Add(enemy.Enemy);
                             op.AttackId.Add(enemy.Enemy.InstanceId);
                         }

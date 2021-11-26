@@ -35,6 +35,7 @@ namespace ArknightSimulator.Pages
         private OperatorManager operatorManager;
         private OperatorTemplate currentDragOperator;
         private Image currentDragOperatorImg;
+        private Image currentOperatorImg;
         private List<Image> notOnMapImg;
         private List<Label> notOnMapLbl;
         private int currentMapX;
@@ -205,7 +206,9 @@ namespace ArknightSimulator.Pages
             e.EnemyMovement.Enemy.AttackEvent += EnemyAttack;
 
             var pos = mapManager.CurrentOperation.GetPosition(e.EnemyMovement.Enemy.Position);
-
+            enemyImg.DataContext = e.EnemyMovement.Enemy;
+            ImageBehavior.AddAnimationCompletedHandler(enemyImg, AnimationLoaded);
+            //ImageBehavior.SetRepeatBehavior(enemyImg, new RepeatBehavior(1));
             enemyImg.Margin = new Thickness(
                     pos.X - 0.5 * enemyImg.Width,
                     pos.Y - 0.7 * enemyImg.Height,
@@ -299,7 +302,7 @@ namespace ArknightSimulator.Pages
             grid.Children.Remove(currentImg);
             grid.UnregisterName(currentImg.Name);
             Canvas currentHitArea = (Canvas)grid.FindName("hit_" + currentDragOperator.Id.Replace(" ", "_"));
-            if(currentHitArea != null)
+            if (currentHitArea != null)
             {
                 currentHitArea.MouseLeftButtonDown -= CurrentOperator_MouseLeftButtonDown;
                 grid.Children.Remove(currentHitArea);
@@ -574,6 +577,8 @@ namespace ArknightSimulator.Pages
 
                 ImageBehavior.SetAnimatedSource(currentDragOperatorImg, new BitmapImage(new Uri(System.IO.Path.GetFullPath(currentDragOperator.AttackPicture))));
                 ImageBehavior.SetAutoStart(currentDragOperatorImg, false);
+                ImageBehavior.AddAnimationLoadedHandler(currentDragOperatorImg, AnimationLoaded);
+                //controller.Play();
 
                 currentDragOperatorImg.Width = 400;
                 currentDragOperatorImg.Height = 400;
@@ -594,6 +599,31 @@ namespace ArknightSimulator.Pages
                 gridCanvas.Visibility = Visibility.Visible;
                 currentDragOperatorImg.IsHitTestVisible = false;
             }
+        }
+
+        // 回调函数，解决动画加载导致动画丢失问题
+        private void AnimationLoaded(object sender, EventArgs e)
+        {
+            Image img = (Image)sender;
+            if (img.DataContext is Operator)
+            {
+                Operator op = (Operator)img.DataContext;
+                if (op != null && op.IsChanged)
+                {
+                    OperatorAttack(op);
+                    op.IsChanged = false;
+                }
+            }
+            if (img.DataContext is Enemy)
+            {
+                Enemy enemy = (Enemy)img.DataContext;
+                if (enemy != null && enemy.IsChanged)
+                {
+                    EnemyAttack(enemy);
+                    enemy.IsChanged = false;
+                }
+            }
+            return;
         }
 
         // 拖动干员
@@ -637,13 +667,15 @@ namespace ArknightSimulator.Pages
                     default: throw new Exception("地图方格类型为特殊，未定义！");
                 }
                 var pos = mapManager.CurrentOperation.GetPosition(new Point(currentMapX + 0.5, currentMapY + 0.5));
-
-
+                ImageBehavior.SetRepeatBehavior(currentDragOperatorImg, new RepeatBehavior(1)); // 设置每次攻击动画执行一次
+                //ImageAnimationController controller = ImageBehavior.GetAnimationController(currentDragOperatorImg);
+                //controller.Play(); // 加载动画，避免第一次攻击失效
+                //ImageBehavior.SetAnimatedSource(currentDragOperatorImg, new BitmapImage(new Uri(System.IO.Path.GetFullPath(currentDragOperator.AttackPicture))));
                 currentDragOperatorImg.Margin = new Thickness(
                     pos.X - 0.5 * currentDragOperatorImg.Width,
-                    pos.Y - 0.65 * currentDragOperatorImg.Height,
+                    pos.Y - 0.7 * currentDragOperatorImg.Height,
                     grid.ActualWidth - pos.X - 0.5 * currentDragOperatorImg.Width,
-                    grid.ActualHeight - pos.Y - 0.35 * currentDragOperatorImg.Height);
+                    grid.ActualHeight - pos.Y - 0.3 * currentDragOperatorImg.Height);
 
                 //                 canvasDirection.Margin = new Thickness(
                 //                     currentDragOperatorImg.Margin.Left - 100,
@@ -651,7 +683,7 @@ namespace ArknightSimulator.Pages
                 //                     currentDragOperatorImg.Margin.Right - 100,
                 //                     currentDragOperatorImg.Margin.Bottom - 100);
 
-                // 人物添加选中区域
+                // 添加选中区域
                 Canvas hitArea = new Canvas();
                 hitArea.Background = new SolidColorBrush(Colors.Transparent);
                 //hitArea.Opacity = 0;
@@ -677,9 +709,10 @@ namespace ArknightSimulator.Pages
 
                 hitArea.MouseLeftButtonDown += CurrentOperator_MouseLeftButtonDown;
                 // currentDragOperatorImg.MouseLeftButtonDown += CurrentOperatorImg_MouseLeftButtonDown;
-
+                currentOperatorImg = currentDragOperatorImg;
                 currentDragOperatorImg = null;
                 gridCanvas.Visibility = Visibility.Hidden;
+
             }
         }
 
@@ -689,6 +722,9 @@ namespace ArknightSimulator.Pages
             Operator op = operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY, currentDeploymentType);
             op.AttackEvent += OperatorAttack;
             AddOperatorProgressBar(op);
+            currentOperatorImg.DataContext = op;
+            ImageBehavior.AddAnimationCompletedHandler(currentOperatorImg, AnimationLoaded);
+            currentOperatorImg = null;
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             Label lbl = notOnMapLbl.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
@@ -704,6 +740,9 @@ namespace ArknightSimulator.Pages
             Operator op = operatorManager.Deploying(currentDragOperator, Directions.Down, currentMapX, currentMapY, currentDeploymentType);
             op.AttackEvent += OperatorAttack;
             AddOperatorProgressBar(op);
+            currentOperatorImg.DataContext = op;
+            ImageBehavior.AddAnimationCompletedHandler(currentOperatorImg, AnimationLoaded);
+            currentOperatorImg = null;
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             Label lbl = notOnMapLbl.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
@@ -728,6 +767,9 @@ namespace ArknightSimulator.Pages
             Operator op = operatorManager.Deploying(currentDragOperator, Directions.Left, currentMapX, currentMapY, currentDeploymentType);
             op.AttackEvent += OperatorAttack;
             AddOperatorProgressBar(op);
+            currentOperatorImg.DataContext = op;
+            ImageBehavior.AddAnimationCompletedHandler(currentOperatorImg, AnimationLoaded);
+            currentOperatorImg = null;
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             Label lbl = notOnMapLbl.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
@@ -743,6 +785,9 @@ namespace ArknightSimulator.Pages
             Operator op = operatorManager.Deploying(currentDragOperator, Directions.Right, currentMapX, currentMapY, currentDeploymentType);
             op.AttackEvent += OperatorAttack;
             AddOperatorProgressBar(op);
+            currentOperatorImg.DataContext = op;
+            ImageBehavior.AddAnimationCompletedHandler(currentOperatorImg, AnimationLoaded);
+            currentOperatorImg = null;
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             Label lbl = notOnMapLbl.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
@@ -968,12 +1013,14 @@ namespace ArknightSimulator.Pages
             if (opImg == null)
                 return;
             var controller = ImageBehavior.GetAnimationController(opImg);
-            ImageBehavior.SetAnimationDuration(opImg, TimeSpan.FromSeconds(op.Status.AttackTime / gameManager.Speed));
-            ImageBehavior.SetRepeatBehavior(opImg, new RepeatBehavior(1));
+            Duration? duration = ImageBehavior.GetAnimationDuration(opImg);
+            if (!duration.HasValue || !(duration.Value.TimeSpan.TotalSeconds == op.Status.AttackTime / gameManager.Speed -0.2))
+            {
+                op.IsChanged = true;
+                ImageBehavior.SetAnimationDuration(opImg, TimeSpan.FromSeconds(op.Status.AttackTime / gameManager.Speed - 0.2));
+            }
             controller.GotoFrame(0);
             controller.Play();
-
-            //ImageBehavior.SetRepeatBehavior(opImg, new RepeatBehavior(1));
 
         }
 
@@ -984,12 +1031,16 @@ namespace ArknightSimulator.Pages
                 return;
             ImageBehavior.SetAnimatedSource(enemyImg, new BitmapImage(new Uri(System.IO.Path.GetFullPath(enemy.Template.AttackPicture))));
             var controller = ImageBehavior.GetAnimationController(enemyImg);
-            ImageBehavior.SetAnimationDuration(enemyImg, TimeSpan.FromSeconds(enemy.Status.AttackTime / gameManager.Speed));
+            //Duration? duration = ImageBehavior.GetAnimationDuration(enemyImg);
             ImageBehavior.SetRepeatBehavior(enemyImg, new RepeatBehavior(1));
+            ImageBehavior.SetAnimationDuration(enemyImg, TimeSpan.FromSeconds(1.0 / gameManager.Speed));
+            //             if (!duration.HasValue || !(duration.Value.TimeSpan.TotalSeconds == 1.0 / gameManager.Speed))
+            //             {
+            //                 enemy.IsChanged = true;
+            //                 ImageBehavior.SetAnimationDuration(enemyImg, TimeSpan.FromSeconds(1.0 / gameManager.Speed));
+            //             }
             controller.GotoFrame(0);
             controller.Play();
-            //ImageBehavior.SetRepeatBehavior(opImg, new RepeatBehavior(1));
-
         }
 
         // 敌人死亡事件

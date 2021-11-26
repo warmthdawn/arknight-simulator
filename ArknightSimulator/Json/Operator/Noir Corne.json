@@ -5,7 +5,7 @@
     "DeploymentType": 1,
     "Picture": "./Image/Operator/Noir Corne.png",
     //"ModelPicture": "./Image/Operator/model-Noir Corne.png",
-    "AttackPicture": "./Image/Operator/Noir_Corne-Attack_2.gif",
+    "AttackPicture": "./Image/Operator/Noir_Corne-Front.gif",
     "Rare": 2,
     "EliteLevel": 0,
     "Level": 1,

@@ -61,11 +61,7 @@ namespace ArknightSimulator.Enemies
             }
             AttackType = enemy.AttackType;
             DamageType = enemy.DamageType;
-            //((EnemyStatus)Status).DieEvent += () =>
-            //{
-            //    if (DieEvent != null)
-            //        DieEvent(this);
-            //};
+            IsChanged = enemy.IsChanged;
         }
 
         public void RefreshAttack(int attackRefresh, List<Operator> op = null)

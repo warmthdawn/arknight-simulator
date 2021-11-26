@@ -958,6 +958,8 @@ namespace ArknightSimulator.Pages
                 if (op.Skill == null)
                 {
                     btnSkill.Visibility = Visibility.Hidden;
+                    canvasSkillOff.Visibility = Visibility.Hidden;
+                    canvasSkillOn.Visibility = Visibility.Hidden;
                 }
                 else
                 {
@@ -966,6 +968,26 @@ namespace ArknightSimulator.Pages
                     ImageBrush brush = new ImageBrush();
                     brush.ImageSource = new BitmapImage(new Uri(System.IO.Path.GetFullPath("./Image/Skills/" + skillname + ".png")));
                     btnSkill.Background = brush;
+                    if(op.Skill.IsUsing == false && op.Status.SkillPoint < op.Skill.Cost)
+                    {
+                        canvasSkillOff.Visibility = Visibility.Visible;
+                        lblSkillPoint.Content = op.Status.SkillPoint;
+                        lblSkillCost.Content = op.Skill.Cost;
+                    }
+                    else
+                    {
+                        canvasSkillOff.Visibility = Visibility.Hidden;
+                    }
+                    if(op.Skill.IsUsing == true)
+                    {
+                        canvasSkillOn.Visibility = Visibility.Visible;
+                        lblSkillCurrentTime.Content = op.Skill.CurrentTime;
+                        lblSkillTime.Content = op.Skill.Time;
+                    }
+                    else
+                    {
+                        canvasSkillOn.Visibility = Visibility.Hidden;
+                    }
                 }
 
                 // 网格可视化
@@ -1013,7 +1035,16 @@ namespace ArknightSimulator.Pages
         // 使用技能
         private void BtnSkill_Click(object sender, RoutedEventArgs e)
         {
+            imgMap.MouseDown -= ImgMap_MouseDown;
+            canvasSkillOrWithdraw.Visibility = Visibility.Hidden;
+            gridCanvas.Visibility = Visibility.Hidden;
 
+            var op = operatorManager.OnMapOperators.Find(o => o.Template.Id == currentDragOperator.Id);
+            operatorManager.SkillStart(op);
+
+            currentDragOperator = null;
+            gameManager.Continue();
+            btnPauseOrContinue.IsEnabled = true;
         }
 
         // 干员攻击

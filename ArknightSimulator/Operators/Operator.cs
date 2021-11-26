@@ -112,7 +112,7 @@ namespace ArknightSimulator.Operators
         }
         public void SkillEnd()
         {
-            Status = Skill.End(Status);
+            Status = Skill.End(Template.Status);
         }
 
     }

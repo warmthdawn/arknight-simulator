@@ -26,6 +26,7 @@ namespace ArknightSimulator.Operators
         public int Time { get; set; }        // 持续时间
         public int CurrentTime { get; set; } // 当前技能已使用时间
         public int TimeUnit { get; set; }   // 已使用时间单元时间
+        public bool IsUsing { get; set; }   // 技能是否正在使用
         public SkillRecoveryType RecoveryType { get; set; }   // 技力回复类型
         public SkillStartType StartType { get; set; }   // 触发类型
 
@@ -38,6 +39,7 @@ namespace ArknightSimulator.Operators
             Time = skill.Time;
             CurrentTime = skill.CurrentTime;
             TimeUnit = skill.TimeUnit;
+            IsUsing = skill.IsUsing;
             RecoveryType = skill.RecoveryType;
             StartType = skill.StartType;
         }
@@ -48,13 +50,17 @@ namespace ArknightSimulator.Operators
         }
         public bool Update(int refresh)
         {
-            if (CurrentTime >= Time)
-                return false;
-
-            int nextTimeUnit = (TimeUnit + 100 / refresh) % 100;
-            if (nextTimeUnit < TimeUnit)
+            if (CurrentTime <= 0)
             {
-                CurrentTime++;
+                IsUsing = false;
+                return false;
+            }
+
+
+            int nextTimeUnit = (TimeUnit - 100 / refresh) % 100;
+            if (nextTimeUnit > TimeUnit)
+            {
+                CurrentTime--;
             }
             TimeUnit = nextTimeUnit;
             return true;

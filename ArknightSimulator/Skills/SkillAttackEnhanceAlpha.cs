@@ -74,20 +74,23 @@ namespace ArknightSimulator.Skills
                 case 7:
                     Level = 7;
                     AttackEnhancePercent = 0.5f;
-                    Initial = 0;
+                    Initial = 30;
                     Cost = 40;
                     Time = 20;
                     break;
                 default: throw new Exception("技能等级错误！");
             }
         }
-        public SkillAttackEnhanceAlpha(Skill skill):base(skill)
+        public SkillAttackEnhanceAlpha(Skill skill) : base(skill)
         {
             AttackEnhancePercent = ((SkillAttackEnhanceAlpha)skill).AttackEnhancePercent;
         }
 
         public override IStatus Start(IStatus status)
         {
+            CurrentTime = Time;
+            TimeUnit = 100;
+            IsUsing = true;
             return new Decorator(status, this);
         }
 
@@ -106,6 +109,7 @@ namespace ArknightSimulator.Skills
             }
 
             public override int Attack => (int)(base.Attack + base.Attack*skill.AttackEnhancePercent);
+            public override int SkillPoint => 0;
 
         }
 

@@ -554,9 +554,10 @@ namespace ArknightSimulator.Manager
 
         }
 
-        // 技能开始 TODO
+        // 技能开始
         public void SkillStart(Operator op)
         {
+            SkillOnOperators.Add(op);
             op.SkillStart();
         }
 

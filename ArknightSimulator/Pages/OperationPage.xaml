@@ -95,8 +95,19 @@
                     <ImageBrush ImageSource="../Image/cancel.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="btnSkill" BorderThickness="0" Margin="200,200,0,0" Height="100" Width="100" Click="BtnSkill_Click">
-            </Button>
+            <Button x:Name="btnSkill" BorderThickness="0" Margin="200,200,0,0" Height="100" Width="100" Click="BtnSkill_Click"/>
+            <Canvas x:Name="canvasSkillOff" Margin="200,200,0,0" Height="100" Width="100" Background="#4C00FF00" >
+                <Label Content="技能填充" Foreground="White" FontSize="22" Height="100" Width="100"/>
+                <Label x:Name="lblSkillPoint" Foreground="White" FontSize="22" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="100" Width="100"/>
+                <Label Content="/" Foreground="White" FontSize="22" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="100" Width="100"/>
+                <Label x:Name="lblSkillCost" Foreground="White" FontSize="22" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="100" Width="100"/>
+            </Canvas>
+            <Canvas x:Name="canvasSkillOn" Margin="200,200,0,0" Height="100" Width="100" Background="#4CFFA500" >
+                <Label Content="技能使用" Foreground="White" FontSize="22" Height="100" Width="100"/>
+                <Label x:Name="lblSkillCurrentTime" Foreground="White" FontSize="22" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Height="100" Width="100"/>
+                <Label Content="/" Foreground="White" FontSize="22" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="100" Width="100"/>
+                <Label x:Name="lblSkillTime" Foreground="White" FontSize="22" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="100" Width="100"/>
+            </Canvas>
         </Canvas>
         <Canvas x:Name="gridCanvas" Panel.ZIndex="-2" Visibility="Hidden"></Canvas>
 <!--         <Polygon Points="251,188 55,817 1549,816 1365,188 " StrokeThickness="5" Stroke="Red"></Polygon> -->

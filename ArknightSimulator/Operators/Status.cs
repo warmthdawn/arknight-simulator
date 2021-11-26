@@ -9,30 +9,35 @@ namespace ArknightSimulator.Operators
     public class Status : IStatus, INotifyPropertyChanged
     {
         private int currentTime;
-        private int _currentLife;
+        private int currentLife;
+        private int maxLife;
+        private int attack;
+        private int defence;
+        private int magicDefence;
+        private int time;
 
-        public int MaxLife { get; set; } // 最大生命
+        public int MaxLife { get => maxLife; set { maxLife = value; OnPropertyChanged(); } } // 最大生命
         public int CurrentLife
         {
-            get => _currentLife;
+            get => currentLife;
             set
             {
                 if (value <= 0 && DieEvent != null)
                 {
                     DieEvent();
-                    _currentLife = 0;
+                    currentLife = 0;
                     return;
                 }
-                _currentLife = value;
+                currentLife = value;
 
             }
         } // 当前生命
         public int SkillPoint { get; set; } // 技力
         public int SkillPointUnit { get; set; } // 技力单元
-        public int Attack { get; set; } // 攻击力
-        public int Defence { get; set; } // 防御 defence
-        public int MagicDefence { get; set; } // 法术抗性
-        public int Time { get; set; } // 再部署时间
+        public int Attack { get => attack; set { attack = value; OnPropertyChanged(); } } // 攻击力
+        public int Defence { get => defence; set { defence = value; OnPropertyChanged(); } } // 防御 defence
+        public int MagicDefence { get => magicDefence; set { magicDefence = value; OnPropertyChanged(); } } // 法术抗性
+        public int Time { get => time; set { time = value; OnPropertyChanged(); } } // 再部署时间
         public int CurrentTime { get => currentTime; set { currentTime = value; OnPropertyChanged(); } } // 当前剩余的再部署时间
         public int[] Cost { get; set; } // 部署费用
         public int DeployCount { get; set; } // 部署位

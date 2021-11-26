@@ -67,7 +67,7 @@
                         <ImageBrush ImageSource="/Image/editbackground.png"/>
                     </Grid.Background>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3.5*"></ColumnDefinition>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -161,9 +161,10 @@
                         </Canvas.Effect>
                         <Grid Width="{Binding Width, ElementName=detailBoard}" Height="{Binding Height, ElementName=detailBoard}"  >
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*"></RowDefinition>
@@ -182,33 +183,45 @@
                                 <RowDefinition></RowDefinition>
                                 <RowDefinition></RowDefinition>
                             </Grid.RowDefinitions>
-                            <Button FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" HorizontalContentAlignment="Center" Content=">>" Background="Black" Foreground="White" Click="HideButton_Click"></Button>
-                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" HorizontalContentAlignment="Center" Content="代号" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Name}" ></Label>
-                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" HorizontalContentAlignment="Center" Content="精英化等级"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="1" Grid.Row="4" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding EliteLevel}"></Label>
-                            <Button FontSize="30" Grid.Column="0" Grid.Row="4" Content="&lt;" Background="Black" Foreground="White" Click="BtnEliteLevelDown_Click"></Button>
-                            <Button FontSize="30" Grid.Column="2" Grid.Row="4" Content=">" Background="Black" Foreground="White" Click="BtnEliteLevelUp_Click"></Button>
-                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5" HorizontalContentAlignment="Center" Content="等级"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="1" Grid.Row="6" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Level}"></Label>
-                            <Button FontSize="30" Grid.Column="0" Grid.Row="6" Content="&lt;" Background="Black" Foreground="White" Click="BtnLevelDown_Click"></Button>
-                            <Button FontSize="30" Grid.Column="2" Grid.Row="6" Content=">" Background="Black" Foreground="White" Click="BtnLevelUp_Click"></Button>
-                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="7" HorizontalContentAlignment="Center" Content="信赖"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="1" Grid.Row="8" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Belief}"></Label>
-                            <Button FontSize="30" Grid.Column="0" Grid.Row="8" Content="&lt;" Background="Black" Foreground="White" Click="BtnBeliefDown_Click"></Button>
-                            <Button FontSize="30" Grid.Column="2" Grid.Row="8" Content=">" Background="Black" Foreground="White" Click="BtnBeliefUp_Click"></Button>
-                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="9" HorizontalContentAlignment="Center" Content="潜能"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="1" Grid.Row="10" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Potential}"></Label>
-                            <Button FontSize="30" Grid.Column="0" Grid.Row="10" Content="&lt;" Background="Black" Foreground="White" Click="BtnPotentialDown_Click"></Button>
-                            <Button FontSize="30" Grid.Column="2" Grid.Row="10" Content=">" Background="Black" Foreground="White" Click="BtnPotentialUp_Click"></Button>
-                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="11" HorizontalContentAlignment="Center" Content="技能选择"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="1" Grid.Row="12" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding SkillChooseId}"></Label>
-                            <Button FontSize="30" Grid.Column="0" Grid.Row="12" Content="&lt;" Background="Black" Foreground="White" Click="BtnSkillChooseIdDown_Click"></Button>
-                            <Button FontSize="30" Grid.Column="2" Grid.Row="12" Content=">" Background="Black" Foreground="White" Click="BtnSkillChooseIdUp_Click"></Button>
-                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="13" HorizontalContentAlignment="Center" Content="技能等级" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
-                            <Label FontSize="30" Grid.Column="1" Grid.Row="14" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding SkillLevel}"></Label>
-                            <Button FontSize="30" Grid.Column="0" Grid.Row="14" Content="&lt;" Background="Black" Foreground="White" Click="BtnSkillLevelDown_Click"></Button>
-                            <Button FontSize="30" Grid.Column="2" Grid.Row="14" Content=">" Background="Black" Foreground="White" Click="BtnSkillLevelUp_Click"></Button>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" HorizontalContentAlignment="Center" Content="生命" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="2" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Status.MaxLife}" ></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="3" HorizontalContentAlignment="Center" Content="攻击" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="4" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Status.Attack}" ></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="5" HorizontalContentAlignment="Center" Content="防御" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="6" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Status.Defence}" ></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="7" HorizontalContentAlignment="Center" Content="法抗" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="8" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Status.MagicDefence}" ></Label>
+                            <Label FontSize="20" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="9" HorizontalContentAlignment="Center" Content="再部署时间" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="10" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Status.Time}" ></Label>
+
+
+                            <Button FontSize="30" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0" HorizontalContentAlignment="Center" Content=">>" Background="Black" Foreground="White" Click="HideButton_Click"></Button>
+                            <Label FontSize="30" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" HorizontalContentAlignment="Center" Content="代号" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Name}" ></Label>
+                            <Label FontSize="30" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" HorizontalContentAlignment="Center" Content="精英化等级"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="2" Grid.Row="4" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding EliteLevel}"></Label>
+                            <Button FontSize="30" Grid.Column="1" Grid.Row="4" Content="&lt;" Background="Black" Foreground="White" Click="BtnEliteLevelDown_Click"></Button>
+                            <Button FontSize="30" Grid.Column="3" Grid.Row="4" Content=">" Background="Black" Foreground="White" Click="BtnEliteLevelUp_Click"></Button>
+                            <Label FontSize="30" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="5" HorizontalContentAlignment="Center" Content="等级"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="2" Grid.Row="6" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Level}"></Label>
+                            <Button FontSize="30" Grid.Column="1" Grid.Row="6" Content="&lt;" Background="Black" Foreground="White" Click="BtnLevelDown_Click"></Button>
+                            <Button FontSize="30" Grid.Column="3" Grid.Row="6" Content=">" Background="Black" Foreground="White" Click="BtnLevelUp_Click"></Button>
+                            <Label FontSize="30" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="7" HorizontalContentAlignment="Center" Content="信赖"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="2" Grid.Row="8" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Belief}"></Label>
+                            <Button FontSize="30" Grid.Column="1" Grid.Row="8" Content="&lt;" Background="Black" Foreground="White" Click="BtnBeliefDown_Click"></Button>
+                            <Button FontSize="30" Grid.Column="3" Grid.Row="8" Content=">" Background="Black" Foreground="White" Click="BtnBeliefUp_Click"></Button>
+                            <Label FontSize="30" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="9" HorizontalContentAlignment="Center" Content="潜能"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="2" Grid.Row="10" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding Potential}"></Label>
+                            <Button FontSize="30" Grid.Column="1" Grid.Row="10" Content="&lt;" Background="Black" Foreground="White" Click="BtnPotentialDown_Click"></Button>
+                            <Button FontSize="30" Grid.Column="3" Grid.Row="10" Content=">" Background="Black" Foreground="White" Click="BtnPotentialUp_Click"></Button>
+                            <Label FontSize="30" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="11" HorizontalContentAlignment="Center" Content="技能选择"  BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="2" Grid.Row="12" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding SkillChooseId}"></Label>
+                            <Button FontSize="30" Grid.Column="1" Grid.Row="12" Content="&lt;" Background="Black" Foreground="White" Click="BtnSkillChooseIdDown_Click"></Button>
+                            <Button FontSize="30" Grid.Column="3" Grid.Row="12" Content=">" Background="Black" Foreground="White" Click="BtnSkillChooseIdUp_Click"></Button>
+                            <Label FontSize="30" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="13" HorizontalContentAlignment="Center" Content="技能等级" BorderBrush="Black" BorderThickness="3"  Background="White"></Label>
+                            <Label FontSize="30" Grid.Column="2" Grid.Row="14" HorizontalContentAlignment="Center" Foreground="White" Content="{Binding SkillLevel}"></Label>
+                            <Button FontSize="30" Grid.Column="1" Grid.Row="14" Content="&lt;" Background="Black" Foreground="White" Click="BtnSkillLevelDown_Click"></Button>
+                            <Button FontSize="30" Grid.Column="3" Grid.Row="14" Content=">" Background="Black" Foreground="White" Click="BtnSkillLevelUp_Click"></Button>
                         </Grid>
 
                     </Canvas>

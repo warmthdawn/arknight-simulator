@@ -15,6 +15,7 @@ namespace ArknightSimulator.Operators
         private int potential;
         private int skillChooseId;
         private int skillLevel;
+        private Status status;
 
         public string Id { get; set; }  // 编号
         public string Name { get; set; } // 代号
@@ -29,7 +30,7 @@ namespace ArknightSimulator.Operators
         public int Belief { get => belief; set { belief = value; OnPropertyChanged(); } }   // 信赖
         public int Potential { get => potential; set { potential = value; OnPropertyChanged(); } } // 潜能
         public Status InitStatus { get; set; } // 初始属性状态
-        public Status Status { get; set; } // 属性状态
+        public Status Status { get => status; set { status = value; OnPropertyChanged(); } } // 属性状态
         public string[] GiftNames { get; set; } // 天赋名
         public string[] SkillNames { get; set; } // 技能名
         public int SkillChooseId { get=> skillChooseId; set { skillChooseId = value; OnPropertyChanged(); } }  // 选择的技能序号（从1开始，0表示无技能）

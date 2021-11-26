@@ -19,7 +19,7 @@
                 <ImageBrush ImageSource="../Image/quit.png"/>
             </Button.Background>
         </Button>
-        <Button x:Name="btnReChoose" HorizontalAlignment="Left" Margin="10,790,0,0" VerticalAlignment="Top" Height="100" Width="100" Click="BtnReChoose_Click">
+        <Button Visibility="Hidden" x:Name="btnReChoose" HorizontalAlignment="Left" Margin="10,790,0,0" VerticalAlignment="Top" Height="100" Width="100" Click="BtnReChoose_Click">
             <Button.Background>
                 <ImageBrush ImageSource="../Image/reChooseOperator.png"/>
             </Button.Background>

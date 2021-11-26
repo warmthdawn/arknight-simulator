@@ -26,6 +26,7 @@ namespace ArknightSimulator.Operators
         public virtual int Block => Inner.Block;
         public virtual float AttackTime => Inner.AttackTime;
         public virtual int[][][] Range => Inner.Range;
+        public virtual Action DieEvent => Inner.DieEvent;
 
 
     }

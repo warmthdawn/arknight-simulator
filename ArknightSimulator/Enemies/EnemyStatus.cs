@@ -6,7 +6,8 @@ namespace ArknightSimulator.Enemies
 {
     public class EnemyStatus : IEnemyStatus
     {
-        public int _currentLife;
+        private int _currentLife;
+
         public int Attack { get; set; } // 攻击力
         public int AttackSpeed { get; set; } // 攻击速度
         public float AttackTime { get; set; } // 攻击间隔

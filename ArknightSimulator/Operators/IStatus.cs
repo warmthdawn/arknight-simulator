@@ -1,4 +1,6 @@
-﻿namespace ArknightSimulator.Operators
+﻿using System;
+
+namespace ArknightSimulator.Operators
 {
     public interface IStatus
     {
@@ -16,6 +18,8 @@
         int Block { get; }
         float AttackTime { get; }
         int[][][] Range { get; }
+        Action DieEvent { get; }
+
 
     }
 }

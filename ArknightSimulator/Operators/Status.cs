@@ -9,9 +9,24 @@ namespace ArknightSimulator.Operators
     public class Status : IStatus, INotifyPropertyChanged
     {
         private int currentTime;
+        private int _currentLife;
 
         public int MaxLife { get; set; } // 最大生命
-        public int CurrentLife { get; set; } // 当前生命
+        public int CurrentLife
+        {
+            get => _currentLife;
+            set
+            {
+                if (value <= 0 && DieEvent != null)
+                {
+                    DieEvent();
+                    _currentLife = 0;
+                    return;
+                }
+                _currentLife = value;
+
+            }
+        } // 当前生命
         public int SkillPoint { get; set; } // 技力
         public int SkillPointUnit { get; set; } // 技力单元
         public int Attack { get; set; } // 攻击力
@@ -24,6 +39,9 @@ namespace ArknightSimulator.Operators
         public int Block { get; set; } // 阻挡数
         public float AttackTime { get; set; } // 攻击间隔 
         public int[][][] Range { get; set; } // 攻击范围（第一维表示精英化等级，第二三维表示的二维数组中，0表示自身，1表示攻击范围，-1表示非攻击范围）
+        public Action DieEvent { get; set; }
+
+
 
         public Status() { }
         public Status(IStatus status)

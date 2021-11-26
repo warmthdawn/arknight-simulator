@@ -9,10 +9,22 @@ namespace ArknightSimulator.Operators
 {
     public class Operator // 已部署干员
     {
+        private IStatus _status;
+
+
         public int InstanceId { get; set; }    // 干员实例的ID
         public OperatorTemplate Template { get; set; } // 干员实例
         //public string TemplateId { get; set; } // 干员模板的ID
-        public IStatus Status { get; set; }    // 属性状态
+        public IStatus Status
+        {
+            get { return _status; }
+            set
+            {
+                _status = value;
+                if (_status is Status) // 更新绑定死亡事件
+                    ((Status)_status).DieEvent += () => { DieEvent(this); };
+            }
+        }    // 属性状态
         public Gift[] Gift { get; set; } // 天赋
         public Skill Skill { get; set; } // 技能
         public Point Position { get; set; } = new Point();  // 坐标
@@ -25,6 +37,7 @@ namespace ArknightSimulator.Operators
         public List<int> AttackId { get; set; } = new List<int>();   // 索敌：攻击的敌人ID   TODO:是否要删
         public int AttackUnit { get; set; } = 0; // 攻击冷却计数
         public Action<Operator> AttackEvent { get; set; } // 干员攻击事件
+        public Action<Operator> DieEvent { get; set; } // 干员死亡事件
         public SearchEnemyType[] SearchEnemyType { get; set; } = new SearchEnemyType[] { }; // 索敌类型
         public AttackType AttackType { get; set; } // 攻击类型（不攻击、单体、群体）
         public DamageType DamageType { get; set; } // 攻击伤害类型

@@ -17,5 +17,6 @@ namespace ArknightSimulator.Utils
         NotBlocked = 8,  // 未被阻挡（优先）
         Fly = 9,         // 飞行（优先）
         NoFly = 10,      // 不能攻击飞行（放在条件最后）
+        OperatorLifePercentMin = 14   // 右方  当前生命比例最低
     }
 }

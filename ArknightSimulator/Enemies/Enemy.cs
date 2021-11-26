@@ -64,20 +64,25 @@ namespace ArknightSimulator.Enemies
             IsChanged = enemy.IsChanged;
         }
 
-        public void RefreshAttack(int attackRefresh, List<Operator> op = null)
+        public void RefreshAttack(int attackRefresh, List<Operator> ops = null, List<Enemy> enemies = null)
         {
             // 若无攻击对象且 下次可攻击则干员空闲
-            if ((op == null || op.Count == 0) && (int)(100 * Status.AttackTime) - AttackUnit <= 100 / attackRefresh)
+            if ((ops == null || ops.Count == 0) && (enemies == null || enemies.Count == 0) && (int)(100 * Status.AttackTime) - AttackUnit <= 100 / attackRefresh)
             {
                 AttackUnit = (int)(100 * Status.AttackTime) - 50;// 暂定半秒延迟
                 return;
             }
 
             int next = (AttackUnit + 100 / attackRefresh) % (int)(100 * Status.AttackTime);
-            if (op != null && next < AttackUnit)
+            if (ops != null && next < AttackUnit)
             {
-                foreach (var o in op)
+                foreach (var o in ops)
                     Attack(o);
+            }
+            if (enemies != null && next < AttackUnit)
+            {
+                foreach (var e in enemies)
+                    Attack(e);
             }
 
             AttackUnit = next;
@@ -88,12 +93,15 @@ namespace ArknightSimulator.Enemies
             Position.X += moveX;
             Position.Y += moveY;
         }
-        public void Attack(Operator op)
+        public void Attack(object opOrenemy)
         {
             if (AttackEvent != null)
                 AttackEvent(this); // 触发攻击事件
 
-            op.Hurt(DamageType, Status.Attack);
+            if (opOrenemy is Operator)
+                ((Operator)opOrenemy).Hurt(DamageType, Status.Attack);
+            else if (opOrenemy is Enemy)
+                ((Enemy)opOrenemy).Hurt(DamageType, Status.Attack);
         }
         public void Hurt(DamageType type, int damage)
         {

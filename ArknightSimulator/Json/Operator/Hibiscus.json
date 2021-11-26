@@ -1,0 +1,75 @@
+{
+    "Id": "Hibiscus",
+    "Name": "芙蓉",
+    "Position": 4,
+    "DeploymentType": 2,
+    "Picture": "./Image/Operator/Hibiscus.png",
+    "AttackPicture": "./Image/Operator/Hibiscus-Front.gif",
+    "Rare": 3,
+    "EliteLevel": 0,
+    "Level": 1,
+    "Belief": 0,
+    "Potential": 1,
+    "InitStatus": {
+        "MaxLife": 682,
+        "CurrentLife": 682,
+        "SkillPoint": 0,
+        "SkillPointUnit": 0,
+        "Attack": 153,
+        "Defence": 61,
+        "MagicDefence": 0,
+        "Time": 70,
+        "CurrentTime": 0,
+        "Cost": [ 15, 17 ],
+        "DeployCount": 1,
+        "Block": 1,
+        "AttackTime": 2.85,
+        "Range": [
+            [
+                [ 1, 1, 1 ],
+                [ 0, 1, 1, 1 ],
+                [ 1, 1, 1 ]
+            ],
+            [
+                [ 1, 1, 1, 1 ],
+                [ 0, 1, 1, 1 ],
+                [ 1, 1, 1, 1 ]
+            ]
+        ]
+    },
+    "GiftNames": [],
+    "SkillNames": [ "SkillHealEnhanceAlpha" ],
+    "SkillChooseId": 1,
+    "SkillLevel": 1,
+    "SkillMaxLevel": 7,
+    "SearchEnemyType": [ 14 ],
+    "AttackType": 1,
+    "DamageType": 3,
+    "LevelUpLife": [ "682", "975", "1220", "0" ],
+    "LevelUpAttack": [ "153", "248", "345", "0" ],
+    "LevelUpDefence": [ "61", "82", "110", "0" ],
+    "LevelUpMagicDefence": [ "0", "0", "0", "0" ],
+    "BeliefUpStatus": [ "0", "45", "0", "0" ],
+    "PotentialValues": [
+        {
+            "Type": "Cost",
+            "UpValue": -1
+        },
+        {
+            "Type": "Time",
+            "UpValue": -4
+        },
+        {
+            "Type": "Attack",
+            "UpValue": 18
+        },
+        {
+            "Type": "Time",
+            "UpValue": -6
+        },
+        {
+            "Type": "Cost",
+            "UpValue": -1
+        }
+    ]
+}

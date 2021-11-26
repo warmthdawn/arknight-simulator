@@ -279,11 +279,12 @@ namespace ArknightSimulator.Manager
                     continue;
 
                 List<Enemy> attackEnemies = new List<Enemy>();  // 总的攻击对象
+                List<Operator> healOperators = new List<Operator>(); // 总的治疗对象
                 op.AttackId.Clear();
                 int attackCount = (int)op.AttackType;  // 攻击数量
 
 
-                if (attackCount > 0)  // 攻击数量大于0
+                if (attackCount > 0 && op.DamageType != DamageType.Heal)  // 攻击数量大于0且不为医疗
                 {
                     if (op.BlockEnemiesId.Count != 0) // 有阻挡敌人，则优先攻击
                     {
@@ -328,13 +329,14 @@ namespace ArknightSimulator.Manager
                         break;
                 }
 
+                List<Operator> operatorsInRange = new List<Operator>();
                 List<EnemyMovement> enemiesInRange = new List<EnemyMovement>();
                 // 扫描攻击范围
                 for (int i = 0; i < range.Length; i++)
                 {
                     for (int j = 0; j < range[i].Length; j++)
                     {
-                        if (range[i][j] == 1)
+                        if (range[i][j] == 0 || range[i][j] == 1)
                         {
                             int di = i - selfi;  // 攻击范围的某一格与自身行距离
                             int dj = j - selfj;  // 列距离
@@ -370,13 +372,23 @@ namespace ArknightSimulator.Manager
                                 }
 
                             }
+
+                            foreach(Operator o in OnMapOperators)
+                            {
+                                var pos = o.Position;
+                                if(pos.Y <= mapi + 1 && pos.Y >= mapi && pos.X <= mapj + 1 && pos.X >= mapj)
+                                {
+                                    if (!operatorsInRange.Contains(o))
+                                        operatorsInRange.Add(o);
+                                }
+                            }
                         }
                     }
                 }
 
 
                 // 攻击所有敌人的干员单独计算
-                if (attackCount == -1)
+                if (attackCount == -1 && op.DamageType != DamageType.Heal)
                 {
                     for (int i = 0; i < op.BlockEnemiesId.Count; i++)
                     {
@@ -400,6 +412,7 @@ namespace ArknightSimulator.Manager
                 // 剩余攻击位
                 if (enemiesInRange.Count > 0)
                 {
+                    List<Operator> selectOperators = new List<Operator>();
                     List<EnemyMovement> selectEnemies = new List<EnemyMovement>();
 
                     foreach (var type in op.SearchEnemyType)
@@ -445,22 +458,65 @@ namespace ArknightSimulator.Manager
                                         selectEnemies.Remove(e);
                                 }
                                 break;
+                            case SearchEnemyType.OperatorLifePercentMin:
+                                if (selectOperators.Count == 0)
+                                {
+                                    for (int i = 0; i < attackCount; i++)
+                                    {
+                                        Operator oper = operatorsInRange.Find(o => !selectOperators.Contains(o));
+                                        double minLifePercent = oper.Status.CurrentLife * 1.0 / oper.Status.MaxLife;
+                                        foreach (var o in operatorsInRange)
+                                        {
+                                            if (selectOperators.Contains(o))
+                                                continue;
+                                            if (o.Status.CurrentLife * 1.0 / o.Status.MaxLife < minLifePercent)
+                                            {
+                                                oper = o;
+                                                minLifePercent = o.Status.CurrentLife * 1.0 / o.Status.MaxLife;
+                                            }
+                                        }
+                                        if (oper.Status.CurrentLife >= oper.Status.MaxLife)
+                                            break;
+                                        selectOperators.Add(oper);
+                                    }
+                                }
+                                else
+                                    selectOperators.Sort((a, b) => a.Status.CurrentLife - b.Status.CurrentLife);
+                                break;
                             default:
                                 throw new Exception("新的干员索敌类型未定义");
                         }
                     }
 
-                    for (int i = 0; i < attackCount && i < selectEnemies.Count; i++)
+                    if(selectEnemies.Count != 0)
                     {
-                        if (!attackEnemies.Contains(selectEnemies[i].Enemy))
+                        for (int i = 0; i < attackCount && i < selectEnemies.Count; i++)
                         {
-                            attackEnemies.Add(selectEnemies[i].Enemy);
-                            op.AttackId.Add(selectEnemies[i].Enemy.InstanceId);
+                            if (!attackEnemies.Contains(selectEnemies[i].Enemy))
+                            {
+                                attackEnemies.Add(selectEnemies[i].Enemy);
+                                op.AttackId.Add(selectEnemies[i].Enemy.InstanceId);
+                            }
                         }
+
+                        op.RefreshAttack(attackRefresh, attackEnemies);
+                        continue;
+                    }
+                    if(selectOperators.Count!=0)
+                    {
+                        for (int i = 0; i < attackCount && i < selectOperators.Count; i++)
+                        {
+                            if (!healOperators.Contains(selectOperators[i]))
+                            {
+                                healOperators.Add(selectOperators[i]);
+                                op.AttackId.Add(selectOperators[i].InstanceId);
+                            }
+                        }
+
+                        op.RefreshAttack(attackRefresh, null, healOperators);
+                        continue;
                     }
 
-                    op.RefreshAttack(attackRefresh, attackEnemies);
-                    continue;
                 }
 
                 op.RefreshAttack(attackRefresh, null);
@@ -505,7 +561,11 @@ namespace ArknightSimulator.Manager
                         op.Skill = new SkillAttackEnhanceAlpha(opt.SkillLevel);
                         op.Status.SkillPoint = op.Skill.Initial;
                         break;
-                    default: break;
+                    case "SkillHealEnhanceAlpha":
+                        op.Skill = new SkillHealEnhanceAlpha(opt.SkillLevel);
+                        op.Status.SkillPoint = op.Skill.Initial;
+                        break;
+                    default: throw new Exception("未定义技能");
                 }
             }
 

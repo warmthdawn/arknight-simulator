@@ -1,0 +1,75 @@
+{
+    "Id": "Steward",
+    "Name": "史都华德",
+    "Position": 6,
+    "DeploymentType": 2,
+    "Picture": "./Image/Operator/Steward.png",
+    "AttackPicture": "./Image/Operator/Steward-Front.gif",
+    "Rare": 3,
+    "EliteLevel": 0,
+    "Level": 1,
+    "Belief": 0,
+    "Potential": 1,
+    "InitStatus": {
+        "MaxLife": 592,
+        "CurrentLife": 592,
+        "SkillPoint": 0,
+        "SkillPointUnit": 0,
+        "Attack": 249,
+        "Defence": 38,
+        "MagicDefence": 10,
+        "Time": 70,
+        "CurrentTime": 0,
+        "Cost": [ 16, 18 ],
+        "DeployCount": 1,
+        "Block": 1,
+        "AttackTime": 1.6,
+        "Range": [
+            [
+                [ 1, 1, 1 ],
+                [ 0, 1, 1 ],
+                [ 1, 1, 1 ]
+            ],
+            [
+                [ 1, 1, 1 ],
+                [ 0, 1, 1, 1 ],
+                [ 1, 1, 1 ]
+            ]
+        ]
+    },
+    "GiftNames": [],
+    "SkillNames": [],// [ "SkillStrongHitAlpha" ],
+    "SkillChooseId": 1,
+    "SkillLevel": 1,
+    "SkillMaxLevel": 7,
+    "SearchEnemyType": [ 0 ],
+    "AttackType": 1,
+    "DamageType": 1,
+    "LevelUpLife": [ "592", "847", "1100", "0" ],
+    "LevelUpAttack": [ "249", "357", "470", "0" ],
+    "LevelUpDefence": [ "38", "65", "90", "0" ],
+    "LevelUpMagicDefence": [ "10", "10", "15", "0" ],
+    "BeliefUpStatus": [ "0", "50", "0", "0" ],
+    "PotentialValues": [
+        {
+            "Type": "Cost",
+            "UpValue": -1
+        },
+        {
+            "Type": "Time",
+            "UpValue": -4
+        },
+        {
+            "Type": "Attack",
+            "UpValue": 23
+        },
+        {
+            "Type": "Time",
+            "UpValue": -6
+        },
+        {
+            "Type": "Cost",
+            "UpValue": -1
+        }
+    ]
+}

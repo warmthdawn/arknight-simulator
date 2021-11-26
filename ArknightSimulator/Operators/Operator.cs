@@ -43,10 +43,10 @@ namespace ArknightSimulator.Operators
         public DamageType DamageType { get; set; } // 攻击伤害类型
         public bool IsChanged { get; set; } // 攻击
 
-        public void RefreshAttack(int attackRefresh, List<Enemy> enemies = null)
+        public void RefreshAttack(int attackRefresh, List<Enemy> enemies = null, List<Operator> ops = null)
         {
             // 若无攻击对象且 下次可攻击则干员空闲
-            if ((enemies == null || enemies.Count == 0) && (int)(100 * Status.AttackTime) - AttackUnit <= 100 / attackRefresh)
+            if ((enemies == null || enemies.Count == 0) && (ops == null || ops.Count == 0) && (int)(100 * Status.AttackTime) - AttackUnit <= 100 / attackRefresh)
             {
                 AttackUnit = (int)(100 * Status.AttackTime) - 50;// 暂定半秒延迟
                 return;
@@ -61,13 +61,23 @@ namespace ArknightSimulator.Operators
                     Attack(e);
             }
 
+            if (ops != null && next < AttackUnit)  // 攻击我方干员，如回血
+            {
+                if (AttackEvent != null)
+                    AttackEvent(this); // 触发攻击事件
+                foreach (var o in ops)
+                    Attack(o);
+            }
+
             AttackUnit = next;
         }
 
-        private void Attack(Enemy enemy)
+        private void Attack(object enemyOrop)
         {
-            
-            enemy.Hurt(DamageType, Status.Attack);
+            if (enemyOrop is Enemy)
+                ((Enemy)enemyOrop).Hurt(DamageType, Status.Attack);
+            else if(enemyOrop is Operator)
+                ((Operator)enemyOrop).Hurt(DamageType, Status.Attack);
         }
         public void Hurt(DamageType type, int damage)
         {

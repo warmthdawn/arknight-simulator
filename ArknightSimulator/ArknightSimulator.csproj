@@ -124,6 +124,9 @@
     <None Update="Image\Operator\Hibiscus-Front.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Image\Operator\Hibiscus.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Image\Operator\Melantha.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -154,6 +157,9 @@
     <None Update="Image\Operator\Steward-Front.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Image\Operator\Steward.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Image\Operator\魅兰莎.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -161,6 +167,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Image\Skills\SkillAttackEnhanceAlpha.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image\Skills\SkillHealEnhanceAlpha.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image\Skills\SkillStrongHitAlpha.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Image\Sniper.png">
@@ -184,10 +196,16 @@
     <None Update="Json\Operator\Adnachiel.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Json\Operator\Hibiscus.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Json\Operator\Melantha.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Json\Operator\Noir Corne.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Json\Operator\Steward.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

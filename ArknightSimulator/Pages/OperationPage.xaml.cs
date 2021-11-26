@@ -165,7 +165,7 @@ namespace ArknightSimulator.Pages
         {
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == e.OperatorTemplate.Id);
             Label lbl = notOnMapLbl.Find(i => ((OperatorTemplate)i.DataContext).Id == e.OperatorTemplate.Id);
-            if (e.Index == 1)
+            if (e.Index == 1 && img != null)
             {
                 if (e.CostEnough)
                 {
@@ -176,7 +176,7 @@ namespace ArknightSimulator.Pages
                     img.Opacity = 0.3;
                 }
             }
-            else if (e.Index == 2)
+            else if (e.Index == 2 && lbl != null)
             {
                 if (e.TimeEnough)
                 {
@@ -469,6 +469,11 @@ namespace ArknightSimulator.Pages
 
             notOnMapLbl.Add(lblReDeployTime);
         }
+        private void LblCost_Initialized(object sender, EventArgs e)
+        {
+            Label lblCost = (Label)sender;
+            lblCost.Content = "C "+((OperatorTemplate)lblCost.DataContext).Status.Cost[((OperatorTemplate)lblCost.DataContext).EliteLevel];
+        }
 
         // 游戏开始
         private void BtnStart_Click(object sender, RoutedEventArgs e)
@@ -551,7 +556,7 @@ namespace ArknightSimulator.Pages
                 gameManager.Continue();
         }
 
-        // 重选干员
+        // 重选干员 TODO
         private void BtnReChoose_Click(object sender, RoutedEventArgs e)
         {
 
@@ -721,6 +726,7 @@ namespace ArknightSimulator.Pages
         {
             Operator op = operatorManager.Deploying(currentDragOperator, Directions.Up, currentMapX, currentMapY, currentDeploymentType);
             op.AttackEvent += OperatorAttack;
+            op.DieEvent += OperatorDie;
             AddOperatorProgressBar(op);
             currentOperatorImg.DataContext = op;
             ImageBehavior.AddAnimationCompletedHandler(currentOperatorImg, AnimationLoaded);
@@ -739,6 +745,7 @@ namespace ArknightSimulator.Pages
         {
             Operator op = operatorManager.Deploying(currentDragOperator, Directions.Down, currentMapX, currentMapY, currentDeploymentType);
             op.AttackEvent += OperatorAttack;
+            op.DieEvent += OperatorDie;
             AddOperatorProgressBar(op);
             currentOperatorImg.DataContext = op;
             ImageBehavior.AddAnimationCompletedHandler(currentOperatorImg, AnimationLoaded);
@@ -766,6 +773,7 @@ namespace ArknightSimulator.Pages
 
             Operator op = operatorManager.Deploying(currentDragOperator, Directions.Left, currentMapX, currentMapY, currentDeploymentType);
             op.AttackEvent += OperatorAttack;
+            op.DieEvent += OperatorDie;
             AddOperatorProgressBar(op);
             currentOperatorImg.DataContext = op;
             ImageBehavior.AddAnimationCompletedHandler(currentOperatorImg, AnimationLoaded);
@@ -784,6 +792,7 @@ namespace ArknightSimulator.Pages
         {
             Operator op = operatorManager.Deploying(currentDragOperator, Directions.Right, currentMapX, currentMapY, currentDeploymentType);
             op.AttackEvent += OperatorAttack;
+            op.DieEvent += OperatorDie;
             AddOperatorProgressBar(op);
             currentOperatorImg.DataContext = op;
             ImageBehavior.AddAnimationCompletedHandler(currentOperatorImg, AnimationLoaded);
@@ -995,8 +1004,9 @@ namespace ArknightSimulator.Pages
         {
             Operator op = operatorManager.OnMapOperators.Find(o => o.Template.Id == currentDragOperator.Id);
             op.AttackEvent -= OperatorAttack;
+            op.DieEvent -= OperatorDie;
             imgMap.MouseDown -= ImgMap_MouseDown;
-            operatorManager.Withdrawing(op);
+            operatorManager.Withdrawing(op, false);
 
             OperatorRemove(this, new OperatorEventArgs(op));
         }
@@ -1043,15 +1053,29 @@ namespace ArknightSimulator.Pages
             controller.Play();
         }
 
+        // 干员死亡事件
+        private void OperatorDie(Operator op)
+        {
+            OperatorRemove(this, new OperatorEventArgs(op));
+
+            op.AttackEvent -= OperatorAttack;
+            op.DieEvent -= OperatorDie;
+
+            operatorManager.Withdrawing(op, true);
+        }
+
         // 敌人死亡事件
         private void EnemyDie(Enemy enemy)
         {
             EnemyRemove(this, new EnemyEventArgs(enemy));
+            enemy.AttackEvent -= EnemyAttack;
+            enemy.DieEvent -= EnemyDie;
 
             // 从mapManager中删除
             mapManager.CurrentEnemyCount++;
             mapManager.EnemiesAppear.RemoveAll((em) => em.Enemy.InstanceId == enemy.InstanceId);
         }
+
 
     }
 }

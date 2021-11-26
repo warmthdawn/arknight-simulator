@@ -38,7 +38,8 @@
                         <WrapPanel>
                             <Grid>
                                 <Image DataContext="{Binding}" Width="100" Stretch="UniformToFill" VerticalAlignment="Top" Initialized="OpSelectedItem_Initialized" MouseLeftButtonDown="OpSelectedItem_MouseLeftButtonDown"/>
-                                <Label Visibility="Hidden" DataContext="{Binding}" Content="{Binding Status.CurrentTime}" Width="100" FontSize="50" Background="#7F000000" Foreground="White" Initialized="LblReDeployTime_Initialized"/>
+                                <Label DataContext="{Binding}" Width="60" Height="30" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#B2000000" Foreground="White" Initialized="LblCost_Initialized"/>
+                                <Label Visibility="Hidden" DataContext="{Binding}" Content="{Binding Status.CurrentTime}" Width="100" FontSize="50" Background="#7FFF0000" Foreground="White" Initialized="LblReDeployTime_Initialized"/>
                             </Grid>
                         </WrapPanel>
                     </Border>

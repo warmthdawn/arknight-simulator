@@ -529,13 +529,14 @@ namespace ArknightSimulator.Manager
             return op;
         }
 
-        // 撤退干员
-        public void Withdrawing(Operator op)
+        // 撤退干员（主动撤退或死亡撤退）
+        public void Withdrawing(Operator op, bool isDead)
         {
             int currentCost = op.Template.Status.Cost[op.Template.EliteLevel];
             int initCost = op.Template.InitStatus.Cost[op.Template.EliteLevel];
 
-            CurrentCost += (int)Math.Round(0.5 * currentCost, MidpointRounding.AwayFromZero);  // 返回一半费用
+            if (isDead == false)
+                CurrentCost += (int)Math.Round(0.5 * currentCost, MidpointRounding.AwayFromZero);  // 返回一半费用
             RestDeploymentCount += op.Status.DeployCount;
 
             if (currentCost <= initCost)   // 再部署第一次 1.5倍费用
@@ -545,11 +546,12 @@ namespace ArknightSimulator.Manager
             else
                 throw new Exception("撤退干员费用管理出现异常");
 
-            ReDeployTimeUnits.Add(op.Template, 0);
-            op.Template.Status.CurrentTime = op.Template.Status.Time;
-
-            OnMapOperators.Remove(op);
             NotOnMapOperators.Add(op.Template);
+            OnMapOperators.Remove(op);
+
+            op.Template.Status.CurrentTime = op.Template.Status.Time;
+            ReDeployTimeUnits.Add(op.Template, 0);
+
         }
 
         // 技能开始 TODO

@@ -11,36 +11,36 @@ namespace ArknightSimulator.Enemies
             this.Inner = status;
         }
         public IEnemyStatus Inner { get; private set; }
-        public int Attack => Inner.Attack;
+        public virtual int Attack => Inner.Attack;
 
-        public int AttackSpeed => Inner.AttackSpeed;
+        public virtual int AttackSpeed => Inner.AttackSpeed;
 
-        public float AttackTime => Inner.AttackTime;
+        public virtual float AttackTime => Inner.AttackTime;
 
-        public int Count => Inner.Count;
+        public virtual int Count => Inner.Count;
 
-        public int CurrentLife => Inner.CurrentLife;
+        public virtual int CurrentLife => Inner.CurrentLife;
 
-        public int Defence => Inner.Defence;
+        public virtual int Defence => Inner.Defence;
 
-        public bool DizzyDefence => Inner.DizzyDefence;
+        public virtual bool DizzyDefence => Inner.DizzyDefence;
 
-        public int MagicDefence => Inner.MagicDefence;
+        public virtual int MagicDefence => Inner.MagicDefence;
 
-        public int MaxLife => Inner.MaxLife;
+        public virtual int MaxLife => Inner.MaxLife;
 
-        public float MoveSpeed => Inner.MoveSpeed;
+        public virtual float MoveSpeed => Inner.MoveSpeed;
 
-        public float Range => Inner.Range;
+        public virtual float Range => Inner.Range;
 
-        public int RecoverSpeed => Inner.RecoverSpeed;
+        public virtual int RecoverSpeed => Inner.RecoverSpeed;
 
-        public bool SilenceDefence => Inner.SilenceDefence;
+        public virtual bool SilenceDefence => Inner.SilenceDefence;
 
-        public bool SleepDefence => Inner.SleepDefence;
+        public virtual bool SleepDefence => Inner.SleepDefence;
 
-        public int Weight => Inner.Weight;
+        public virtual int Weight => Inner.Weight;
 
-        public Action DieEvent => Inner.DieEvent;
+        public virtual Action DieEvent => Inner.DieEvent;
     }
 }

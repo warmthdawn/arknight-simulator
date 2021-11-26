@@ -84,7 +84,7 @@ namespace ArknightSimulator.Operators
 
             ((Status)Status).CurrentLife -= actualDamage;
             if (((Status)Status).CurrentLife > ((Status)Status).MaxLife)
-                ((Status)Status).CurrentLife = ((Status)Status).CurrentLife;
+                ((Status)Status).CurrentLife = ((Status)Status).MaxLife;
 
         }
         public void SkillStart()

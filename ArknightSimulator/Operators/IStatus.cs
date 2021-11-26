@@ -10,6 +10,7 @@
         int Defence { get; }
         int MagicDefence { get; }
         int Time { get; }
+        int CurrentTime { get; }
         int[] Cost { get; }
         int DeployCount { get; }
         int Block { get; }

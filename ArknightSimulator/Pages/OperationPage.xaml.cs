@@ -36,6 +36,7 @@ namespace ArknightSimulator.Pages
         private OperatorTemplate currentDragOperator;
         private Image currentDragOperatorImg;
         private List<Image> notOnMapImg;
+        private List<Label> notOnMapLbl;
         private int currentMapX;
         private int currentMapY;
         private DeploymentType currentDeploymentType;
@@ -64,6 +65,7 @@ namespace ArknightSimulator.Pages
             mapManager = gameManager.MapManager;
             operatorManager = gameManager.OperatorManager;
             notOnMapImg = new List<Image>();
+            notOnMapLbl = new List<Label>();
             blocks = new List<List<Polygon>>();
 
             // 初始化控件
@@ -161,13 +163,28 @@ namespace ArknightSimulator.Pages
         private void OperatorEnable(object sender, OperatorEventArgs e)
         {
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == e.OperatorTemplate.Id);
-            if (e.CostEnough)
+            Label lbl = notOnMapLbl.Find(i => ((OperatorTemplate)i.DataContext).Id == e.OperatorTemplate.Id);
+            if (e.Index == 1)
             {
-                img.Opacity = 1;
+                if (e.CostEnough)
+                {
+                    img.Opacity = 1;
+                }
+                else
+                {
+                    img.Opacity = 0.3;
+                }
             }
-            else
+            else if (e.Index == 2)
             {
-                img.Opacity = 0.3;
+                if (e.TimeEnough)
+                {
+                    lbl.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    lbl.Visibility = Visibility.Visible;
+                }
             }
         }
 
@@ -258,12 +275,18 @@ namespace ArknightSimulator.Pages
         }
         private void EnemyRemove(object sender, EnemyEventArgs e)
         {
-            Image enemyImg = (Image)grid.FindName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString());
-            grid.UnregisterName("enemy" + e.EnemyMovement.Enemy.InstanceId.ToString());
+            Enemy enemy;
+            if (e.EnemyMovement != null)
+                enemy = e.EnemyMovement.Enemy;
+            else
+                enemy = e.Enemy;
+
+            Image enemyImg = (Image)grid.FindName("enemy" + enemy.InstanceId.ToString());
+            grid.UnregisterName("enemy" + enemy.InstanceId.ToString());
             grid.Children.Remove(enemyImg);
 
-            ProgressBar bar = (ProgressBar)grid.FindName("enemylifeBar" + e.EnemyMovement.Enemy.InstanceId);
-            grid.UnregisterName("enemylifeBar" + e.EnemyMovement.Enemy.InstanceId);
+            ProgressBar bar = (ProgressBar)grid.FindName("enemylifeBar" + enemy.InstanceId);
+            grid.UnregisterName("enemylifeBar" + enemy.InstanceId);
             grid.Children.Remove(bar);
 
         }
@@ -278,6 +301,7 @@ namespace ArknightSimulator.Pages
             Canvas currentHitArea = (Canvas)grid.FindName("hit_" + currentDragOperator.Id.Replace(" ", "_"));
             if(currentHitArea != null)
             {
+                currentHitArea.MouseLeftButtonDown -= CurrentOperator_MouseLeftButtonDown;
                 grid.Children.Remove(currentHitArea);
                 grid.UnregisterName(currentHitArea.Name);
             }
@@ -294,7 +318,7 @@ namespace ArknightSimulator.Pages
             }
             if (skillbar != null)
             {
-                grid.UnregisterName("skillbar" + currentDragOperator.Id.Replace(" ", "_"));
+                grid.UnregisterName("skillBar" + currentDragOperator.Id.Replace(" ", "_"));
                 grid.Children.Remove(skillbar);
             }
 
@@ -433,6 +457,14 @@ namespace ArknightSimulator.Pages
             img.Width = (width < notOnMapItems.Height) ? width : notOnMapItems.Height;
 
             notOnMapImg.Add(img);
+        }
+        private void LblReDeployTime_Initialized(object sender, EventArgs e)
+        {
+            Label lblReDeployTime = (Label)sender;
+            double width = notOnMapItems.Width / operatorManager.NotOnMapOperators.Count;
+            lblReDeployTime.Width = (width < notOnMapItems.Height) ? width : notOnMapItems.Height;
+
+            notOnMapLbl.Add(lblReDeployTime);
         }
 
         // 游戏开始
@@ -659,7 +691,9 @@ namespace ArknightSimulator.Pages
             AddOperatorProgressBar(op);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
+            Label lbl = notOnMapLbl.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             notOnMapImg.Remove(img);
+            notOnMapLbl.Remove(lbl);
             currentDragOperator = null;
             canvasDirection.Visibility = Visibility.Hidden;
             gameManager.Continue();   // 部署后继续游戏
@@ -672,7 +706,9 @@ namespace ArknightSimulator.Pages
             AddOperatorProgressBar(op);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
+            Label lbl = notOnMapLbl.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             notOnMapImg.Remove(img);
+            notOnMapLbl.Remove(lbl);
             currentDragOperator = null;
             canvasDirection.Visibility = Visibility.Hidden;
             gameManager.Continue();
@@ -694,7 +730,9 @@ namespace ArknightSimulator.Pages
             AddOperatorProgressBar(op);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
+            Label lbl = notOnMapLbl.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             notOnMapImg.Remove(img);
+            notOnMapLbl.Remove(lbl);
             currentDragOperator = null;
             canvasDirection.Visibility = Visibility.Hidden;
             gameManager.Continue();
@@ -707,7 +745,9 @@ namespace ArknightSimulator.Pages
             AddOperatorProgressBar(op);
 
             Image img = notOnMapImg.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
+            Label lbl = notOnMapLbl.Find(i => ((OperatorTemplate)i.DataContext).Id == currentDragOperator.Id);
             notOnMapImg.Remove(img);
+            notOnMapLbl.Remove(lbl);
             currentDragOperator = null;
             canvasDirection.Visibility = Visibility.Hidden;
             gameManager.Continue();
@@ -858,6 +898,9 @@ namespace ArknightSimulator.Pages
                 string id = ((Canvas)sender).Name.Substring(4).Replace("_", " ");
                 OperatorTemplate opt = operatorManager.SelectedOperators.Find(o => o.Id == id);
                 Operator op = operatorManager.OnMapOperators.Find(o => o.Template.Id == opt.Id);
+
+                currentDragOperator = opt;
+
                 if (op.Skill == null)
                 {
                     btnSkill.Visibility = Visibility.Hidden;
@@ -896,6 +939,7 @@ namespace ArknightSimulator.Pages
             imgMap.MouseDown -= ImgMap_MouseDown;
             canvasSkillOrWithdraw.Visibility = Visibility.Hidden;
             gridCanvas.Visibility = Visibility.Hidden;
+            currentDragOperator = null;
 
             gameManager.Continue();
             btnPauseOrContinue.IsEnabled = true;
@@ -904,7 +948,12 @@ namespace ArknightSimulator.Pages
         // 撤退干员
         private void BtnWithdraw_Click(object sender, RoutedEventArgs e)
         {
+            Operator op = operatorManager.OnMapOperators.Find(o => o.Template.Id == currentDragOperator.Id);
+            op.AttackEvent -= OperatorAttack;
+            imgMap.MouseDown -= ImgMap_MouseDown;
+            operatorManager.Withdrawing(op);
 
+            OperatorRemove(this, new OperatorEventArgs(op));
         }
         // 使用技能
         private void BtnSkill_Click(object sender, RoutedEventArgs e)
@@ -946,17 +995,10 @@ namespace ArknightSimulator.Pages
         // 敌人死亡事件
         private void EnemyDie(Enemy enemy)
         {
-            // 移除敌人
-            Image enemyImg = (Image)grid.FindName("enemy" + enemy.InstanceId.ToString());
-            grid.Children.Remove(enemyImg);
-            grid.UnregisterName("enemy" + enemy.InstanceId.ToString());
-
-            // 移除敌人血条
-            ProgressBar bar = (ProgressBar)grid.FindName("enemylifeBar" + enemy.InstanceId);
-            grid.UnregisterName("enemylifeBar" + enemy.InstanceId);
-            grid.Children.Remove(bar);
+            EnemyRemove(this, new EnemyEventArgs(enemy));
 
             // 从mapManager中删除
+            mapManager.CurrentEnemyCount++;
             mapManager.EnemiesAppear.RemoveAll((em) => em.Enemy.InstanceId == enemy.InstanceId);
         }
 

@@ -60,11 +60,11 @@ namespace ArknightSimulator.Enemies
             }
             AttackType = enemy.AttackType;
             DamageType = enemy.DamageType;
-            ((EnemyStatus)Status).DieEvent += () =>
-            {
-                if (DieEvent != null)
-                    DieEvent(this);
-            };
+            //((EnemyStatus)Status).DieEvent += () =>
+            //{
+            //    if (DieEvent != null)
+            //        DieEvent(this);
+            //};
         }
 
         public void RefreshAttack(int attackRefresh, List<Operator> op = null)
@@ -129,7 +129,7 @@ namespace ArknightSimulator.Enemies
             //newStatus.CurrentLife -= actualDamage;
             ((EnemyStatus)Status).CurrentLife -= actualDamage;
             if (((EnemyStatus)Status).CurrentLife > ((EnemyStatus)Status).MaxLife)
-                ((EnemyStatus)Status).CurrentLife = ((EnemyStatus)Status).CurrentLife;
+                ((EnemyStatus)Status).CurrentLife = ((EnemyStatus)Status).MaxLife;
         }
         public void SkillOn() { }
 

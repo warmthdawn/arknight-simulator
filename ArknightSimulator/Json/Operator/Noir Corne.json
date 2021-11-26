@@ -20,6 +20,7 @@
         "Defence": 220,
         "MagicDefence": 0,
         "Time": 70,
+        "CurrentTime": 0,
         "Cost": [ 14 ],
         "DeployCount": 1,
         "Block": 3,

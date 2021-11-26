@@ -13,6 +13,8 @@ namespace ArknightSimulator.EventHandlers
         public Operator Operator { get; set; }
         public OperatorTemplate OperatorTemplate { get; set; }
         public bool CostEnough { get; set; }
+        public bool TimeEnough { get; set; }
+        public int Index { get; set; }
 
         public OperatorEventArgs(Operator op)
         {
@@ -22,10 +24,12 @@ namespace ArknightSimulator.EventHandlers
         {
             OperatorTemplate = opt;
         }
-        public OperatorEventArgs(OperatorTemplate opt, bool costEnough)
+        public OperatorEventArgs(OperatorTemplate opt, bool costEnough, bool timeEnough, int index)
         {
             OperatorTemplate = opt;
             CostEnough = costEnough;
+            TimeEnough = timeEnough;
+            Index = index;
         }
 
     }

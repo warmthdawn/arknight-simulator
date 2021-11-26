@@ -20,6 +20,7 @@ namespace ArknightSimulator.Operators
         public virtual int Defence => Inner.Defence;
         public virtual int MagicDefence => Inner.MagicDefence;
         public virtual int Time => Inner.Time;
+        public virtual int CurrentTime => Inner.CurrentTime;
         public virtual int[] Cost => Inner.Cost;
         public virtual int DeployCount => Inner.DeployCount;
         public virtual int Block => Inner.Block;

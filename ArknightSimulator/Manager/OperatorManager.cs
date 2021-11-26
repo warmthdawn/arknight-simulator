@@ -32,7 +32,7 @@ namespace ArknightSimulator.Manager
         public int RestDeploymentCount { get => restDeploymentCount; set { restDeploymentCount = value; OnPropertyChanged(); } }
         public int TotalDeploymentCount { get => totalDeploymentCount; set => totalDeploymentCount = value; }
 
-
+        private Dictionary<OperatorTemplate, int> ReDeployTimeUnits { get; set; }  // 各个干员的再部署时间计数单元 
 
         public List<OperatorTemplate> AvailableOperators { get; private set; } // 总干员列表
         public List<OperatorTemplate> SelectedOperators { get; set; }   // 选择出战的干员
@@ -87,6 +87,7 @@ namespace ArknightSimulator.Manager
 
         public void Init(List<OperatorTemplate> selected, int initialCost, int maxCost, int deploymentLimit)
         {
+            ReDeployTimeUnits = new Dictionary<OperatorTemplate, int>();
             SelectedOperators = new List<OperatorTemplate>();
             NotOnMapOperators = new ObservableCollection<OperatorTemplate>();
             foreach (OperatorTemplate opt in selected)
@@ -110,6 +111,7 @@ namespace ArknightSimulator.Manager
         public void Update(int refresh, List<EnemyMovement> EnemiesAppear, Operation CurrentOperation, double operatorColliderRadius, double enemyColliderRadius)
         {
             CostIncreasing(refresh);
+            ReDeployTimeDecreasing(refresh);
 
             OperatorBlock(EnemiesAppear, CurrentOperation, operatorColliderRadius, enemyColliderRadius);
 
@@ -137,11 +139,49 @@ namespace ArknightSimulator.Manager
             foreach (var opt in NotOnMapOperators)   // 判断费用是否足够放置干员
             {
                 if (CurrentCost >= opt.Status.Cost[opt.EliteLevel])
-                    OnOperatorEnable(this, new OperatorEventArgs(opt, true));
+                    OnOperatorEnable(this, new OperatorEventArgs(opt, true, true, 1));
                 else
-                    OnOperatorEnable(this, new OperatorEventArgs(opt, false));
+                    OnOperatorEnable(this, new OperatorEventArgs(opt, false, true, 1));
             }
         }
+
+        // 再部署时间随时间减少
+        public void ReDeployTimeDecreasing(int refresh)
+        {
+            List<OperatorTemplate> removeList = new List<OperatorTemplate>();
+            Dictionary<OperatorTemplate, int> modifyDic = new Dictionary<OperatorTemplate, int>();
+            foreach (var time in ReDeployTimeUnits)
+            {
+                if (time.Key.Status.CurrentTime > 0)
+                {
+                    int nextTimeUnit = (time.Value - 100 / refresh) % 100;
+                    if (nextTimeUnit > time.Value)
+                    {
+                        time.Key.Status.CurrentTime--;
+                    }
+                    modifyDic.Add(time.Key, nextTimeUnit);
+                    OnOperatorEnable(this, new OperatorEventArgs(time.Key, true, false, 2));
+                }
+                else
+                {
+                    OnOperatorEnable(this, new OperatorEventArgs(time.Key, true, true, 2));
+                    removeList.Add(time.Key);
+                }
+
+            }
+
+            foreach(var time in modifyDic)
+            {
+                ReDeployTimeUnits[time.Key] = time.Value;
+            }
+            foreach(var o in removeList)
+            {
+                ReDeployTimeUnits.Remove(o);
+            }
+
+        }
+
+
 
         // 干员阻挡 TODO 暂不考虑空降挤开和特殊敌人
         public void OperatorBlock(List<EnemyMovement> enemiesAppear, Operation currentOperation, double operatorColliderRadius, double enemyColliderRadius)
@@ -487,6 +527,29 @@ namespace ArknightSimulator.Manager
             return op;
         }
 
+        // 撤退干员
+        public void Withdrawing(Operator op)
+        {
+            int currentCost = op.Template.Status.Cost[op.Template.EliteLevel];
+            int initCost = op.Template.InitStatus.Cost[op.Template.EliteLevel];
+
+            CurrentCost += (int)Math.Round(0.5 * currentCost, MidpointRounding.AwayFromZero);  // 返回一半费用
+            RestDeploymentCount += op.Status.DeployCount;
+
+            if (currentCost <= initCost)   // 再部署第一次 1.5倍费用
+                op.Template.Status.Cost[op.Template.EliteLevel] = (int)Math.Round(1.5 * initCost, MidpointRounding.AwayFromZero);
+            else if (currentCost >= (int)Math.Round(1.5 * initCost, MidpointRounding.AwayFromZero))   // 再部署第二次及以上 2倍费用
+                op.Template.Status.Cost[op.Template.EliteLevel] = 2 * initCost;
+            else
+                throw new Exception("撤退干员费用管理出现异常");
+
+            ReDeployTimeUnits.Add(op.Template, 0);
+            op.Template.Status.CurrentTime = op.Template.Status.Time;
+
+            OnMapOperators.Remove(op);
+            NotOnMapOperators.Add(op.Template);
+        }
+
         // 技能开始 TODO
         public void SkillStart(Operator op)
         {
@@ -497,6 +560,7 @@ namespace ArknightSimulator.Manager
 
         public void GameOver()
         {
+            ReDeployTimeUnits = null;
             SelectedOperators = null;
             NotOnMapOperators = null;
             OnMapOperators = null;

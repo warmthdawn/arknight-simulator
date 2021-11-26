@@ -6,8 +6,10 @@ using System.Text;
 
 namespace ArknightSimulator.Operators
 {
-    public class Status : IStatus
+    public class Status : IStatus, INotifyPropertyChanged
     {
+        private int currentTime;
+
         public int MaxLife { get; set; } // 最大生命
         public int CurrentLife { get; set; } // 当前生命
         public int SkillPoint { get; set; } // 技力
@@ -16,6 +18,7 @@ namespace ArknightSimulator.Operators
         public int Defence { get; set; } // 防御 defence
         public int MagicDefence { get; set; } // 法术抗性
         public int Time { get; set; } // 再部署时间
+        public int CurrentTime { get => currentTime; set { currentTime = value; OnPropertyChanged(); } } // 当前剩余的再部署时间
         public int[] Cost { get; set; } // 部署费用
         public int DeployCount { get; set; } // 部署位
         public int Block { get; set; } // 阻挡数
@@ -35,6 +38,7 @@ namespace ArknightSimulator.Operators
             Defence = status.Defence;
             MagicDefence = status.MagicDefence;
             Time = status.Time;
+            CurrentTime = status.CurrentTime;
             Cost = new int[status.Cost.Length];
             for (int i = 0; i < status.Cost.Length; i++)
             {
@@ -58,6 +62,13 @@ namespace ArknightSimulator.Operators
             }
         }
 
+
+        // 数据更新
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
 
 
     }

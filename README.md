@@ -1,2 +1,32 @@
-# arknight-simulator
-An simulator for arknight
+# arknights-simulator
+An simulator for arknights
+
+
+
+分工：
+
+项目初期策划：徐贵龙、郭派锋
+
+需求分析：郭派锋、徐贵龙
+
+代码架构设计：徐贵龙
+
+前端UI设计：旷鹏、郭派锋
+
+后端代码：旷鹏、郭派锋、徐贵龙
+
+- Json配置：徐贵龙
+- 装饰器设计：徐贵龙
+- 管理类：郭派锋、旷鹏
+- 实体类：郭派锋、旷鹏、徐贵龙
+
+游戏数据收集：郭派锋
+
+bug修复：旷鹏、郭派锋
+
+ppt：徐贵龙
+
+演示：郭派锋
+
+
+
